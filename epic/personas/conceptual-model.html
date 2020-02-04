@@ -17,38 +17,44 @@
 <body>
 
 <h1>Entities & Attributes</h1>
-<h2>PARENT PROFILE</h2>
-<p>parentProfileId (primary key)<br>
-	parentProfileActivationToken (for account verification)<br>
-	parentProfileUsername<br>
-	parentProfileEmail<br>
-	profileHash(for account password)
+<h2>PARENT</h2>
+<p>parentId (primary key)<br>
+	parentActivationToken (for account verification)<br>
+	parentUsername<br>
+	parentEmail<br>
+	parentHash(for account password)
 </p>
 
-<h2>KID PROFILE</h2>
-<p>kidProfileId (primary key)<br>
-	kidParentProfileId (foreign key)<br>
-	kidProfileUsername<br>
-	profilePin<br>
+<h2>KID</h2>
+<p>kidId (primary key)<br>
+	kidParentId (foreign key)<br>
+	kidUsername<br>
+	kidHash<br>
 </p>
 
 <h2>TASK</h2>
-
 <p>taskId (primary key)<br>
-taskParentProfileId (foreign key)<br>
-	taskKidProfileId (foreign key)<br>
+	taskParentId (foreign key)<br>
+	taskKidId (foreign key)<br>
 	taskContent<br>
-	taskDue<br>
+	taskIsDue<br>
 	taskReward<br>
-	taskStep<br>
-	</p>
+	taskIsComplete <br>
+</p>
 
-
-
-
+<h2>STEPS</h2>
+<p>stepId (primary key) <br>
+	stepTaskId (foreign key) <br>
+	stepOrder <br>
+	stepContent
+</p>
 
 <h1>Relations</h1>
-One Profile can write many Tweets - (1 to n)
-Many Tweets can be liked by many Profiles - (m to n)
-</body>
+<p>One parent can add many kids - (1 to n) <br>
+One parent can add many tasks - (1 to n) <br>
+One kid can have many tasks - (1 to n) <br>
+One task can have many steps - (1 to n) <br>
+</p>
+<h1>ERD</h1>
+<img src="../images/Basic Database ER Diagram (Crow's Foot) (1).png" width="800px"/></body>
 </html>
