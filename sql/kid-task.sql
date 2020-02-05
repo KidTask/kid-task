@@ -1,6 +1,7 @@
 CREATE TABLE parent (
 	parentId binary(16) not null,
 	parentActivationToken char(32),
+	parentAvatarUrl varchar(255),
 	parentEmail varchar(128) not null,
 	parentHash char(96) not null,
 	parentName nvarchar(255),
