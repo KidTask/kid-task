@@ -243,6 +243,48 @@ class Parent implements \JsonSerializable {
 	 *
 	 * @return string value of Name
 	 */
-	public function getParentName
+	public function getParentName(): string {
+		return $this->parentName;
+	}//end of getParentName method
+
+	/*
+	 * mutator method for Name
+	 *
+	 * @param string newParentName new value of parent name
+	 * @throws \RangeException if $new is > 255 characters
+	 * @throws \TypeError if $newParentAvatarUrl is not a string
+	 */
+	public function setParentName(string $newParentName): void {
+		if(strlen($newParentName) > 255) {
+			throw(new \RangeException("Name is too large"));
+		}
+
+		//store parent name
+		$this->parentName = $newParentName;
+	}
+
+	/*
+	* @return string value of username
+	**/
+	public function getParentUsername(): string {
+		return $this->parentUsername;
+	} // end getParentUsername function
+
+	/**
+	 * mutator method for Username
+	 *
+	 * @param string $newParentUsername new value of username
+	 * @throws \InvalidArgumentException if the username is empty
+	 * @throws \RangeException if $newParentUsername is > 32 characters
+	 * @throws \TypeError if $newParentUsername is not a string
+	 **/
+	public function setParentUsername(string $newParentUsername): void {
+		if(empty($newParentUsername) === true) {
+			throw(new \InvalidArgumentException("username is empty"));
+		}
+
+		// store the username
+		$this->parentUsername = $newParentUsername;
+	} // end of setParentUsername function
 
 }//end of Parent class
