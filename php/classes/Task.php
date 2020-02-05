@@ -1,0 +1,381 @@
+<?php
+
+
+namespace Club\KidTask;
+
+require_once("autoload.php");
+
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
+
+use Cassandra\Tinyint;
+use Ramsey\Uuid\Uuid;
+
+/**
+ *
+ * Phase 1
+ *State Variables, Accessors, Mutators, and constructor
+ * *Write and document all state variables in the class.
+ * *Write and document an accessor/getter method for each state variable.
+ * *Write and document a mutator/setter method for each state variable.
+ * *Write and document constructor method.
+ *
+ * @author Demetria Gutierrez <fullstack@calyx.studio>
+ * @version 4.0.0
+ **/
+class Task {
+	use ValidateUuid;
+
+	//All STATE VARIABLES
+	/**
+	 * id for this Task; this is the primary key
+	 * @var Uuid $taskId
+	 **/
+	private $taskId;
+
+
+	/**
+	 * id for this Task; this is the foreign key
+	 * @var Uuid $taskParentId
+	 **/
+	private $taskParentId;
+
+	/**
+	 * id for this Task; this is a foreign key
+	 * @var Uuid $taskKidId
+	 **/
+	private $taskKidId;
+
+
+	/**
+	 * task content
+	 * @var string $taskContent
+	 **/
+	private $taskContent;
+
+	/**
+	 * Date for this Task
+	 * @var \DateTime $taskDueDate
+	 **/
+	private $taskDueDate;
+
+	/**
+	 * email for this Author; this is a unique index
+	 * @var Tinyint $taskIsComplete
+	 **/
+	private $taskIsComplete;
+	/**
+	 * reward for Task
+	 * @var $taskReward
+	 **/
+	private $taskReward;
+
+
+
+
+	/**
+	 * constructor for this Author
+	 *
+	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
+	 * @param string|Uuid $newTaskParentId id of the Parent making task
+	 * @param string|Uuid $newTaskKidId id if the Kid that has task
+	 * @param string $newtaskContent string containing task content
+	 * @param \DateTime|string|null $newtaskDueDate date and time Task is due
+	 * @param Tinyint|null $newTaskIsComplete tiny int to show task if Task is complete
+	 * @param string|null $newTaskReward string containing reward for Task
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
+	 **/
+	public function __construct($newTaskId, $newTaskParentId, $newTaskKidId, $newTaskContent, $newTaskDueDate,
+										 $newTaskIsComplete, $taskReward = null) {
+		try {
+			$this->setTaskId($newTaskId);
+			$this->setTaskParentId($newTaskParentId);
+			$this->setTaskKidId($newTaskKidId);
+			$this->setTaskContent($newTaskContent);
+			$this->setTaskDueDate($newTaskDueDate);
+			$this->setTaskIsComplete($newTaskIsComplete);
+			$this->setTaskReward($newReward);
+		} //determine what exception type was thrown
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+	}
+
+
+	/**
+	 * accessor method for task id
+	 *
+	 * @return Uuid value of task id (or null if new Task)
+	 **/
+	public function getTaskId(): Uuid {
+		return ($this->taskId);
+	}
+
+	/**
+	 * mutator method for task id
+	 *
+	 * @param Uuid| string $newTaskId value of new task id
+	 * @throws \RangeException if $newTaskId is not positive
+	 * @throws \TypeError if the task Id is not
+	 **/
+	public function setTaskId($newTaskId): void {
+		try {
+			$uuid = self::validateUuid($newTaskId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store the task id
+		$this->taskId = $uuid;
+	}
+
+	/**
+	 * accessor method for task by parent id
+	 *
+	 * @return Uuid value of task parent id (or null if new Task)
+	 **/
+	public function getTaskParentId(): Uuid {
+		return ($this->taskParentId);
+	}
+
+	/**
+	 * mutator method for task parent id
+	 *
+	 * @param Uuid| string $newTaskParentId value of new task parent id
+	 * @throws \RangeException if $newTaskParentId is not positive
+	 * @throws \TypeError if the task parent Id is not
+	 **/
+	public function setTaskParentId($newTaskParentId): void {
+		try {
+			$uuid = self::validateUuid($newTaskParentId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store the task parent id
+		$this->taskParentId = $uuid;
+	}
+
+	/**
+	 * accessor method for task kid id
+	 *
+	 * @return Uuid value of task kid id (or null if new Task)
+	 **/
+	public function getTaskKidId(): Uuid {
+		return ($this->taskKidId);
+	}
+
+	/**
+	 * mutator method for task kid id
+	 *
+	 * @param Uuid| string $newTaskKidId value of new task kid id
+	 * @throws \RangeException if $newTaskKidId is not positive
+	 * @throws \TypeError if the task kid Id is not
+	 **/
+	public function setTaskKidId($newTaskKidId): void {
+		try {
+			$uuid = self::validateUuid($newTaskKidId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store the task kid id
+		$this->taskKidId = $uuid;
+	}
+
+
+
+
+
+
+
+	/**
+	 * accessor method for task content
+	 *
+	 * @return string value of the task content
+	 */
+	public function getTaskContent(): ?string {
+		return ($this->taskContent);
+	}
+
+	/**
+	 * mutator method for task content
+	 *
+	 * @param string $newTaskContent new value of task content
+	 * @throws \InvalidArgumentException  if the task content is not a string or insecure
+	 * @throws \RangeException if the string is not less than 1000 characters
+	 * @throws \TypeError if the task content is not a string
+	 */
+	public function setTaskContent(?string $newTaskContent): void {
+		if($newTaskContent === null) {
+			$this->taskContent = null;
+			return;
+		}
+		$newTaskContent = strtolower(trim($newTaskContent));
+		if(ctype_xdigit($newTaskContent) === false) {
+			throw(new\RangeException("task content is not valid"));
+		}
+		//make sure user activation token is only 1000 characters
+		if(strlen($newTaskContent) > 1000) {
+			throw(new\RangeException("task content has to be less than 1000"));
+		}
+		$this->taskContent = $newTaskContent;
+	}
+
+
+	/**
+	 * accessor method for task due date
+	 *
+	 * @return \DateTime value of task due date
+	 **/
+	public function getTaskDueDate(): \DateTime {
+		return $this->taskDueDate;
+	}
+
+	/**
+	 * mutator method for task due date
+	 *
+	 * @param \DateTime|string|null $newTaskDueDate new task due date as a DateTime object or string
+	 * (or null to load the current time)
+	 * @throws \InvalidArgumentException if $newTaskDueDate is not a valid object or string
+	 * @throws \RangeException if $newTaskDueDate is a date that does not exist
+	 **/
+	public function setTaskDueDate($newTaskDueDate = null): void {
+		// base case: if the date is null, use the current date and time
+		if($newTaskDueDate === null) {
+			$this->taskDueDate = new \DateTime();
+		}
+		// store the task due date using the ValidateDate trait
+		try {
+			$newTaskDueDate = self::validateDateTime($newTaskDueDate);
+		} catch(\InvalidArgumentException |  \RangeException $exception) {
+			throw (new $exceptionType)$exception->getMessage(), 0, $exception));
+		}
+		$this->taskDueDate = $newTaskDueDate;
+	}
+
+	/**
+	 * accessor method for task is complete
+	 *
+	 * @return Tinyint value of task is complete
+	 **/
+	public function getTaskIsComplete(): Tinyint {
+		return $this->taskIsComplete;
+	}
+
+	/**
+	 * mutator method for task is complete
+	 *
+	 * @param Tinyint $newTaskIsComplete new value task is complete
+	 * @throws \InvalidArgumentException if $newTaskIsComplete is not a valid email or insecure
+	 * @throws \RangeException if $newEmail is > 128 characters
+	 **/
+	public function setAuthorEmail(string $newAuthorEmail): void {
+		// verify the email is secure
+		$newAuthorEmail = trim($newAuthorEmail);
+		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newAuthorEmail) === true) {
+			throw(new \InvalidArgumentException("author email is empty or insecure"));
+		}
+		// verify the email will fit in the database
+		if(strlen($newAuthorEmail) > 128) {
+			throw(new \RangeException("author email is too large"));
+		}
+		// store the email
+		$this->authorEmail = $newAuthorEmail;
+	}
+
+	/**
+	 * accessor method for authorHash
+	 *
+	 * @return string value of hash
+	 */
+	public function getAuthorHash(): string {
+		return $this->authorHash;
+	}
+
+	/**
+	 * mutator method for author hash password
+	 *
+	 * @param string $newAuthorHash
+	 * @throws \InvalidArgumentException if the hash is not secure
+	 * @throws \RangeException if the hash is not 96 characters
+	 * @throws \TypeError if author hash is not a string
+	 */
+	public function setAuthorHash(string $newAuthorHash): void {
+		//enforce that the hash is properly formatted
+		$newAuthorHash = trim($newAuthorHash);
+		if(empty($newAuthorHash) === true) {
+			throw(new \InvalidArgumentException("author password hash empty or insecure"));
+		}
+		//enforce the hash is really an Argon hash
+		$authorHashInfo = password_get_info($newAuthorHash);
+		if($authorHashInfo["algoName"] !== "argon2i") {
+			throw(new \InvalidArgumentException("author hash is not a valid hash"));
+		}
+		//enforce that the hash is exactly 96 characters.
+		if(strlen($newAuthorHash) !== 96) {
+			throw(new \RangeException("author hash must be 96 characters"));
+		}
+		//store the hash
+		$this->authorHash = $newAuthorHash;
+	}
+
+	/**
+	 * accessor method for username
+	 *
+	 * @return string value of username
+	 **/
+	public function getAuthorUsername(): string {
+		return ($this->authorUsername);
+	}
+
+	/**
+	 * mutator method for username
+	 *
+	 * @param string $newAuthorUsername new value of username
+	 * @throws \InvalidArgumentException if $newUsername is not a string or insecure
+	 * @throws \RangeException if $newUsername is > 32 characters
+	 * @throws \TypeError if $newUsername is not a string
+	 **/
+	public function setAuthorUsername(string $newAuthorUsername): void {
+		// verify the username is secure
+		$newAuthorUsername = trim($newAuthorUsername);
+		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newAuthorUsername) === true) {
+			throw(new \InvalidArgumentException("author username is empty or insecure"));
+		}
+		// verify the username will fit in the database
+		if(strlen($newAuthorUsername) > 32) {
+			throw(new \RangeException("author username is too large"));
+		}
+		// store the username
+		$this->authorUsername = $newAuthorUsername;
+	}
+
+
+	/**
+	 * inserts this Author into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo): void {
+
+		// create query template
+		$query = "INSERT INTO author(authorId,authorActivationToken, tweetContent, tweetDate) VALUES(:tweetId, :tweetProfileId, :tweetContent, :tweetDate)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
+		$parameters = ["tweetId" => $this->tweetId->getBytes(), "tweetProfileId" => $this->tweetProfileId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
+		$statement->execute($parameters);
+	}
+
+
+}
