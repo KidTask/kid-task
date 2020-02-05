@@ -287,4 +287,57 @@ class Parent implements \JsonSerializable {
 		$this->parentUsername = $newParentUsername;
 	} // end of setParentUsername function
 
+	/**
+	 * inserts this Parent into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
+
+		// create query template
+		$query = "INSERT INTO parent(parentId, parentActivationToken, parentAvatarUrl, parentEmail, parentHash, parentName, parentUsername) VALUES(:parentId, :parentActivationToken, :parentAvatarUrl, :parentEmail, :parentHash, :parentName, :parentUsername)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = ["parentId" => $this->parentId->getBytes(), "parentActivationToken" => $this->parentActivationToken, "parentAvatarUrl" => $this->parentAvatarUrl, "parentEmail" => $this->parentEmail, "parentHash" => $this->parentHash, "parentName" => $this->parentName, "parentUsername" => $this->parentUsername];
+		$statement->execute($parameters);
+	}//end of pdo insert function
+
+	/**
+	 * updates this Parent in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		// create query template
+		$query = "UPDATE parent SET parentActivationToken = :parentActivationToken, parentAvatarUrl = :parentAvatarUrl, parentEmail = :parentEmail, parentHash = :parentHash, parentName = :parentName, parentUsername = :parentUsername WHERE parentId = :parentId";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["parentId" => $this->parentId->getBytes(), "parentActivationToken" => $this->parentActivationToken, "parentAvatarUrl" => $this->parentAvatarUrl, "parentEmail" => $this->parentEmail, "parentHash" => $this->parentHash, "parentName" => $this->parentName "parentUsername" => $this->parentUsername];
+		$statement->execute($parameters);
+	}//end of update pdo method
+
+	/**
+	 * deletes this Parent from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
+
+		// create query template
+		$query = "DELETE FROM parent WHERE parentId = :parentId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holder in the template
+		$parameters = ["parentId" => $this->parentId->getBytes()];
+		$statement->execute($parameters);
+	}//end of delete pdo method
+
 }//end of Parent class
