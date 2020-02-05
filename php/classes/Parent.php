@@ -90,7 +90,7 @@ class Parent implements \JsonSerializable {
 	} //end of getParentId function
 
 	/**
-	 * mutator method for tweet id
+	 * mutator method for Parent id
 	 *
 	 * @param Uuid|string $newParentId new value of Parent id
 	 * @throws \RangeException if $newAtuhorId is not positive
