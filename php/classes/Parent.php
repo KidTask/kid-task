@@ -14,38 +14,38 @@ class Parent implements \JsonSerializable {
 	 * id for this Parent; this is the primary key
 	 * @var Uuid $ParentId
 	 */
-	private $ParentId;
+	private $parentId;
 	/*
 	 * activation token for this Parent
 	 * @var $ParentActivationToken
 	 */
-	private $ParentActivationToken;
+	private $parentActivationToken;
 	/*
 	 * avatar url for this Parent
 	 * @var string $ParentAvatarUrl
 	 */
-	private $ParentAvatarUrl;
+	private $parentAvatarUrl;
 	/*
 	 * email for this Parent; unique
 	 * @var string $ParentEmail
 	 */
-	private $ParentEmail;
+	private $parentEmail;
 	/*
 	 * State variable containing the Hash of Parent in question
 	 * @var $ParentHash
 	 */
-	private $ParentHash;
+	private $parentHash;
 	/*
 	 * name of this Parent
 	 * @var $ParentName
 	 */
-	private $ParentName;
+	private $parentName;
 	/*
 		 * State variable containing the Username of Parent in question
 		 * Unique
 		 * @var string $ParentUsername
 		 */
-	private $ParentUsername;
+	private $parentUsername;
 
 	/**
 	 * constructor for this Parent
