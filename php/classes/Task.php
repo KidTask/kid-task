@@ -78,8 +78,8 @@ class Task {
 	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
 	 * @param string|Uuid $newTaskParentId id of the Parent making task
 	 * @param string|Uuid $newTaskKidId id if the Kid that has task
-	 * @param string $newtaskContent string containing task content
-	 * @param \DateTime|string|null $newtaskDueDate date and time Task is due
+	 * @param string $newTaskContent string containing task content
+	 * @param \DateTime|string|null $newTaskDueDate date and time Task is due
 	 * @param Tinyint|null $newTaskIsComplete tiny int to show task if Task is complete
 	 * @param string|null $newTaskReward string containing reward for Task
 	 * @throws \InvalidArgumentException if data types are not valid
@@ -89,7 +89,7 @@ class Task {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 	public function __construct($newTaskId, $newTaskParentId, $newTaskKidId, $newTaskContent, $newTaskDueDate,
-										 $newTaskIsComplete, $taskReward = null) {
+										 $newTaskIsComplete, $newTaskReward = null) {
 		try {
 			$this->setTaskId($newTaskId);
 			$this->setTaskParentId($newTaskParentId);
@@ -97,7 +97,7 @@ class Task {
 			$this->setTaskContent($newTaskContent);
 			$this->setTaskDueDate($newTaskDueDate);
 			$this->setTaskIsComplete($newTaskIsComplete);
-			$this->setTaskReward($newReward);
+			$this->setTaskReward($newTaskReward);
 		} //determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
@@ -188,11 +188,6 @@ class Task {
 	}
 
 
-
-
-
-
-
 	/**
 	 * accessor method for task content
 	 *
@@ -243,6 +238,7 @@ class Task {
 	 * (or null to load the current time)
 	 * @throws \InvalidArgumentException if $newTaskDueDate is not a valid object or string
 	 * @throws \RangeException if $newTaskDueDate is a date that does not exist
+	 * @throws \Exception if some other error occurs
 	 **/
 	public function setTaskDueDate($newTaskDueDate = null): void {
 		// base case: if the date is null, use the current date and time
@@ -253,7 +249,9 @@ class Task {
 		try {
 			$newTaskDueDate = self::validateDateTime($newTaskDueDate);
 		} catch(\InvalidArgumentException |  \RangeException $exception) {
-			throw (new $exceptionType)$exception->getMessage(), 0, $exception));
+			$exceptionType = get_class($exception);
+			throw (new $exceptionType ($exception->getMessage(), 0, $exception));
+
 		}
 		$this->taskDueDate = $newTaskDueDate;
 	}
@@ -271,95 +269,57 @@ class Task {
 	 * mutator method for task is complete
 	 *
 	 * @param Tinyint $newTaskIsComplete new value task is complete
-	 * @throws \InvalidArgumentException if $newTaskIsComplete is not a valid email or insecure
-	 * @throws \RangeException if $newEmail is > 128 characters
+	 * @throws \InvalidArgumentException if $newTaskIsComplete is not a valid int
+	 * @throws \RangeException if $newTaskIsComplete is > 3
 	 **/
-	public function setAuthorEmail(string $newAuthorEmail): void {
-		// verify the email is secure
-		$newAuthorEmail = trim($newAuthorEmail);
-		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
-		if(empty($newAuthorEmail) === true) {
-			throw(new \InvalidArgumentException("author email is empty or insecure"));
+	public function setTaskIsComplete(Tinyint $newTaskIsComplete): void {
+		// verify task is complete is 0, 1, 2
+		$newTaskIsComplete = trim($newTaskIsComplete);
+		$newTaskIsComplete = filter_var($newTaskIsComplete);
+		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2) ) {
+			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-2"));
 		}
-		// verify the email will fit in the database
-		if(strlen($newAuthorEmail) > 128) {
-			throw(new \RangeException("author email is too large"));
-		}
-		// store the email
-		$this->authorEmail = $newAuthorEmail;
+
+		// store the task is complete
+		$this->taskIsComplete = $newTaskIsComplete;
 	}
 
 	/**
-	 * accessor method for authorHash
+	 * accessor method for taskReward
 	 *
-	 * @return string value of hash
+	 * @return string value of task Reward
 	 */
-	public function getAuthorHash(): string {
-		return $this->authorHash;
+	public function getTaskReward(): string {
+		return $this->getTaskReward();
 	}
 
 	/**
-	 * mutator method for author hash password
+	 * mutator method for task Reward
 	 *
-	 * @param string $newAuthorHash
-	 * @throws \InvalidArgumentException if the hash is not secure
-	 * @throws \RangeException if the hash is not 96 characters
-	 * @throws \TypeError if author hash is not a string
+	 * @param string $newTaskReward
+	 * @throws \InvalidArgumentException if the task reward is empty or not secure
+	 * @throws \RangeException if the task Reward is not less than 255 characters
+	 * @throws \TypeError if task reward is not a string
 	 */
-	public function setAuthorHash(string $newAuthorHash): void {
-		//enforce that the hash is properly formatted
-		$newAuthorHash = trim($newAuthorHash);
-		if(empty($newAuthorHash) === true) {
-			throw(new \InvalidArgumentException("author password hash empty or insecure"));
+	public function setTaskReward(string $newTaskReward): void {
+		//enforce that the task reward is properly formatted
+		$newTaskReward = trim($newTaskReward);
+		if(empty($newTaskReward) === true) {
+			throw(new \InvalidArgumentException("task reward empty or insecure"));
 		}
-		//enforce the hash is really an Argon hash
-		$authorHashInfo = password_get_info($newAuthorHash);
-		if($authorHashInfo["algoName"] !== "argon2i") {
-			throw(new \InvalidArgumentException("author hash is not a valid hash"));
+		//enforce that the hash is less than 255 characters.
+		if(strlen($newTaskReward) > 255) {
+			throw(new \RangeException("task reward must be less than 255 characters"));
 		}
-		//enforce that the hash is exactly 96 characters.
-		if(strlen($newAuthorHash) !== 96) {
-			throw(new \RangeException("author hash must be 96 characters"));
-		}
-		//store the hash
-		$this->authorHash = $newAuthorHash;
-	}
-
-	/**
-	 * accessor method for username
-	 *
-	 * @return string value of username
-	 **/
-	public function getAuthorUsername(): string {
-		return ($this->authorUsername);
-	}
-
-	/**
-	 * mutator method for username
-	 *
-	 * @param string $newAuthorUsername new value of username
-	 * @throws \InvalidArgumentException if $newUsername is not a string or insecure
-	 * @throws \RangeException if $newUsername is > 32 characters
-	 * @throws \TypeError if $newUsername is not a string
-	 **/
-	public function setAuthorUsername(string $newAuthorUsername): void {
-		// verify the username is secure
-		$newAuthorUsername = trim($newAuthorUsername);
-		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newAuthorUsername) === true) {
-			throw(new \InvalidArgumentException("author username is empty or insecure"));
-		}
-		// verify the username will fit in the database
-		if(strlen($newAuthorUsername) > 32) {
-			throw(new \RangeException("author username is too large"));
-		}
-		// store the username
-		$this->authorUsername = $newAuthorUsername;
+		//store the task reward
+		$this->taskReward = $newTaskReward;
 	}
 
 
+
+
 	/**
-	 * inserts this Author into mySQL
+	 * inserts this Task into mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
@@ -368,12 +328,15 @@ class Task {
 	public function insert(\PDO $pdo): void {
 
 		// create query template
-		$query = "INSERT INTO author(authorId,authorActivationToken, tweetContent, tweetDate) VALUES(:tweetId, :tweetProfileId, :tweetContent, :tweetDate)";
+		$query = "INSERT INTO task(taskId,taskParentId,taskKidId, taskContent, taskDueDate, taskIsComplete, taskReward) 
+VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsComplete, :taskReward)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["tweetId" => $this->tweetId->getBytes(), "tweetProfileId" => $this->tweetProfileId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
+		$formattedDate = $this->taskDueDate->format("Y-m-d H:i:s.u");
+		$parameters = ["taskId" => $this->taskId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(), "taskKidId" => $this->taskKidId,
+			"taskContent" => $this->taskContent->getBytes(), "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->getBytes(),
+			"taskReward" => $this->taskReward->getBytes() ];
 		$statement->execute($parameters);
 	}
 
