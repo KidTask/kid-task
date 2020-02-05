@@ -371,11 +371,11 @@ class Kid implements \JsonSerializable {
     public function jsonSerialize() : array {
         $fields = get_object_vars($this);
 
-        $fields["tweetId"] = $this->tweetId->toString();
-        $fields["tweetProfileId"] = $this->tweetProfileId->toString();
+        $fields["kidId"] = $this->kidId->toString();
+        $fields["kidParentId"] = $this->kidParentId->toString();
 
-        //format the date so that the front end can consume it
-        $fields["tweetDate"] = round(floatval($this->tweetDate->format("U.u")) * 1000);
+        //format the hash so that the front end can consume it
+        $fields["kidHash"] = round(floatval($this->kidHash->format("U.u")) * 1000);
         return($fields);
     }
 }
