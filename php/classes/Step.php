@@ -59,5 +59,62 @@ class Step implements \JsonSerializable {
 		}
 	} //end of construct function
 
+	/**
+	 * accessor method for step id
+	 *
+	 * @return Uuid value of step id (or null if new Profile)
+	 **/
+	public function getStepId() : Uuid {
+		return($this->stepId);
+	} //end of getStepId function
+
+	/**
+	 * mutator method for step id
+	 *
+	 * @param Uuid|string $newStepId new value of step id
+	 * @throws \RangeException if $newStepId is not positive
+	 * @throws \TypeError if $newStepId is not a uuid or string
+	 **/
+	public function setStepId($newStepId): void {
+		try {
+			$uuid = self::validateUuid($newStepId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+
+		// convert and store the step id
+		$this->stepId = $uuid;
+	} //end of setStepId function
+
+	/**
+	 * accessor method for stepTask id
+	 *
+	 * @return Uuid value of stepTask id (or null if new Profile)
+	 **/
+	public function getStepTaskId() : Uuid {
+		return($this->stepTaskId);
+	} //end of getStepTaskId function
+
+	/**
+	 * mutator method for stepTask id
+	 *
+	 * @param Uuid|string $newStepTaskId new value of stepTask id
+	 * @throws \RangeException if $newStepTaskId is not positive
+	 * @throws \TypeError if $newStepTaskId is not a uuid or string
+	 **/
+	public function setStepTaskId($newStepTaskId): void {
+		try {
+			$uuid = self::validateUuid($newStepTaskId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+
+		// convert and store the stepTask id
+		$this->stepTaskId = $uuid;
+	} //end of setStepTaskId function
+
+
 
 }//end of Step class
