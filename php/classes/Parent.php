@@ -171,7 +171,78 @@ class Parent implements \JsonSerializable {
 		$this->parentAvatarUrl = $newParentAvatarUrl;
 	} //end of set avatar function
 
+	/*
+		 *@return string value of email
+		 */
+	public function getParentEmail(): string {
+		return $this->parentEmail;
+	} // end getParentEmail function
 
+	/**
+	 * mutator method for email
+	 *
+	 * @param string $newParentEmail new value of email
+	 * @throws \InvalidArgumentException if $newParentEmail is not a valid email or insecure
+	 * @throws \RangeException if $newParentEmail is > 128 characters
+	 * @throws \TypeError if $newParentEmail is not a string
+	 **/
+	public function setParentEmail(string $newParentEmail): void {
+		// verify the email is secure
+		$newParentEmail = trim($newParentEmail);
+		$newParentEmail = filter_var($newParentEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newParentEmail) === true) {
+			throw(new \InvalidArgumentException("parent email is empty or insecure"));
+		}
+		// verify the email will fit in the database
+		if(strlen($newParentEmail) > 128) {
+			throw(new \RangeException("parent email is too large"));
+		}
 
+		// store the email
+		$this->parentEmail = $newParentEmail;
+	} // end of setParentEmail function
+
+	/**
+	 * accessor method for ParentHash
+	 *
+	 * @return string value of hash
+	 */
+	public function getParentHash(): string {
+		return $this->parentHash;
+	} //end of getParentHash function
+
+	/**
+	 * mutator method for Parent hash password
+	 *
+	 * @param string $newParentHash
+	 * @throws \InvalidArgumentException if the hash is not secure
+	 * @throws \RangeException if the hash is not 128 characters
+	 * @throws \TypeError if profile hash is not a string
+	 */
+	public function setParentHash(string $newParentHash): void {
+		//enforce that the hash is properly formatted
+		$newParentHash = trim($newParentHash);
+		if(empty($newParentHash) === true) {
+			throw(new \InvalidArgumentException("Parent password hash empty or insecure"));
+		}
+		//enforce the hash is really an Argon hash
+		$parentHashInfo = password_get_info($newParentHash);
+		if($parentHashInfo["algoName"] !== "argon2i") {
+			throw(new \InvalidArgumentException("Parent hash is not a valid hash"));
+		}
+		//enforce that the hash is exactly 96 characters.
+		if(strlen($newParentHash) !== 96) {
+			throw(new \RangeException("Parent hash must be 96 characters"));
+		}
+		//store the hash
+		$this->parentHash = $newParentHash;
+	} //end of setParentHash function
+
+	/*
+	 * Accessor method for parentName
+	 *
+	 * @return string value of Name
+	 */
+	public function getParentName
 
 }//end of Parent class
