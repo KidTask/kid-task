@@ -131,6 +131,9 @@ class Step implements \JsonSerializable {
 	 * @throws \TypeError if $newStepContent is not a string
 	 **/
 	public function setStepContent(string $newStepContent): void {
+		//validate content is secure
+		$newStepContent = trim($newStepContent);
+		$newStepContent = filter_var($newStepContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newStepContent) === true) {
 			throw(new \InvalidArgumentException("content is empty"));
 		}
