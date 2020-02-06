@@ -185,8 +185,25 @@ class Step implements \JsonSerializable {
 		// bind the member variables to the place holders in the template
 		$parameters = ["stepId" => $this->stepId->getBytes(), "stepTaskId" => $this->stepTaskId->getBytes(), "stepContent" => $this->stepContent, "stepOrder" => $this->stepOrder];
 		$statement->execute($parameters);
-	}
+	}// end of insert pdo
 
+	/**
+	 * Updates this Step into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		// create query template
+		$query = "UPDATE step SET stepId = :stepId, stepTaskId = :stepTaskId, stepContent = :stepContent, stepOrder = :stepOrder WHERE stepId = :stepId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = ["stepId" => $this->stepId->getBytes(), "stepTaskId" => $this->stepTaskId->getBytes(), "stepContent" => $this->stepContent, "stepOrder" => $this->stepOrder];
+		$statement->execute($parameters);
+	}// end of update pdo
 
 
 
