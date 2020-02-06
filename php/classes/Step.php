@@ -145,9 +145,31 @@ class Step implements \JsonSerializable {
 		$this->stepContent = $newStepContent;
 	} // end of setStepContent function
 
+	/**
+	 * accessor method for step order
+	 *
+	 * @return int value of stepOrder
+	 **/
 	public function getStepOrder: int {
 		return $this->stepOrder;
-	}
+	}//end of getStepOrder
+
+	/**
+	 * mutator method for step order
+	 *
+	 * @param int $newStepOrder new value of step order
+	 * @throws \RangeException if 0 < $newStepOrder > 15
+	 **/
+	public function setStepOrder(int $newStepOrder) : void {
+		if(!($newStepOrder >= 0 || $newStepOrder < 16)){
+			throw(new \RangeException("too many steps added"));
+		}
+
+		// store the content
+		$this->stepOrder = $newStepOrder;
+	}//end of setStepOrder
+
+
 
 
 
