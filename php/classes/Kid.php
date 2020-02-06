@@ -63,6 +63,26 @@ class Kid implements \JsonSerializable {
      * @throws \Exception if some other exception occurs
      * @Documentation https://php.net/manual/en/language.oop5.decon.php
      **/
+
+    /**
+     * mutator method for Username
+     *
+     * @param string $newParentUsername new value of username
+     * @throws \InvalidArgumentException if the username is empty
+     * @throws \RangeException if $newParentUsername is > 32 characters
+     * @throws \TypeError if $newParentUsername is not a string
+     **/
+    public function setKidUsername(string $newKidUsername): void {
+        //remove whitespace and validate parent name
+        $newKidUsername = trim($newKidUsername);
+        $newKidUsername = filter_var($newKidUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        if(empty($newKidUsername) === true) {
+            throw(new \InvalidArgumentException("username is empty"));
+        }
+        // store the username
+        $this->kidUsername = $newKidUsername;
+    } // end of setKidUsername function
+
     public function __construct($newkidId, $newkidParentId, string $newkidAvatarUrl, $newkidHash = null) {
         try {
             $this->setkidId($newkidId);
