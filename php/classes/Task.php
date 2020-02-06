@@ -193,7 +193,7 @@ class Task {
 	 *
 	 * @return string value of the task content
 	 */
-	public function getTaskContent(): ?string {
+	public function getTaskContent(): string {
 		return ($this->taskContent);
 	}
 
@@ -205,8 +205,10 @@ class Task {
 	 * @throws \RangeException if the string is not less than 1000 characters
 	 * @throws \TypeError if the task content is not a string
 	 */
-	public function setTaskContent(?string $newTaskContent): void {
-		if($newTaskContent === null) {
+	public function setTaskContent(string $newTaskContent): void {
+		$newTaskContent = trim($newTaskContent);
+		$newTaskContent = filter_var($newTaskContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newTaskContent) === true) {
 			$this->taskContent = null;
 			return;
 		}
@@ -303,9 +305,12 @@ class Task {
 	 */
 	public function setTaskReward(string $newTaskReward): void {
 		//enforce that the task reward is properly formatted
+
 		$newTaskReward = trim($newTaskReward);
+		$newTaskReward = filter_var($newTaskReward, FILTER_SANITIZE_STRING, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newTaskReward) === true) {
-			throw(new \InvalidArgumentException("task reward empty or insecure"));
+		$this->taskReward = null;
+		return;
 		}
 		//enforce that the hash is less than 255 characters.
 		if(strlen($newTaskReward) > 255) {
@@ -314,8 +319,6 @@ class Task {
 		//store the task reward
 		$this->taskReward = $newTaskReward;
 	}
-
-
 
 
 	/**
