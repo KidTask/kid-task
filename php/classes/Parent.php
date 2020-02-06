@@ -90,7 +90,7 @@ class Parent implements \JsonSerializable {
 	} //end of getParentId function
 
 	/**
-	 * mutator method for tweet id
+	 * mutator method for Parent id
 	 *
 	 * @param Uuid|string $newParentId new value of Parent id
 	 * @throws \RangeException if $newAtuhorId is not positive
@@ -250,11 +250,15 @@ class Parent implements \JsonSerializable {
 	/*
 	 * mutator method for Name
 	 *
-	 * @param string newParentName new value of parent name
+	 * @param string newParentName value of parent name
 	 * @throws \RangeException if $new is > 255 characters
 	 * @throws \TypeError if $newParentAvatarUrl is not a string
 	 */
 	public function setParentName(string $newParentName): void {
+		if($newParentName === null) {
+			$this->parentName = null;
+			return;
+		}
 		if(strlen($newParentName) > 255) {
 			throw(new \RangeException("Name is too large"));
 		}
