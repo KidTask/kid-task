@@ -67,7 +67,7 @@ class Kid implements \JsonSerializable {
     /**
      * mutator method for Username
      *
-     * @param string $newParentUsername new value of username
+     * @param string $newKidUsername new value of username
      * @throws \InvalidArgumentException if the username is empty
      * @throws \RangeException if $newParentUsername is > 32 characters
      * @throws \TypeError if $newParentUsername is not a string
@@ -173,7 +173,7 @@ class Kid implements \JsonSerializable {
     public function setTweetContent(string $newkidAvatarUrl) : void {
         // verify the tweet content is secure
         $newkidAvatarUrl = trim($newkidAvatarUrl);
-        $newkidAvatarUrl = filter_var($newkidAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $newkidAvatarUrl = filter_var($newkidAvatarUrl, FILTER_VALIDATE_URL);
         if(empty($newkidAvatarUrl) === true) {
             throw(new \InvalidArgumentException("kid avatar url is empty or insecure"));
         }
