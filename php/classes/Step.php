@@ -115,6 +115,37 @@ class Step implements \JsonSerializable {
 		$this->stepTaskId = $uuid;
 	} //end of setStepTaskId function
 
+	/*
+		* @return string value of Content
+		**/
+	public function getStepContent(): string {
+		return $this->stepContent;
+	} // end getStepContent function
+
+	/**
+	 * mutator method for Content
+	 *
+	 * @param string $newStepContent new value of Content
+	 * @throws \InvalidArgumentException if the content is empty
+	 * @throws \RangeException if $newStepContent is > 1000 characters
+	 * @throws \TypeError if $newStepContent is not a string
+	 **/
+	public function setStepContent(string $newStepContent): void {
+		if(empty($newStepContent) === true) {
+			throw(new \InvalidArgumentException("content is empty"));
+		}
+		if(strlen($newStepContent) > 255) {
+			throw(new \RangeException("Content is too large"));
+		}
+
+		// store the content
+		$this->stepContent = $newStepContent;
+	} // end of setStepContent function
+
+	public function getStepOrder: int {
+		return $this->stepOrder;
+	}
+
 
 
 }//end of Step class

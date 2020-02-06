@@ -43,7 +43,7 @@ CREATE TABLE task (
 CREATE TABLE step (
 	stepId binary(16) not null,
 	stepTaskId binary(16) not null,
-	stepContent varchar(1000),
+	stepContent varchar(255) not null,
 	stepOrder SMALLINT,
 	index(stepTaskId),
 	foreign key(stepTaskId) references task(taskId),

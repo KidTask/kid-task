@@ -189,7 +189,7 @@ class Parent implements \JsonSerializable {
 	public function setParentEmail(string $newParentEmail): void {
 		// verify the email is secure
 		$newParentEmail = trim($newParentEmail);
-		$newParentEmail = filter_var($newParentEmail, FILTER_VALIDATE_EMAIL);
+		$newParentEmail = filter_var($newParentEmail, FILTER_VALIDATE_STRING);
 		if(empty($newParentEmail) === true) {
 			throw(new \InvalidArgumentException("parent email is empty or insecure"));
 		}
