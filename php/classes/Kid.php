@@ -2,7 +2,7 @@
 namespace Club\KidTask;
 
 require_once("Kid.php");
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once(dirname(__DIR__) . "/vendor/Kid.php");
 
 use Cassandra\Uuid;
 use Ramsey\Uuid\Uuid;
@@ -57,6 +57,7 @@ class Kid implements \JsonSerializable {
      * @param string|Uuid $newkidParentId id of the Kid's Parent
      * @param string $newkidAvatarUrl The Kid's Avatar
      * @param string|null $newkidHash hash for the kid
+     * @param string|null $newKidUsername The Kid's Username
      * @throws \InvalidArgumentException if data types are not valid
      * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
      * @throws \TypeError if data types violate type hints
@@ -65,7 +66,7 @@ class Kid implements \JsonSerializable {
      **/
 
     /**
-     * mutator method for Username
+     * mutator method for Kid Username
      *
      * @param string $newKidUsername new value of username
      * @throws \InvalidArgumentException if the username is empty
@@ -270,7 +271,7 @@ class Kid implements \JsonSerializable {
         $statement = $pdo->prepare($query);
 
 
-        $parameters = ["tweetId" => $this->kidId->getBytes(),"kidParentId" => $this->kidParentId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $kidHash];
+        $parameters = ["kidId" => $this->kidId->getBytes(),"kidParentId" => $this->kidParentId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $kidHash];
         $statement->execute($parameters);
     }
 
