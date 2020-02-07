@@ -189,7 +189,7 @@ class Parent implements \JsonSerializable {
 	public function setParentEmail(string $newParentEmail): void {
 		// verify the email is secure
 		$newParentEmail = trim($newParentEmail);
-		$newParentEmail = filter_var($newParentEmail, FILTER_VALIDATE_EMAIL);
+		$newParentEmail = filter_var($newParentEmail, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newParentEmail) === true) {
 			throw(new \InvalidArgumentException("parent email is empty or insecure"));
 		}
@@ -255,6 +255,9 @@ class Parent implements \JsonSerializable {
 	 * @throws \TypeError if $newParentAvatarUrl is not a string
 	 */
 	public function setParentName(string $newParentName): void {
+		//remove whitespace and validate parent name
+		$newParentName = trim($newParentName);
+		$newParentName = filter_var($newParentName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if($newParentName === null) {
 			$this->parentName = null;
 			return;
@@ -283,6 +286,10 @@ class Parent implements \JsonSerializable {
 	 * @throws \TypeError if $newParentUsername is not a string
 	 **/
 	public function setParentUsername(string $newParentUsername): void {
+		//remove whitespace and validate parent name
+		$newParentUsername = trim($newParentUsername);
+		$newParentUsername = filter_var($newParentUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
 		if(empty($newParentUsername) === true) {
 			throw(new \InvalidArgumentException("username is empty"));
 		}
