@@ -98,9 +98,9 @@ class Kid implements \JsonSerializable {
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
 
-        // convert and store the Parent id
+        // convert and store the Kid id
         $this->kidId = $uuid;
-    } //end of setParentId function
+    } //end of setKidId function
 
     /**
      * accessor method for Kid Parent id
@@ -139,12 +139,12 @@ class Kid implements \JsonSerializable {
         return $this->kidAvatarUrl;
     } //end of getKidAvatarUrl function
 
-    /** Mutator method for avatar url
+    /* Mutator method for avatar url
          @param string $newKidAvatarUrl new value of avatar url
          @throws \InvalidArgumentException if $newKidAvatarUrl is not a valid url or insecure
          @throws \RangeException if $newKidAvatarUrl is > 255 characters
          @throws \TypeError if $newKidAvatarUrl is not a string
-        **/
+        */
 
     public function setKidAvatarUrl($newKidAvatarUrl): void {
         //verify url is secure
@@ -304,5 +304,4 @@ class Kid implements \JsonSerializable {
         $statement->execute($parameters);
     }//end of delete pdo method
 
-}//end of Parent class
-       }//end of Kid class
+}//end of Kid class
