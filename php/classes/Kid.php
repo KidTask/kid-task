@@ -44,7 +44,7 @@ class Kid implements \JsonSerializable {
     private $kidUsername;
 
     /**
-     * constructor for this Parent
+     * constructor for this Kid
      *
      * @param string|Uuid $newKidId The Kid's Id
      * @param string|Uuid $newKidParentId The Kid's Parent Id
