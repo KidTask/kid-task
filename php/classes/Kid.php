@@ -44,77 +44,53 @@ class Kid implements \JsonSerializable {
     private $kidUsername;
 
     /**
-     * @inheritDoc
-     */
-    public function jsonSerialize()
-    {
-        // TODO: Implement jsonSerialize() method.
-    }
-    /**
-     * constructor for this Tweet
+     * constructor for this Parent
      *
-     * @param string|Uuid $newkidId id of this Kid
-     * @param string|Uuid $newkidParentId id of the Kid's Parent
-     * @param string $newkidAvatarUrl The Kid's Avatar
-     * @param string|null $newkidHash hash for the kid
-     * @param string|null $newKidUsername The Kid's Username
+     * @param string|Uuid $newKidId The Kid's Id
+     * @param string|Uuid $newKidParentId The Kid's Parent Id
+     * @param $newKidAvatarUrl
+     * @param $newKidHash
+     * @param $newKidName
+     * @param $newKidUsername
      * @throws \InvalidArgumentException if data types are not valid
      * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
      * @throws \TypeError if data types violate type hints
      * @throws \Exception if some other exception occurs
      * @Documentation https://php.net/manual/en/language.oop5.decon.php
-     **/
-
-    /**
-     * mutator method for Kid Username
-     *
-     * @param string $newKidUsername new value of username
-     * @throws \InvalidArgumentException if the username is empty
-     * @throws \RangeException if $newParentUsername is > 32 characters
-     * @throws \TypeError if $newParentUsername is not a string
-     **/
-    public function setKidUsername(string $newKidUsername): void {
-        //remove whitespace and validate parent name
-        $newKidUsername = trim($newKidUsername);
-        $newKidUsername = filter_var($newKidUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        if(empty($newKidUsername) === true) {
-            throw(new \InvalidArgumentException("username is empty"));
-        }
-        // store the username
-        $this->kidUsername = $newKidUsername;
-    } // end of setKidUsername function
-
-    public function __construct($newkidId, $newkidParentId, string $newkidAvatarUrl, $newkidHash = null) {
+     */
+    public function __construct($newKidId, $newKidParentId, $newKidAvatarUrl, $newKidHash, $newKidName, $newKidUsername) {
         try {
-            $this->setkidId($newkidId);
-            $this->setkidParentId($newkidParentId);
-            $this->setkidAvatarUrl($newkidAvatarUrl);
-            $this->setkidHash($newkidHash);
+            $this->setKidId($newKidId);
+            $this->setKidParentId($newKidParentId);
+            $this->setKidAvatarUrl($newKidAvatarUrl);
+            $this->setKidHash($newKidHash);
+            $this->setKidName($newKidName);
+            $this->setKidUsername($newKidUsername);
         }
             //determine what exception type was thrown
         catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
             $exceptionType = get_class($exception);
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
-    }
+    } //end of construct function
 
     /**
-     * accessor method for kid id
+     * accessor method for Kid id
      *
-     * @return Uuid value of kid id
+     * @return Uuid value of Kid id (or null if new Profile)
      **/
     public function getKidId() : Uuid {
         return($this->kidId);
-    }
+    } //end of getKidId function
 
     /**
-     * mutator method for tweet id
+     * mutator method for Kid id
      *
-     * @param Uuid|string $newKidId new value of kid id
-     * @throws \RangeException if $newKidId is not positive
+     * @param Uuid|string $newKidId new value of Parent id
+     * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidId is not a uuid or string
      **/
-    public function setTweetId( $newKidId) : void {
+    public function setKidId($newKidId): void {
         try {
             $uuid = self::validateUuid($newKidId);
         } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -122,103 +98,158 @@ class Kid implements \JsonSerializable {
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
 
-        // convert and store the kid id
+        // convert and store the Parent id
         $this->kidId = $uuid;
-    }
+    } //end of setParentId function
 
     /**
-     * accessor method for kid parent id
+     * accessor method for Kid Parent id
      *
-     * @return Uuid value of kid parent id
+     * @return Uuid value of Kid Parent id (or null if new Profile)
      **/
-    public function getKidParentId() : Uuid{
+    public function getKidParentId() : Uuid {
         return($this->kidParentId);
-    }
+    } //end of getKidParentId function
 
     /**
-     * mutator method for kid parent id
+     * mutator method for Kid Parent id
      *
-     * @param string | Uuid $newkidParentId new value of tweet profile id
-     * @throws \RangeException if $newkidParentId is not positive
-     * @throws \TypeError if $newkidParentId is not an integer
+     * @param Uuid|string $newKidParentId new value of Parent id
+     * @throws \RangeException if $newAuthorId is not positive
+     * @throws \TypeError if $newKidParentId is not a uuid or string
      **/
-    public function setTweetProfileId( $newkidParentId) : void {
+    public function setkidParentId($newKidParentId): void {
         try {
-            $uuid = self::validateUuid($newkidParentId);
+            $uuid = self::validateUuid($newKidParentId);
         } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
             $exceptionType = get_class($exception);
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
 
-        // convert and store the profile id
+        // convert and store the Kid Parent id
         $this->kidParentId = $uuid;
-    }
+    } //end of setKidParentId function
 
     /**
-     * accessor method for Kid Avatar Url
+     * accessor method for Kid avatar url
      *
-     * @return string value of Kid Avatar Url
+     * @return string value of Kid avatar url
      **/
-    public function getkidAvatarUrl() : string {
-        return($this->kidAvatarUrl);
-    }
+    public function getKidAvatarUrl(): string {
+        return $this->kidAvatarUrl;
+    } //end of getKidAvatarUrl function
 
-    /**
-     * mutator method for Kid Avatar Url
-     *
-     * @param string $newkidAvatarUrl new value of tweet content
-     * @throws \InvalidArgumentException if $newkidAvatarUrl is not a string or insecure
-     * @throws \RangeException if $newkidAvatarUrl is > 140 characters
-     * @throws \TypeError if $newkidAvatarUrl is not a string
-     **/
-    public function setTweetContent(string $newkidAvatarUrl) : void {
-        // verify the tweet content is secure
-        $newkidAvatarUrl = trim($newkidAvatarUrl);
-        $newkidAvatarUrl = filter_var($newkidAvatarUrl, FILTER_VALIDATE_URL);
-        if(empty($newkidAvatarUrl) === true) {
-            throw(new \InvalidArgumentException("kid avatar url is empty or insecure"));
+    /** Mutator method for avatar url
+         @param string $newKidAvatarUrl new value of avatar url
+         @throws \InvalidArgumentException if $newKidAvatarUrl is not a valid url or insecure
+         @throws \RangeException if $newKidAvatarUrl is > 255 characters
+         @throws \TypeError if $newKidAvatarUrl is not a string
+        **/
+
+    public function setKidAvatarUrl($newKidAvatarUrl): void {
+        //verify url is secure
+        $newKidAvatarUrl = trim($newKidAvatarUrl);
+        $newKidAvatarUrl = filter_var($newKidAvatarUrl, FILTER_VALIDATE_URL);
+        if(empty($newKidAvatarUrl)===true) {
+            throw(new \InvalidArgumentException("url is empty or insecure"));
+        }
+        //verify url will fit database
+        if(strlen($newKidAvatarUrl) > 255) {
+            throw(new \RangeException("parent avatar url is too large"));
         }
 
-        // verify the tweet content will fit in the database
-        if(strlen($newkidAvatarUrl) > 140) {
-            throw(new \RangeException("kid avatar url too large"));
+        $this->kidAvatarUrl = $newKidAvatarUrl;
+    } //end of set avatar function
+
+
+    /**
+     * accessor method for KidHash
+     *
+     * @return string value of hash
+     */
+    public function getKidHash(): string {
+        return $this->kidHash;
+    } //end of getKidHash function
+
+    /**
+     * mutator method for Kid hash password
+     *
+     * @param string $newKidHash
+     * @throws \InvalidArgumentException if the hash is not secure
+     * @throws \RangeException if the hash is not 128 characters
+     * @throws \TypeError if profile hash is not a string
+     */
+    public function setKidHash(string $newKidHash): void {
+        //enforce that the hash is properly formatted
+        $newKidHash = trim($newKidHash);
+        if(empty($newKidHash) === true) {
+            throw(new \InvalidArgumentException("Parent password hash empty or insecure"));
         }
+        //enforce the hash is really an Argon hash
+        $newKidHash = password_get_info($newKidHash);
+        if($kidHashInfo["algoName"] !== "argon2i") {
+            throw(new \InvalidArgumentException("Parent hash is not a valid hash"));
+        }
+        //enforce that the hash is exactly 96 characters.
+        if(strlen($newKidHash) !== 96) {
+            throw(new \RangeException("Parent hash must be 96 characters"));
+        }
+        //store the hash
+        $this->kidHash = $newKidHash;
+    } //end of setKidHash function
 
-        // store the tweet content
-        $this->kidAvatarUrl = $newkidAvatarUrl;
-    }
-
-    /**
-     * accessor method for Kid Hash
+    /*
+     * Accessor method for kidName
      *
-     * @return \DateTime value of Kid Hash
-     **/
-    public function getkidHash() : \Null {
-        return($this->kidHash);
-    }
+     * @return string value of Name
+     */
+    public function getKidName(): string {
+        return $this->kidName;
+    }//end of getKidName method
 
-    /**
-     * mutator method for kid hash
+    /*
+     * mutator method for Name
      *
-     * @param \Null|string|null $newkidHash kid hash as a Null object or string (or null
-     * @throws \InvalidArgumentException if $newkidHash is not a valid object or string
-     * @throws \RangeException if $newkidHash is a null that does not exist
-     **/
-    public function setkidHash($newkidHash = null) : void {
-        if($newkidHash=== null) {
-            $this->kidHash = new \Null();
+     * @param string newKidName value of parent name
+     * @throws \RangeException if $new is > 255 characters
+     * @throws \TypeError if $newKidAvatarUrl is not a string
+     */
+    public function setKidName(string $newParentName): void {
+        if($newParentName === null) {
+            $this->kidName = null;
             return;
         }
-
-        // store the like date using the ValidateDate trait
-        try {
-            $newkidHash = self::($newkidHash);
-        } catch(\InvalidArgumentException | \RangeException $exception) {
-            $exceptionType = get_class($exception);
-            throw(new $exceptionType($exception->getMessage(), 0, $exception));
+        if(strlen($newKidName) > 255) {
+            throw(new \RangeException("Name is too large"));
         }
-        $this->kidHash = $newkidHash;
+
+        //store parent name
+        $this->kidName = $newKidName;
     }
+
+    /*
+    * @return string value of username
+    **/
+    public function getKidUsername(): string {
+        return $this->kidUsername;
+    } // end getKidUsername function
+
+    /**
+     * mutator method for Username
+     *
+     * @param string $newKidUsername new value of username
+     * @throws \InvalidArgumentException if the username is empty
+     * @throws \RangeException if $newKidUsername is > 32 characters
+     * @throws \TypeError if $newKidUsername is not a string
+     **/
+    public function setKidUsername(string $newKidUsername): void {
+        if(empty($newKidUsername) === true) {
+            throw(new \InvalidArgumentException("username is empty"));
+        }
+
+        // store the username
+        $this->kidUsername = $newKidUsername;
+    } // end of setKidUsername function
 
     /**
      * inserts this Kid into mySQL
@@ -230,14 +261,30 @@ class Kid implements \JsonSerializable {
     public function insert(\PDO $pdo) : void {
 
         // create query template
-        $query = "INSERT INTO kid(kidId,kidParentId, kidAvatarUrl, kidHash) VALUES(:kidId, :kidParentId, :kidAvatarUrl, :kidHash)";
+        $query = "INSERT INTO kid(kidId, kidParentId, kidAvatarUrl, kidHash, kidName, kidUsername) VALUES(:kidId, :kidParentId, :kidAvatarUrl, :kidHash, :kidName, :kidUsername)";
         $statement = $pdo->prepare($query);
 
         // bind the member variables to the place holders in the template
-        $parameters = ["kidId" => $this->kidId->getBytes(), "kidParentId" => $this->kidAvatarUrl->getBytes(), "Kid Avatar Url" => $this->kidAvatarUrl, "kidHash" => $kidHash];
+        $parameters = ["kidId" => $this->kidId->getBytes(), "kidParentId" => $this->kidParentId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
         $statement->execute($parameters);
-    }
+    }//end of pdo insert function
 
+    /**
+     * updates this Kid in mySQL
+     *
+     * @param \PDO $pdo PDO connection object
+     * @throws \PDOException when mySQL related errors occur
+     * @throws \TypeError if $pdo is not a PDO connection object
+     **/
+    public function update(\PDO $pdo) : void {
+
+        // create query template
+        $query = "UPDATE kid SET kidParentId = :kidParentId, kidAvatarUrl = :kidAvatarUrl, kidHash = :kidHash, kidName = :kidName, kidUsername = :kidUsername WHERE kidId = :kidId";
+        $statement = $pdo->prepare($query);
+
+        $parameters = ["kidId" => $this->kidId->getBytes(), "kidParentId" => $this->kidParentId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
+		$statement->execute($parameters);
+	}//end of update pdo method
 
     /**
      * deletes this Kid from mySQL
@@ -253,151 +300,9 @@ class Kid implements \JsonSerializable {
         $statement = $pdo->prepare($query);
 
         // bind the member variables to the place holder in the template
-        $parameters = ["tweetId" => $this->kidId->getBytes()];
+        $parameters = ["kidId" => $this->kidId->getBytes()];
         $statement->execute($parameters);
-    }
+    }//end of delete pdo method
 
-    /**
-     * updates this Kid in mySQL
-     *
-     * @param \PDO $pdo PDO connection object
-     * @throws \PDOException when mySQL related errors occur
-     * @throws \TypeError if $pdo is not a PDO connection object
-     **/
-    public function update(\PDO $pdo) : void {
-
-        // create query template
-        $query = "UPDATE kid SET kidId = :kidId, kidAvatarUrl = :kidAvatarUrl, kidHash = :kidHash WHERE kidId = :kidId";
-        $statement = $pdo->prepare($query);
-
-
-        $parameters = ["kidId" => $this->kidId->getBytes(),"kidParentId" => $this->kidParentId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $kidHash];
-        $statement->execute($parameters);
-    }
-
-    /**
-     * gets the Kid by kidId
-     *
-     * @param \PDO $pdo PDO connection object
-     * @param Uuid|string $kidId tweet id to search for
-     * @return Kid|null Kid found or null if not found
-     * @throws \PDOException when mySQL related errors occur
-     * @throws \TypeError when a variable are not the correct data type
-     **/
-    public static function getKidByKidId(\PDO $pdo, $kidId) : ?Kid {
-        // sanitize the kidId before searching
-        try {
-            $kidId = self::validateUuid($kidId);
-        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-            throw(new \PDOException($exception->getMessage(), 0, $exception));
-        }
-
-        // create query template
-        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidHash FROM kid WHERE kidId = :kidId";
-        $statement = $pdo->prepare($query);
-
-        // bind the tweet id to the place holder in the template
-        $parameters = ["kid" => $kidId->getBytes()];
-        $statement->execute($parameters);
-
-        // grab the kid from mySQL
-        try {
-            $kidId = null;
-            $statement->setFetchMode(\PDO::FETCH_ASSOC);
-            $row = $statement->fetch();
-            if($row !== false) {
-                $tweet = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidHash"]);
-            }
-        } catch(\Exception $exception) {
-            // if the row couldn't be converted, rethrow it
-            throw(new \PDOException($exception->getMessage(), 0, $exception));
-        }
-        return($kid);
-    }
-
-    /**
-     * gets the Kid by kid parent id
-     *
-     * @param \PDO $pdo PDO connection object
-     * @param Uuid|string $tweetProfileId profile id to search by
-     * @return \SplFixedArray SplFixedArray of Tweets found
-     * @throws \PDOException when mySQL related errors occur
-     * @throws \TypeError when variables are not the correct data type
-     **/
-    public static function getKidByKidParentId(\PDO $pdo, $tweetProfileId) : \SplFixedArray {
-
-        try {
-            $kidParentId = self::validateUuid($kidParentId);
-        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-            throw(new \PDOException($exception->getMessage(), 0, $exception));
-        }
-
-        // create query template
-        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidHash FROM kid WHERE kidParentId = :kidParentId";
-        $statement = $pdo->prepare($query);
-        // bind the tweet profile id to the place holder in the template
-        $parameters = ["kidParentId" => $kidParentId->getBytes()];
-        $statement->execute($parameters);
-        // build an array of tweets
-        $kid = new \SplFixedArray($statement->rowCount());
-        $statement->setFetchMode(\PDO::FETCH_ASSOC);
-        while(($row = $statement->fetch()) !== false) {
-            try {
-                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidHash"]);
-                $kid[$kid->key()] = $kid;
-                $kid->next();
-            } catch(\Exception $exception) {
-                // if the row couldn't be converted, rethrow it
-                throw(new \PDOException($exception->getMessage(), 0, $exception));
-            }
-        }
-        return($kid);
-    }
-
-    /**
-     * gets all Kids
-     *
-     * @param \PDO $pdo PDO connection object
-     * @return \SplFixedArray SplFixedArray of Tweets found or null if not found
-     * @throws \PDOException when mySQL related errors occur
-     * @throws \TypeError when variables are not the correct data type
-     **/
-    public static function getAllKids(\PDO $pdo) : \SPLFixedArray {
-        // create query template
-        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidHash FROM kid";
-        $statement = $pdo->prepare($query);
-        $statement->execute();
-
-        // build an array of tweets
-        $kids = new \SplFixedArray($statement->rowCount());
-        $statement->setFetchMode(\PDO::FETCH_ASSOC);
-        while(($row = $statement->fetch()) !== false) {
-            try {
-                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidHash"]);
-                $kids[$kids->key()] = $kid;
-                $kids->next();
-            } catch(\Exception $exception) {
-                // if the row couldn't be converted, rethrow it
-                throw(new \PDOException($exception->getMessage(), 0, $exception));
-            }
-        }
-        return ($kids);
-    }
-
-    /**
-     * formats the state variables for JSON serialization
-     *
-     * @return array resulting state variables to serialize
-     **/
-    public function jsonSerialize() : array {
-        $fields = get_object_vars($this);
-
-        $fields["kidId"] = $this->kidId->toString();
-        $fields["kidParentId"] = $this->kidParentId->toString();
-
-        //format the hash so that the front end can consume it
-        $fields["kidHash"] = round(floatval($this->kidHash->format("U.u")) * 1000);
-        return($fields);
-    }
-}
-     }//end of Kid class
+}//end of Parent class
+       }//end of Kid class
