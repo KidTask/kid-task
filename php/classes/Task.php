@@ -76,8 +76,8 @@ class Task {
 	 * constructor for this Author
 	 *
 	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
-	 * @param string|Uuid $newTaskParentId id of the Parent making task
 	 * @param string|Uuid $newTaskKidId id if the Kid that has task
+	 * @param string|Uuid $newTaskParentId id of the Parent making task
 	 * @param string $newTaskContent string containing task content
 	 * @param \DateTime|string|null $newTaskDueDate date and time Task is due
 	 * @param Tinyint|null $newTaskIsComplete tiny int to show task if Task is complete
@@ -88,12 +88,12 @@ class Task {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct($newTaskId, $newTaskParentId, $newTaskKidId, $newTaskContent, $newTaskDueDate,
+	public function __construct($newTaskId, $newTaskKidId, $newTaskParentId, $newTaskContent, $newTaskDueDate,
 										 $newTaskIsComplete, $newTaskReward = null) {
 		try {
 			$this->setTaskId($newTaskId);
-			$this->setTaskParentId($newTaskParentId);
 			$this->setTaskKidId($newTaskKidId);
+			$this->setTaskParentId($newTaskParentId);
 			$this->setTaskContent($newTaskContent);
 			$this->setTaskDueDate($newTaskDueDate);
 			$this->setTaskIsComplete($newTaskIsComplete);
