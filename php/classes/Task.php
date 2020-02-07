@@ -341,4 +341,45 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 	}
 
 
+	/**
+	 * updates this Task in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		// create query template
+		$query = "UPDATE task SET taskParentId = :taskParentId, taskKidId = :taskKidId, 
+    taskContent = :taskContent, taskDueDate = :taskDueDate, taskIsComplete = :taskIsComplete, taskReward = :taskReward WHERE taskId = :taskId";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["taskId" => $this->taskId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(), "taskKidId" => $this->taskKidId,
+			"taskContent" => $this->taskContent->getBytes(), "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->getBytes(),
+			"taskReward" => $this->taskReward->getBytes() ];
+		$statement->execute($parameters);
+	}//end of update pdo method
+
+	/**
+	 * deletes this Task from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
+
+		// create query template
+		$query = "DELETE FROM task WHERE taskId = :taskId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holder in the template
+		$parameters = ["taskId" => $this->taskId->getBytes()];
+		$statement->execute($parameters);
+	}//end of delete pdo method
+
+
+
+
 }
