@@ -449,7 +449,7 @@ class Parent implements \JsonSerializable {
 		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentActivationToken = :parentActivationToken";
 		$statement = $pdo->prepare($query);
 
-		// bind the parent id to the place holder in the template
+		// bind the parent activation token to the place holder in the template
 		$parameters = ["parentActivationToken" => $parentActivationToken];
 		$statement->execute($parameters);
 
@@ -466,87 +466,17 @@ class Parent implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return($parent);
-	} // end of getParentByParentId
-
-	/**
-	 * gets the Parent by parentId
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $parentId parent id to search for
-	 * @return Parent|null Parent found or null if not found
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when a variable are not the correct data type
-	 **/
-	public static function getParentByParentId(\PDO $pdo, $parentId) : ?Parent {
-		// sanitize the parentId before searching
-		try {
-			$parentId = self::validateUuid($parentId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
-		}
-
-		// create query template
-		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentId = :parentId";
-		$statement = $pdo->prepare($query);
-
-		// bind the parent id to the place holder in the template
-		$parameters = ["parentId" => $parentId->getBytes()];
-		$statement->execute($parameters);
-
-		// grab the parent from mySQL
-		try {
-			$parent = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
-				$parent = new Parent($row["parentId"], $row["parentActivationToken"], $row["parentAvatarUrl"], $row["parentCloudinaryToken"], $row["parentEmail"], $row["parentHash"], $row["parentName"], $row["parentUsername"]);
-			}
-		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
-		}
-		return($parent);
-	} // end of getParentByParentId
-
-	/**
-	 * gets the Parent by parentActivationToken
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $parentId parent id to search for
-	 * @return Parent|null Parent found or null if not found
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError when a variable are not the correct data type
-	 **/
-	public static function getParentByParentActivationToken(\PDO $pdo, $parentActivationToken) : ?Parent {
-		// sanitize the parentActivationToken before searching
-		$parentActivationToken = strtolower(trim($parentActivationToken));
-		if(ctype_xdigit($parentActivationToken) === false) {
-			throw(new\RangeException("user activation is not valid"));
-		}
-
-		// create query template
-		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentActivationToken = :parentActivationToken";
-		$statement = $pdo->prepare($query);
-
-		// bind the parent id to the place holder in the template
-		$parameters = ["parentActivationToken" => $parentActivationToken];
-		$statement->execute($parameters);
-
-		// grab the parent from mySQL
-		try {
-			$parent = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
-				$parent = new Parent($row["parentId"], $row["parentActivationToken"], $row["parentAvatarUrl"], $row["parentCloudinaryToken"], $row["parentEmail"], $row["parentHash"], $row["parentName"], $row["parentUsername"]);
-			}
-		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
-		}
-		return($parent);
 	} // end of getParentByActivationToken
 
+	/**
+	 * gets the Parent by parentUsername
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $parentUsername parent username to search for
+	 * @return Parent|null Parent found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
 	public static function getParentByParentUsername(\PDO $pdo, $parentUsername) : ?Parent {
 		//trim and sanitize username
 		$parentUsername = strtolower(trim($parentUsername));
