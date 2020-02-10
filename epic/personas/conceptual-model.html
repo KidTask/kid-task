@@ -20,35 +20,41 @@
 <h2>PARENT</h2>
 <p>parentId (primary key)<br>
 	parentActivationToken (for account verification)<br>
-	parentUsername<br>
+	parentAvatarUrl <br>
+	parentCloudinaryToken <br>
 	parentEmail<br>
-	parentHash(for account password)
+	parentHash(for account password) <br>
+	parentName <br>
+	parentUsername<br>
 </p>
 
 <h2>KID</h2>
 <p>kidId (primary key)<br>
 	kidParentId (foreign key)<br>
-	kidUsername<br>
-	kidName <br>
 	kidAvatarUrl <br>
-	kidHash<br>
+	kidCloudinaryToken
+	kidHash <br>
+	kidName <br>
+	kidUsername<br>
 </p>
 
 <h2>TASK</h2>
 <p>taskId (primary key)<br>
-	taskParentId (foreign key)<br>
 	taskKidId (foreign key)<br>
+	taskParentId (foreign key)<br>
+	taskAvatarUrl <br>
+	taskCloudinaryToken <br>
 	taskContent<br>
-	taskIsDue<br>
-	taskReward<br>
+	taskDueDate<br>
 	taskIsComplete <br>
+	taskReward<br>
 </p>
 
 <h2>STEPS</h2>
 <p>stepId (primary key) <br>
 	stepTaskId (foreign key) <br>
+	stepContent <br>
 	stepOrder <br>
-	stepContent
 </p>
 
 <h1>Relations</h1>
