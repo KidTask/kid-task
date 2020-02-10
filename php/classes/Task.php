@@ -633,5 +633,4 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 		return($fields);
 	}
 
-
 }
