@@ -433,7 +433,9 @@ class Parent implements \JsonSerializable {
 	public static function getParentByParentUsername(\PDO $pdo, $parentUsername) : ?Parent {
 		//trim and sanitize username
 		$parentUsername = strtolower(trim($parentUsername));
-		if()
+		$parentUsername = filter_var($parentUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+
 
 	}  //end of getParentByParentUsername
 
