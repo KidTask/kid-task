@@ -213,7 +213,6 @@ class Step implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 	public function delete(\PDO $pdo) : void {
-
 		// create query template
 		$query = "DELETE FROM step WHERE stepId = :stepId";
 		$statement = $pdo->prepare($query);
@@ -223,8 +222,45 @@ class Step implements \JsonSerializable {
 		$statement->execute($parameters);
 	} // end of delete pdo
 
+	/**
+	 * gets the Parent by parentId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $parentId parent id to search for
+	 * @return Parent|null Parent found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getStepBySteptId(\PDO $pdo, $stepId) : ?Step {
+		// sanitize the stepId before searching
+		try {
+			$stepId = self::validateUuid($stepId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
 
+		// create query template
+		$query = "SELECT stepId, stepTaskId, stepContent, stepOrder FROM step WHERE stepId = :stepId";
+		$statement = $pdo->prepare($query);
 
+		// bind the step id to the place holder in the template
+		$parameters = ["stepId" => $stepId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the parent from mySQL
+		try {
+			$step = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$step = new Step($row["stepId"], $row["stepTaskId"], $row["stepContent"], $row["stepOrder"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($step);
+	} // end of getStepByStepId
 
 	/**
 	 * formats the state variables for JSON serialization
@@ -234,7 +270,7 @@ class Step implements \JsonSerializable {
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
-		$fields["authorId"] = $this->authorId->toString();
+		$fields["stepId"] = $this->stepId->toString();
 
 		return($fields);
 	} //end of json function
