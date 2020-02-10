@@ -131,6 +131,9 @@ class Step implements \JsonSerializable {
 	 * @throws \TypeError if $newStepContent is not a string
 	 **/
 	public function setStepContent(string $newStepContent): void {
+		//validate content is secure
+		$newStepContent = trim($newStepContent);
+		$newStepContent = filter_var($newStepContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newStepContent) === true) {
 			throw(new \InvalidArgumentException("content is empty"));
 		}
@@ -142,10 +145,133 @@ class Step implements \JsonSerializable {
 		$this->stepContent = $newStepContent;
 	} // end of setStepContent function
 
+	/**
+	 * accessor method for step order
+	 *
+	 * @return int value of stepOrder
+	 **/
 	public function getStepOrder: int {
 		return $this->stepOrder;
-	}
+	}//end of getStepOrder
 
+	/**
+	 * mutator method for step order
+	 *
+	 * @param int $newStepOrder new value of step order
+	 * @throws \RangeException if 0 < $newStepOrder > 15
+	 **/
+	public function setStepOrder(int $newStepOrder) : void {
+		if(!($newStepOrder >= 0 || $newStepOrder < 16)){
+			throw(new \RangeException("too many steps added"));
+		}
 
+		// store the content
+		$this->stepOrder = $newStepOrder;
+	}//end of setStepOrder
 
+	/**
+	 * inserts this Step into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
+
+		// create query template
+		$query = "INSERT INTO step(stepId, stepTaskId, stepContent, stepOrder) VALUES(:stepId, :stepTaskId, :stepContent, :stepOrder)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = ["stepId" => $this->stepId->getBytes(), "stepTaskId" => $this->stepTaskId->getBytes(), "stepContent" => $this->stepContent, "stepOrder" => $this->stepOrder];
+		$statement->execute($parameters);
+	}// end of insert pdo
+
+	/**
+	 * Updates this Step into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		// create query template
+		$query = "UPDATE step SET stepId = :stepId, stepTaskId = :stepTaskId, stepContent = :stepContent, stepOrder = :stepOrder WHERE stepId = :stepId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = ["stepId" => $this->stepId->getBytes(), "stepTaskId" => $this->stepTaskId->getBytes(), "stepContent" => $this->stepContent, "stepOrder" => $this->stepOrder];
+		$statement->execute($parameters);
+	}// end of update pdo
+
+	/**
+	 * deletes this Step from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
+		// create query template
+		$query = "DELETE FROM step WHERE stepId = :stepId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holder in the template
+		$parameters = ["stepId" => $this->stepId->getBytes()];
+		$statement->execute($parameters);
+	} // end of delete pdo
+
+	/**
+	 * gets the Step by stepId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $stepId step id to search for
+	 * @return Step|null Step found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getStepBySteptId(\PDO $pdo, $stepId) : ?Step {
+		// sanitize the stepId before searching
+		try {
+			$stepId = self::validateUuid($stepId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT stepId, stepTaskId, stepContent, stepOrder FROM step WHERE stepId = :stepId";
+		$statement = $pdo->prepare($query);
+
+		// bind the step id to the place holder in the template
+		$parameters = ["stepId" => $stepId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the step from mySQL
+		try {
+			$step = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$step = new Step($row["stepId"], $row["stepTaskId"], $row["stepContent"], $row["stepOrder"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($step);
+	} // end of getStepByStepId
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["stepId"] = $this->stepId->toString();
+
+		return($fields);
+	} //end of json function
 }//end of Step class

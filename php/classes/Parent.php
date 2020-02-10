@@ -12,38 +12,43 @@ class Parent implements \JsonSerializable {
 	use ValidateUuid;
 	/*
 	 * id for this Parent; this is the primary key
-	 * @var Uuid $ParentId
+	 * @var Uuid $parentId
 	 */
 	private $parentId;
 	/*
 	 * activation token for this Parent
-	 * @var $ParentActivationToken
+	 * @var $parentActivationToken
 	 */
 	private $parentActivationToken;
 	/*
 	 * avatar url for this Parent
-	 * @var string $ParentAvatarUrl
+	 * @var string $parentAvatarUrl
 	 */
 	private $parentAvatarUrl;
 	/*
+	 * cloudinary token for this Parent
+	 * @var string $parentCloudinaryToken
+	 */
+	private $parentCloudinaryToken;
+	/*
 	 * email for this Parent; unique
-	 * @var string $ParentEmail
+	 * @var string $parentEmail
 	 */
 	private $parentEmail;
 	/*
 	 * State variable containing the Hash of Parent in question
-	 * @var $ParentHash
+	 * @var $parentHash
 	 */
 	private $parentHash;
 	/*
 	 * name of this Parent
-	 * @var $ParentName
+	 * @var $parentName
 	 */
 	private $parentName;
 	/*
 		 * State variable containing the Username of Parent in question
 		 * Unique
-		 * @var string $ParentUsername
+		 * @var string $parentUsername
 		 */
 	private $parentUsername;
 
@@ -53,6 +58,7 @@ class Parent implements \JsonSerializable {
 	 * @param string|Uuid $newParentId id of this Parent or null if a new Parent
 	 * @param $newParentActivationToken
 	 * @param $newParentAvatarUrl
+	 * @param $newParentCLoudinaryToken
 	 * @param $newParentEmail
 	 * @param $newParentHash
 	 * @param $newParentName
@@ -63,11 +69,12 @@ class Parent implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-	public function __construct($newParentId, $newParentActivationToken, $newParentAvatarUrl, $newParentEmail, $newParentHash, $newParentName, $newParentUsername) {
+	public function __construct($newParentId, $newParentActivationToken, $newParentAvatarUrl, $newParentCloudinaryToken, $newParentEmail, $newParentHash, $newParentName, $newParentUsername) {
 		try {
 			$this->setParentId($newParentId);
 			$this->setParentActivationToken($newParentActivationToken);
 			$this->setParentAvatarUrl($newParentAvatarUrl);
+			$this->setParentCloudinaryToken($newParentCloudinaryToken);
 			$this->setParentEmail($newParentEmail);
 			$this->setParentHash($newParentHash);
 			$this->setParentName($newParentName);
@@ -170,6 +177,36 @@ class Parent implements \JsonSerializable {
 
 		$this->parentAvatarUrl = $newParentAvatarUrl;
 	} //end of set avatar function
+
+	/**
+	 * accessor method for Parent cloudinary Token
+	 *
+	 * @return string value of Parent cloudinary token
+	 **/
+	public function getParentCloudinaryToken(): string {
+		return $this->parentCloudinaryToken;
+	} //end of getParentCloudinaryToken function
+
+	/* Mutator method for avatar url
+		 @param string $newParentCloudinaryToken new value of avatar url
+		 @throws \InvalidArgumentException if $newParentCloudinaryToken is insecure
+		 @throws \RangeException if $newParentCloudinaryToken is > 255 characters
+		 @throws \TypeError if $newParentCloudinaryToken is not a string
+		*/
+	public function setParentCloudinaryToken($newParentCloudinaryToken): void {
+		//verify string is secure
+		$newParentCloudinaryToken = trim($newParentCloudinaryToken);
+		$newParentCloudinaryToken = filter_var($newParentCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newParentCloudinaryToken)===true) {
+			throw(new \InvalidArgumentException("token is insecure"));
+		}
+		//verify url will fit database
+		if(strlen($newParentCloudinaryToken) > 255) {
+			throw(new \RangeException("parent cloudinary token is too large"));
+		}
+
+		$this->parentCloudinaryToken = $newParentCloudinaryToken;
+	} //end of setParentCloudinaryToken function
 
 	/*
 		 *@return string value of email
@@ -308,11 +345,11 @@ class Parent implements \JsonSerializable {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO parent(parentId, parentActivationToken, parentAvatarUrl, parentEmail, parentHash, parentName, parentUsername) VALUES(:parentId, :parentActivationToken, :parentAvatarUrl, :parentEmail, :parentHash, :parentName, :parentUsername)";
+		$query = "INSERT INTO parent(parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername) VALUES(:parentId, :parentActivationToken, :parentAvatarUrl, :parentCloudinaryToken, :parentEmail, :parentHash, :parentName, :parentUsername)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["parentId" => $this->parentId->getBytes(), "parentActivationToken" => $this->parentActivationToken, "parentAvatarUrl" => $this->parentAvatarUrl, "parentEmail" => $this->parentEmail, "parentHash" => $this->parentHash, "parentName" => $this->parentName, "parentUsername" => $this->parentUsername];
+		$parameters = ["parentId" => $this->parentId->getBytes(), "parentActivationToken" => $this->parentActivationToken, "parentAvatarUrl" => $this->parentAvatarUrl, "parentCloudinaryToken" => $this->parentCloudinaryToken, "parentEmail" => $this->parentEmail, "parentHash" => $this->parentHash, "parentName" => $this->parentName, "parentUsername" => $this->parentUsername];
 		$statement->execute($parameters);
 	}//end of pdo insert function
 
@@ -431,4 +468,127 @@ class Parent implements \JsonSerializable {
 		return($parent);
 	} // end of getParentByParentId
 
+	/**
+	 * gets the Parent by parentId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $parentId parent id to search for
+	 * @return Parent|null Parent found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getParentByParentId(\PDO $pdo, $parentId) : ?Parent {
+		// sanitize the parentId before searching
+		try {
+			$parentId = self::validateUuid($parentId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentId = :parentId";
+		$statement = $pdo->prepare($query);
+
+		// bind the parent id to the place holder in the template
+		$parameters = ["parentId" => $parentId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the parent from mySQL
+		try {
+			$parent = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$parent = new Parent($row["parentId"], $row["parentActivationToken"], $row["parentAvatarUrl"], $row["parentCloudinaryToken"], $row["parentEmail"], $row["parentHash"], $row["parentName"], $row["parentUsername"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($parent);
+	} // end of getParentByParentId
+
+	/**
+	 * gets the Parent by parentActivationToken
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $parentId parent id to search for
+	 * @return Parent|null Parent found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getParentByParentActivationToken(\PDO $pdo, $parentActivationToken) : ?Parent {
+		// sanitize the parentActivationToken before searching
+		$parentActivationToken = strtolower(trim($parentActivationToken));
+		if(ctype_xdigit($parentActivationToken) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+
+		// create query template
+		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentActivationToken = :parentActivationToken";
+		$statement = $pdo->prepare($query);
+
+		// bind the parent id to the place holder in the template
+		$parameters = ["parentActivationToken" => $parentActivationToken];
+		$statement->execute($parameters);
+
+		// grab the parent from mySQL
+		try {
+			$parent = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$parent = new Parent($row["parentId"], $row["parentActivationToken"], $row["parentAvatarUrl"], $row["parentCloudinaryToken"], $row["parentEmail"], $row["parentHash"], $row["parentName"], $row["parentUsername"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($parent);
+	} // end of getParentByActivationToken
+
+	public static function getParentByParentUsername(\PDO $pdo, $parentUsername) : ?Parent {
+		//trim and sanitize username
+		$parentUsername = strtolower(trim($parentUsername));
+		$parentUsername = filter_var($parentUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($parentUsername) === true) {
+			throw(new \PDOException("parent Username type is empty of invalid"));
+		}
+		// escape mySQL wild cards
+		$parentUsername = str_replace("_", "\\_", str_replace("%", "\\%", $parentUsername));
+
+		// create query template
+		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentUsername = :parentUsername";
+		$statement = $pdo->prepare($query);
+
+		// bind the parent username to the place holder in the template
+		$parameters = ["parentUsername" => $parentUsername];
+		$statement->execute($parameters);
+
+		// grab the parent from mySQL
+		try {
+			$parent = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$parent = new Parent($row["parentId"], $row["parentActivationToken"], $row["parentAvatarUrl"], $row["parentCloudinaryToken"], $row["parentEmail"], $row["parentHash"], $row["parentName"], $row["parentUsername"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($parent);
+	}  //end of getParentByParentUsername
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+		$fields["parentId"] = $this->parentId->toString();
+
+		return($fields);
+	} //end of jsonSerialize
 }//end of Parent class
