@@ -223,11 +223,11 @@ class Step implements \JsonSerializable {
 	} // end of delete pdo
 
 	/**
-	 * gets the Parent by parentId
+	 * gets the Step by stepId
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $parentId parent id to search for
-	 * @return Parent|null Parent found or null if not found
+	 * @param Uuid|string $stepId step id to search for
+	 * @return Step|null Step found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
@@ -247,7 +247,7 @@ class Step implements \JsonSerializable {
 		$parameters = ["stepId" => $stepId->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the parent from mySQL
+		// grab the step from mySQL
 		try {
 			$step = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
