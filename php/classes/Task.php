@@ -31,19 +31,29 @@ class Task {
 	 **/
 	private $taskId;
 
+	/**
+	 * kid id for this Task; this is a foreign key
+	 * @var Uuid $taskKidId
+	 **/
+	private $taskKidId;
 
 	/**
-	 * id for this Task; this is the foreign key
+	 * parent id for this Task; this is the foreign key
 	 * @var Uuid $taskParentId
 	 **/
 	private $taskParentId;
 
 	/**
-	 * id for this Task; this is a foreign key
-	 * @var Uuid $taskKidId
+	 * avatar for this Task;
+	 * @var Uuid $taskAvatarUrl
 	 **/
-	private $taskKidId;
+	private $taskAvatarUrl;
 
+	/**
+	 * id for this avatar from cloudinary Task;
+	 * @var Uuid $taskCloudinaryToken
+	 **/
+	private $taskCloudinaryToken;
 
 	/**
 	 * task content
@@ -58,10 +68,11 @@ class Task {
 	private $taskDueDate;
 
 	/**
-	 * email for this Author; this is a unique index
+	 * tinyint showing progress of task
 	 * @var Tinyint $taskIsComplete
 	 **/
 	private $taskIsComplete;
+
 	/**
 	 * reward for Task
 	 * @var $taskReward
@@ -77,6 +88,8 @@ class Task {
 	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
 	 * @param string|Uuid $newTaskKidId id if the Kid that has task
 	 * @param string|Uuid $newTaskParentId id of the Parent making task
+	 * @param string|null $newTaskAvatarUrl avatar URL of task
+	 * @param string|null $newTaskCloudinaryToken id of avatar image for task
 	 * @param string $newTaskContent string containing task content
 	 * @param \DateTime|string|null $newTaskDueDate date and time Task is due
 	 * @param Tinyint|null $newTaskIsComplete tiny int to show task if Task is complete
@@ -87,12 +100,14 @@ class Task {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct($newTaskId, $newTaskKidId, $newTaskParentId, $newTaskContent, $newTaskDueDate,
-										 $newTaskIsComplete, $newTaskReward = null) {
+	public function __construct($newTaskId, $newTaskKidId, $newTaskParentId, $newTaskAvatarUrl, $newTaskCloudinaryToken,
+										 $newTaskContent, $newTaskDueDate, $newTaskIsComplete, $newTaskReward = null) {
 		try {
 			$this->setTaskId($newTaskId);
 			$this->setTaskKidId($newTaskKidId);
 			$this->setTaskParentId($newTaskParentId);
+			$this->setTaskAvatarUrl($newTaskAvatarUrl);
+			$this->setTaskCloudinaryToken($newTaskCloudinaryToken);
 			$this->setTaskContent($newTaskContent);
 			$this->setTaskDueDate($newTaskDueDate);
 			$this->setTaskIsComplete($newTaskIsComplete);
@@ -132,6 +147,35 @@ class Task {
 		$this->taskId = $uuid;
 	}
 
+
+	/**
+	 * accessor method for task kid id
+	 *
+	 * @return Uuid value of task kid id (or null if new Task)
+	 **/
+	public function getTaskKidId(): Uuid {
+		return ($this->taskKidId);
+	}
+
+	/**
+	 * mutator method for task kid id
+	 *
+	 * @param Uuid| string $newTaskKidId value of new task kid id
+	 * @throws \RangeException if $newTaskKidId is not positive
+	 * @throws \TypeError if the task kid Id is not
+	 **/
+	public function setTaskKidId($newTaskKidId): void {
+		try {
+			$uuid = self::validateUuid($newTaskKidId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store the task kid id
+		$this->taskKidId = $uuid;
+	}
+
+
 	/**
 	 * accessor method for task by parent id
 	 *
@@ -159,31 +203,77 @@ class Task {
 		$this->taskParentId = $uuid;
 	}
 
+
 	/**
-	 * accessor method for task kid id
+	 * accessor method for task avatar url
 	 *
-	 * @return Uuid value of task kid id (or null if new Task)
-	 **/
-	public function getTaskKidId(): Uuid {
-		return ($this->taskKidId);
+	 * @return string value of the task avatar url
+	 */
+	public function getTaskAvatarUrl(): string {
+		return ($this->taskAvatarUrl);
 	}
 
 	/**
-	 * mutator method for task kid id
+	 * mutator method for task avatar url
 	 *
-	 * @param Uuid| string $newTaskKidId value of new task kid id
-	 * @throws \RangeException if $newTaskKidId is not positive
-	 * @throws \TypeError if the task kid Id is not
-	 **/
-	public function setTaskKidId($newTaskKidId): void {
-		try {
-			$uuid = self::validateUuid($newTaskKidId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+	 * @param string $newTaskAvatarUrl new value of task avatar url
+	 * @throws \InvalidArgumentException  if the task avatar is not a string or insecure
+	 * @throws \RangeException if the string is not less than 1000 characters
+	 * @throws \TypeError if the task content is not a string
+	 */
+	public function setTaskAvatarUrl(string $newTaskAvatarUrl): void {
+		$newTaskAvatarUrl = trim($newTaskAvatarUrl);
+		$newTaskAvatarUrl = filter_var($newTaskAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newTaskAvatarUrl) === true) {
+			$this->taskAvatarUrl = null;
+			return;
 		}
-		// convert and store the task kid id
-		$this->taskKidId = $uuid;
+		$newTaskAvatarUrl = strtolower(trim($newTaskAvatarUrl));
+		if(ctype_xdigit($newTaskAvatarUrl) === false) {
+			throw(new\RangeException("task avatar url is not valid"));
+		}
+		//make sure user activation token is only 1000 characters
+		if(strlen($newTaskAvatarUrl) > 1000) {
+			throw(new\RangeException("task avatar url has to be less than 1000"));
+		}
+		$this->taskAvatarUrl = $newTaskAvatarUrl;
+	}
+
+
+
+	/**
+	 * accessor method for task Cloudinary token
+	 *
+	 * @return string value of the task cloudinary token
+	 */
+	public function getTaskCloudinaryToken(): string {
+		return ($this->taskCloudinaryToken);
+	}
+
+	/**
+	 * mutator method for task cloudinary token
+	 *
+	 * @param string $newTaskCloudinaryToken new value of task cloudinary token
+	 * @throws \InvalidArgumentException  if the task cloudinary token is not a string or insecure
+	 * @throws \RangeException if the string is not less than 1000 characters
+	 * @throws \TypeError if the task content is not a string
+	 */
+	public function setTaskCloudinaryToken(string $newTaskCloudinaryToken): void {
+		$newTaskCloudinaryToken = trim($newTaskCloudinaryToken);
+		$newTaskCloudinaryToken = filter_var($newTaskCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newTaskCloudinaryToken) === true) {
+			$this->taskCloudinaryToken = null;
+			return;
+		}
+		$newTaskCloudinaryToken = strtolower(trim($newTaskCloudinaryToken));
+		if(ctype_xdigit($newTaskCloudinaryToken) === false) {
+			throw(new\RangeException("task cloudinary token is not valid"));
+		}
+		//make sure user activation token is only 1000 characters
+		if(strlen($newTaskCloudinaryToken) > 1000) {
+			throw(new\RangeException("task cloudinary token has to be less than 1000"));
+		}
+		$this->taskCloudinaryToken = $newTaskCloudinaryToken;
 	}
 
 
@@ -330,13 +420,14 @@ class Task {
 	public function insert(\PDO $pdo): void {
 
 		// create query template
-		$query = "INSERT INTO task(taskId,taskKidId ,taskParentId, taskContent, taskDueDate, taskIsComplete, taskReward) 
-VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsComplete, :taskReward)";
+		$query = "INSERT INTO task(taskId,taskKidId ,taskParentId, taskAvataryUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward) 
+VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken,  :taskContent, :taskDueDate, :taskIsComplete, :taskReward)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->taskDueDate->format("Y-m-d H:i:s.u");
 		$parameters = ["taskId" => $this->taskId->getBytes(), "taskKidId" => $this->taskKidId, "taskParentId" => $this->taskParentId->getBytes(),
+			"taskAvatarUrl" => $this->taskAvatarUrl, "taskCloudinaryToken" => $this->taskCloudinaryToken,
 			"taskContent" => $this->taskContent->, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->(),
 			"taskReward" => $this->taskReward ];
 		$statement->execute($parameters);
@@ -354,10 +445,12 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 
 		// create query template
 		$query = "UPDATE task SET  taskKidId = :taskKidId, taskParentId = :taskParentId,
+    taskAvatarUrl = :taskAvatarUrl, taskCloudinaryToken = :taskCloudinaryToken,
     taskContent = :taskContent, taskDueDate = :taskDueDate, taskIsComplete = :taskIsComplete, taskReward = :taskReward WHERE taskId = :taskId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["taskId" => $this->taskId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(), "taskKidId" => $this->taskKidId,
+		$parameters = ["taskId" => $this->taskId->getBytes(), "taskKidId" => $this->taskKidId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(),
+			"taskAvatarUrl" => $this->taskAvatarUrl, "taskCloudinaryToken" =>$this->taskCloudinaryToken,
 			"taskContent" => $this->taskContent->, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->,
 			"taskReward" => $this->taskReward->];
 		$statement->execute($parameters);
@@ -399,7 +492,7 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT taskId,taskKidId ,taskParentId, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskKidId = :taskKidId";
+		$query = "SELECT taskId,taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskKidId = :taskKidId";
 		$statement = $pdo->prepare($query);
 
 		// bind the task kid id to the place holder in the template
@@ -412,7 +505,8 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$tasks = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"], $row["taskContent"] , $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
+				$tasks = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"],
+					$row["taskAvatarUrl"], $row["taskCloudinaryToken"], $row["taskContent"] , $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -444,7 +538,7 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 		$taskContent = str_replace("_", "\\_", str_replace("%", "\\%", $taskContent));
 
 		// create query template
-		$query = "SELECT taskId,taskKidId ,taskParentId, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent = :taskContent";
+		$query = "SELECT taskId,taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent = :taskContent";
 		$statement = $pdo->prepare($query);
 
 		// bind the tweet content to the place holder in the template
@@ -457,7 +551,9 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$task = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"], $row["taskContent"], $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
+				$task = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"],
+					$row["taskAvatarUrl"], $row["taskCloudinaryToken"],
+					$row["taskContent"], $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
 				$tasks[$tasks->key()] = $task;
 				$tasks->next();
 			} catch(\Exception $exception) {
@@ -491,7 +587,7 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT taskId,taskKidId ,taskParentId, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskParentId = :taskParentId";
+		$query = "SELECT taskId,taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskParentId = :taskParentId";
 		$statement = $pdo->prepare($query);
 
 		// bind the task parent id to the place holder in the template
@@ -504,7 +600,9 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$tasks = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"], $row["taskContent"] , $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
+				$tasks = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"],
+					$row["taskAvatarUrl"], $row["taskCloudinaryToken"],
+					$row["taskContent"] , $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
