@@ -185,16 +185,16 @@ class Kid implements \JsonSerializable {
         //enforce that the hash is properly formatted
         $newKidHash = trim($newKidHash);
         if(empty($newKidHash) === true) {
-            throw(new \InvalidArgumentException("Parent password hash empty or insecure"));
+            throw(new \InvalidArgumentException("Kid password hash empty or insecure"));
         }
         //enforce the hash is really an Argon hash
         $newKidHash = password_get_info($newKidHash);
         if($kidHashInfo["algoName"] !== "argon2i") {
-            throw(new \InvalidArgumentException("Parent hash is not a valid hash"));
+            throw(new \InvalidArgumentException("Kid hash is not a valid hash"));
         }
         //enforce that the hash is exactly 96 characters.
         if(strlen($newKidHash) !== 96) {
-            throw(new \RangeException("Parent hash must be 96 characters"));
+            throw(new \RangeException("Kid hash must be 96 characters"));
         }
         //store the hash
         $this->kidHash = $newKidHash;
