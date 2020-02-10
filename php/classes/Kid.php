@@ -5,7 +5,6 @@ require_once("Kid.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
 use Cassandra\Uuid;
-use Ramsey\Uuid\Uuid;
 
 
 class Kid implements \JsonSerializable {
