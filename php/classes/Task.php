@@ -45,13 +45,13 @@ class Task {
 
 	/**
 	 * avatar for this Task;
-	 * @var Uuid $taskAvatarUrl
+	 * @var string $taskAvatarUrl
 	 **/
 	private $taskAvatarUrl;
 
 	/**
 	 * id for this avatar from cloudinary Task;
-	 * @var Uuid $taskCloudinaryToken
+	 * @var string $taskCloudinaryToken
 	 **/
 	private $taskCloudinaryToken;
 
@@ -420,7 +420,7 @@ class Task {
 	public function insert(\PDO $pdo): void {
 
 		// create query template
-		$query = "INSERT INTO task(taskId,taskKidId ,taskParentId, taskAvataryUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward) 
+		$query = "INSERT INTO task(taskId, taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward) 
 VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken,  :taskContent, :taskDueDate, :taskIsComplete, :taskReward)";
 		$statement = $pdo->prepare($query);
 
@@ -506,7 +506,8 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 			$row = $statement->fetch();
 			if($row !== false) {
 				$tasks = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"],
-					$row["taskAvatarUrl"], $row["taskCloudinaryToken"], $row["taskContent"] , $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
+					$row["taskAvatarUrl"], $row["taskCloudinaryToken"],
+					$row["taskContent"] , $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -538,7 +539,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 		$taskContent = str_replace("_", "\\_", str_replace("%", "\\%", $taskContent));
 
 		// create query template
-		$query = "SELECT taskId,taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent = :taskContent";
+		$query = "SELECT taskId, taskKidId, taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent = :taskContent";
 		$statement = $pdo->prepare($query);
 
 		// bind the tweet content to the place holder in the template
@@ -587,7 +588,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT taskId,taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskParentId = :taskParentId";
+		$query = "SELECT taskId, taskKidId, taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskParentId = :taskParentId";
 		$statement = $pdo->prepare($query);
 
 		// bind the task parent id to the place holder in the template
