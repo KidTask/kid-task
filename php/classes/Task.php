@@ -70,8 +70,6 @@ class Task {
 	private $taskReward;
 
 
-
-
 	/**
 	 * constructor for this Author
 	 *
@@ -276,7 +274,7 @@ class Task {
 		// verify task is complete is 0, 1, 2
 		$newTaskIsComplete = trim($newTaskIsComplete);
 		$newTaskIsComplete = filter_var($newTaskIsComplete);
-		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2) ) {
+		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2)) {
 			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-2"));
 		}
 
@@ -315,9 +313,6 @@ class Task {
 		$this->taskReward = $newTaskReward;
 	}
 
-
-
-
 	/**
 	 * inserts this Task into mySQL
 	 *
@@ -335,10 +330,10 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->taskDueDate->format("Y-m-d H:i:s.u");
 		$parameters = ["taskId" => $this->taskId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(), "taskKidId" => $this->taskKidId,
-			"taskContent" => $this->taskContent->getBytes(), "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->getBytes(),
-			"taskReward" => $this->taskReward->getBytes() ];
+			"taskContent" => $this->taskContent->getBytes(), "taskDueDate" => $formattedDate, "taskIsComplete" => $this->taskIsComplete->getBytes(),
+			"taskReward" => $this->taskReward->getBytes()];
 		$statement->execute($parameters);
 	}
 
+} // end of Task Class
 
-}
