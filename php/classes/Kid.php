@@ -377,5 +377,4 @@ class Kid implements \JsonSerializable {
         $fields["kidHash"] = round(floatval($this->kidHash->format("U.u")) * 1000);
         return($fields);
     }
-}
-     }//end of Kid class
+}//end of Kid class
