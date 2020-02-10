@@ -49,6 +49,7 @@ class Kid implements \JsonSerializable {
      * @param string|Uuid $newKidId The Kid's Id
      * @param string|Uuid $newKidParentId The Kid's Parent Id
      * @param $newKidAvatarUrl
+     * @param $newKidCloudinaryToken
      * @param $newKidHash
      * @param $newKidName
      * @param $newKidUsername
@@ -58,11 +59,12 @@ class Kid implements \JsonSerializable {
      * @throws \Exception if some other exception occurs
      * @Documentation https://php.net/manual/en/language.oop5.decon.php
      */
-    public function __construct($newKidId, $newKidParentId, $newKidAvatarUrl, $newKidHash, $newKidName, $newKidUsername) {
+    public function __construct($newKidId, $newKidParentId, $newKidAvatarUrl, $newKidCloudinaryToken, $newKidHash, $newKidName, $newKidUsername) {
         try {
             $this->setKidId($newKidId);
             $this->setKidParentId($newKidParentId);
             $this->setKidAvatarUrl($newKidAvatarUrl);
+            $this->setKidCloudinaryToken($newKidCloudinaryToken);
             $this->setKidHash($newKidHash);
             $this->setKidName($newKidName);
             $this->setKidUsername($newKidUsername);
@@ -197,6 +199,39 @@ class Kid implements \JsonSerializable {
         //store the hash
         $this->kidHash = $newKidHash;
     } //end of setKidHash function
+
+    /**
+     * accessor method for kid cloudinary token
+     *
+     * @return string value of Parent activation token
+     **/
+    public function getKidCloudinaryToken(): string {
+        return $this->kidCloudinaryToken;
+    } //end of getKidCloudinaryToken function
+
+    /**
+     * mutator method for kid cloudinary token
+     *
+     * @param string $newKidCloudinaryToken kid cloudinary token
+     * @throws \InvalidArgumentException  if the token is not a string or insecure
+     * @throws \RangeException if $newKidCloudinaryToken is not exactly 32 characters
+     * @throws \TypeError if $newKidCloudinaryToken is not a string
+     **/
+    public function setKidCloudinaryToken(string $newKidCloudinaryToken): void {
+        if($newKidCloudinaryToken === null) {
+            $this->kidCloudinaryToken = null;
+            return;
+        }
+        $newKidCloudinaryToken = strtolower(trim($newKidCloudinaryToken));
+        if(ctype_xdigit($newKidCloudinaryToken) === false) {
+            throw(new\RangeException("user activation is not valid"));
+        }
+        if(strlen($newKidCloudinaryToken) !== 32){
+            throw(new\RangeException("Activation Token must be 32 characters "));
+        }
+        $this->kidCloudinaryToken = $newKidCloudinaryToken;
+    } //end of setKidCloudinaryToken function
+
 
     /*
      * Accessor method for kidName
