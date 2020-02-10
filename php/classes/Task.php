@@ -338,8 +338,8 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->taskDueDate->format("Y-m-d H:i:s.u");
 		$parameters = ["taskId" => $this->taskId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(), "taskKidId" => $this->taskKidId,
-			"taskContent" => $this->taskContent->getBytes(), "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->getBytes(),
-			"taskReward" => $this->taskReward->getBytes() ];
+			"taskContent" => $this->taskContent->, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->(),
+			"taskReward" => $this->taskReward ];
 		$statement->execute($parameters);
 	}
 
@@ -359,8 +359,8 @@ VALUES( :taskId, :taskParentId, :taskKidId, :taskContent, :taskDueDate, :taskIsC
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["taskId" => $this->taskId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(), "taskKidId" => $this->taskKidId,
-			"taskContent" => $this->taskContent->getBytes(), "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->getBytes(),
-			"taskReward" => $this->taskReward->getBytes() ];
+			"taskContent" => $this->taskContent->, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->,
+			"taskReward" => $this->taskReward->];
 		$statement->execute($parameters);
 	}//end of update pdo method
 
