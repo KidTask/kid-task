@@ -49,6 +49,7 @@ class Kid implements \JsonSerializable {
      * @param string|Uuid $newKidId The Kid's Id
      * @param string|Uuid $newKidParentId The Kid's Parent Id
      * @param $newKidAvatarUrl
+     * @param $newKidCloudinaryToken
      * @param $newKidHash
      * @param $newKidName
      * @param $newKidUsername
@@ -58,11 +59,12 @@ class Kid implements \JsonSerializable {
      * @throws \Exception if some other exception occurs
      * @Documentation https://php.net/manual/en/language.oop5.decon.php
      */
-    public function __construct($newKidId, $newKidParentId, $newKidAvatarUrl, $newKidHash, $newKidName, $newKidUsername) {
+    public function __construct($newKidId, $newKidParentId, $newKidAvatarUrl, $newKidCloudinaryToken, $newKidHash, $newKidName, $newKidUsername) {
         try {
             $this->setKidId($newKidId);
             $this->setKidParentId($newKidParentId);
             $this->setKidAvatarUrl($newKidAvatarUrl);
+            $this->setKidCloudinaryToken($newKidCloudinaryToken);
             $this->setKidHash($newKidHash);
             $this->setKidName($newKidName);
             $this->setKidUsername($newKidUsername);
@@ -98,9 +100,9 @@ class Kid implements \JsonSerializable {
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
 
-        // convert and store the Parent id
+        // convert and store the Kid id
         $this->kidId = $uuid;
-    } //end of setParentId function
+    } //end of setKidId function
 
     /**
      * accessor method for Kid Parent id
@@ -139,12 +141,12 @@ class Kid implements \JsonSerializable {
         return $this->kidAvatarUrl;
     } //end of getKidAvatarUrl function
 
-    /** Mutator method for avatar url
+    /* Mutator method for avatar url
          @param string $newKidAvatarUrl new value of avatar url
          @throws \InvalidArgumentException if $newKidAvatarUrl is not a valid url or insecure
          @throws \RangeException if $newKidAvatarUrl is > 255 characters
          @throws \TypeError if $newKidAvatarUrl is not a string
-        **/
+        */
 
     public function setKidAvatarUrl($newKidAvatarUrl): void {
         //verify url is secure
@@ -183,20 +185,53 @@ class Kid implements \JsonSerializable {
         //enforce that the hash is properly formatted
         $newKidHash = trim($newKidHash);
         if(empty($newKidHash) === true) {
-            throw(new \InvalidArgumentException("Parent password hash empty or insecure"));
+            throw(new \InvalidArgumentException("Kid password hash empty or insecure"));
         }
         //enforce the hash is really an Argon hash
         $newKidHash = password_get_info($newKidHash);
         if($kidHashInfo["algoName"] !== "argon2i") {
-            throw(new \InvalidArgumentException("Parent hash is not a valid hash"));
+            throw(new \InvalidArgumentException("Kid hash is not a valid hash"));
         }
         //enforce that the hash is exactly 96 characters.
         if(strlen($newKidHash) !== 96) {
-            throw(new \RangeException("Parent hash must be 96 characters"));
+            throw(new \RangeException("Kid hash must be 96 characters"));
         }
         //store the hash
         $this->kidHash = $newKidHash;
     } //end of setKidHash function
+
+    /**
+     * accessor method for kid cloudinary token
+     *
+     * @return string value of Parent activation token
+     **/
+    public function getKidCloudinaryToken(): string {
+        return $this->kidCloudinaryToken;
+    } //end of getKidCloudinaryToken function
+
+    /**
+     * mutator method for kid cloudinary token
+     *
+     * @param string $newKidCloudinaryToken kid cloudinary token
+     * @throws \InvalidArgumentException  if the token is not a string or insecure
+     * @throws \RangeException if $newKidCloudinaryToken is not exactly 32 characters
+     * @throws \TypeError if $newKidCloudinaryToken is not a string
+     **/
+    public function setKidCloudinaryToken(string $newKidCloudinaryToken): void {
+        if($newKidCloudinaryToken === null) {
+            $this->kidCloudinaryToken = null;
+            return;
+        }
+        $newKidCloudinaryToken = strtolower(trim($newKidCloudinaryToken));
+        if(ctype_xdigit($newKidCloudinaryToken) === false) {
+            throw(new\RangeException("user activation is not valid"));
+        }
+        if(strlen($newKidCloudinaryToken) !== 32){
+            throw(new\RangeException("Activation Token must be 32 characters "));
+        }
+        $this->kidCloudinaryToken = $newKidCloudinaryToken;
+    } //end of setKidCloudinaryToken function
+
 
     /*
      * Accessor method for kidName
@@ -261,7 +296,7 @@ class Kid implements \JsonSerializable {
     public function insert(\PDO $pdo) : void {
 
         // create query template
-        $query = "INSERT INTO kid(kidId, kidParentId, kidAvatarUrl, kidHash, kidName, kidUsername) VALUES(:kidId, :kidParentId, :kidAvatarUrl, :kidHash, :kidName, :kidUsername)";
+        $query = "INSERT INTO kid(kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername) VALUES(:kidId, :kidParentId, :kidAvatarUrl, :kidHash, :kidName, :kidUsername)";
         $statement = $pdo->prepare($query);
 
         // bind the member variables to the place holders in the template
@@ -279,12 +314,12 @@ class Kid implements \JsonSerializable {
     public function update(\PDO $pdo) : void {
 
         // create query template
-        $query = "UPDATE kid SET kidParentId = :kidParentId, kidAvatarUrl = :kidAvatarUrl, kidHash = :kidHash, kidName = :kidName, kidUsername = :kidUsername WHERE kidId = :kidId";
+        $query = "UPDATE kid SET kidParentId = :kidParentId, kidAvatarUrl = :kidAvatarUrl, kidCloudinaryToken = :kidCloudinaryToken, kidHash = :kidHash, kidName = :kidName, kidUsername = :kidUsername WHERE kidId = :kidId";
         $statement = $pdo->prepare($query);
 
         $parameters = ["kidId" => $this->kidId->getBytes(), "kidParentId" => $this->kidParentId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
-		$statement->execute($parameters);
-	}//end of update pdo method
+        $statement->execute($parameters);
+    }//end of update pdo method
 
     /**
      * deletes this Kid from mySQL
@@ -304,5 +339,84 @@ class Kid implements \JsonSerializable {
         $statement->execute($parameters);
     }//end of delete pdo method
 
-}//end of Parent class
-       }//end of Kid class
+    /**
+     * gets the Kid by kidParentId
+     *
+     * @param \PDO $pdo PDO connection object
+     * @param Uuid|string $kidParentId kid id to search for
+     * @return Kid|null kid found or null if not found
+     * @throws \PDOException when mySQL related errors occur
+     * @throws \TypeError when a variable are not the correct data type
+     **/
+    public static function getKidByKidParentId(\PDO $pdo, $kidParentId) : ?Kid {
+        // sanitize the kidParentId before searching
+        try {
+            $kidParentId = self::validateUuid($kidParentId);
+        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+
+        // create query template
+        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $statement = $pdo->prepare($query);
+
+        // bind the parent id to the place holder in the template
+        $parameters = ["kidId" => $kidId->getBytes()];
+        $statement->execute($parameters);
+
+        // grab the kid from mySQL
+        try {
+            $kid = null;
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $row = $statement->fetch();
+            if($row !== false) {
+                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidCloudinaryToken"], $row["kidHash"], $row["kidName"], $row["kidUsername"]);
+            }
+        } catch(\Exception $exception) {
+            // if the row couldn't be converted, rethrow it
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+        return($kid);
+    } // end of getKidByKidParentId
+
+    /**
+     * gets the Kid by kidUsername
+     *
+     * @param \PDO $pdo PDO connection object
+     * @param Uuid|string $kidUsername kid username to search for
+     * @return Kid|null kid found or null if not found
+     * @throws \PDOException when mySQL related errors occur
+     * @throws \TypeError when a variable are not the correct data type
+     **/
+    public static function getKidByKidUsername(\PDO $pdo, $kidUsername) : ?Kid {
+        // sanitize the kidUsername before searching
+        try {
+            $kidUsername = self::validateUuid($kidUsername);
+        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+
+        // create query template
+        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $statement = $pdo->prepare($query);
+
+        // bind the kid id to the place holder in the template
+        $parameters = ["kidUsername" => $kidUsername->getBytes()];
+        $statement->execute($parameters);
+
+        // grab the kid from mySQL
+        try {
+            $kid = null;
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $row = $statement->fetch();
+            if($row !== false) {
+                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidCloudinaryToken"], $row["kidHash"], $row["kidName"], $row["kidUsername"]);
+            }
+        } catch(\Exception $exception) {
+            // if the row couldn't be converted, rethrow it
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+        return($kid);
+    } // end of getKidByKidUsername
+
+}//end of Kid classss
