@@ -351,4 +351,5 @@ class Parent implements \JsonSerializable {
 		$statement->execute($parameters);
 	}//end of delete pdo method
 
+
 }//end of Parent class
