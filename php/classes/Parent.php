@@ -500,5 +500,15 @@ class Parent implements \JsonSerializable {
 		return($parent);
 	}  //end of getParentByParentUsername
 
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+		$fields["parentId"] = $this->parentId->toString();
 
+		return($fields);
+	} //end of jsonSerialize
 }//end of Parent class
