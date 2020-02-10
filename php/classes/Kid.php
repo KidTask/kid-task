@@ -339,6 +339,46 @@ class Kid implements \JsonSerializable {
     }//end of delete pdo method
 
     /**
+     * gets the Kid by kidId
+     *
+     * @param \PDO $pdo PDO connection object
+     * @param Uuid|string $kidId kid id to search for
+     * @return Kid|null kid found or null if not found
+     * @throws \PDOException when mySQL related errors occur
+     * @throws \TypeError when a variable are not the correct data type
+     **/
+    public static function getKidByKidId(\PDO $pdo, $kidId) : ?Kid {
+        // sanitize the kidId before searching
+        try {
+            $kidId = self::validateUuid($kidId);
+        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+
+        // create query template
+        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $statement = $pdo->prepare($query);
+
+        // bind the parent id to the place holder in the template
+        $parameters = ["kidId" => $kidId->getBytes()];
+        $statement->execute($parameters);
+
+        // grab the kid from mySQL
+        try {
+            $kid = null;
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $row = $statement->fetch();
+            if($row !== false) {
+                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidCloudinaryToken"], $row["kidHash"], $row["kidName"], $row["kidUsername"]);
+            }
+        } catch(\Exception $exception) {
+            // if the row couldn't be converted, rethrow it
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+        return($kid);
+    } // end of getKidByKidId
+
+    /**
      * gets the Kid by kidParentId
      *
      * @param \PDO $pdo PDO connection object
