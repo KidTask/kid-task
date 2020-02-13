@@ -1,0 +1,7 @@
+{
+  "require": {
+    "ramsey/uuid": "@stable",
+    "ext-json": "*",
+    "ext-cassandra": "*"
+  }
+}

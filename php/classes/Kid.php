@@ -4,8 +4,7 @@ namespace Club\KidTask;
 require_once("Kid.php");
 require_once(dirname(__DIR__) . "/vendor/Kid.php");
 
-use Cassandra\Uuid;
-use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\uuid;
 
 
 class Kid implements \JsonSerializable {
@@ -30,6 +29,13 @@ class Kid implements \JsonSerializable {
      * State variable containing the Hash of kid
      * @var string $kidHash
      */
+
+    private $kidCloudinaryToken;
+    /*
+     * Cloudinary Token for Kid
+     * @var string $kidCloudinaryToken
+     */
+
     private $kidHash;
     /*
      * name of the Kid
@@ -120,7 +126,7 @@ class Kid implements \JsonSerializable {
      * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidParentId is not a uuid or string
      **/
-    public function setkidParentId($newKidParentId): void {
+    public function setKidParentId($newKidParentId): void {
         try {
             $uuid = self::validateUuid($newKidParentId);
         } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -185,16 +191,19 @@ class Kid implements \JsonSerializable {
         //enforce that the hash is properly formatted
         $newKidHash = trim($newKidHash);
         if(empty($newKidHash) === true) {
+
             throw(new \InvalidArgumentException("Kid password hash empty or insecure"));
         }
         //enforce the hash is really an Argon hash
-        $newKidHash = password_get_info($newKidHash);
+        $kidHashInfo = password_get_info($newKidHash);
+
         if($kidHashInfo["algoName"] !== "argon2i") {
+
             throw(new \InvalidArgumentException("Kid hash is not a valid hash"));
         }
-        //enforce that the hash is exactly 96 characters.
-        if(strlen($newKidHash) !== 96) {
-            throw(new \RangeException("Kid hash must be 96 characters"));
+        //enforce that the hash is exactly 98 characters.
+        if(strlen($newKidHash) !== 98) {
+            throw(new \RangeException("Kid hash must be 98 characters"));
         }
         //store the hash
         $this->kidHash = $newKidHash;
@@ -249,15 +258,14 @@ class Kid implements \JsonSerializable {
      * @throws \RangeException if $new is > 255 characters
      * @throws \TypeError if $newKidAvatarUrl is not a string
      */
-    public function setKidName(string $newParentName): void {
-        if($newParentName === null) {
+    public function setKidName(string $newKidName): void {
+        if($newKidName === null) {
             $this->kidName = null;
             return;
         }
-        if(strlen($newKidName) > 255) {
+        if(strlen($newKidName) > 256) {
             throw(new \RangeException("Name is too large"));
-        }
-
+		  }
         //store parent name
         $this->kidName = $newKidName;
     }
@@ -296,7 +304,7 @@ class Kid implements \JsonSerializable {
     public function insert(\PDO $pdo) : void {
 
         // create query template
-        $query = "INSERT INTO kid(kidId, kidParentId, kidAvatarUrl, kidHash, kidName, kidUsername) VALUES(:kidId, :kidParentId, :kidAvatarUrl, :kidHash, :kidName, :kidUsername)";
+        $query = "INSERT INTO kid(kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername) VALUES(:kidId, :kidParentId, :kidAvatarUrl, :kidHash, :kidName, :kidUsername)";
         $statement = $pdo->prepare($query);
 
         // bind the member variables to the place holders in the template
@@ -314,12 +322,12 @@ class Kid implements \JsonSerializable {
     public function update(\PDO $pdo) : void {
 
         // create query template
-        $query = "UPDATE kid SET kidParentId = :kidParentId, kidAvatarUrl = :kidAvatarUrl, kidHash = :kidHash, kidName = :kidName, kidUsername = :kidUsername WHERE kidId = :kidId";
+        $query = "UPDATE kid SET kidParentId = :kidParentId, kidAvatarUrl = :kidAvatarUrl, kidCloudinaryToken = :kidCloudinaryToken, kidHash = :kidHash, kidName = :kidName, kidUsername = :kidUsername WHERE kidId = :kidId";
         $statement = $pdo->prepare($query);
 
         $parameters = ["kidId" => $this->kidId->getBytes(), "kidParentId" => $this->kidParentId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
-		$statement->execute($parameters);
-	}//end of update pdo method
+        $statement->execute($parameters);
+    }//end of update pdo method
 
     /**
      * deletes this Kid from mySQL
@@ -339,4 +347,137 @@ class Kid implements \JsonSerializable {
         $statement->execute($parameters);
     }//end of delete pdo method
 
-}//end of Kid class
+
+    /**
+     * gets the Kid by kidId
+     *
+     * @param \PDO $pdo PDO connection object
+     * @param Uuid|string $kidId kid id to search for
+     * @return Kid|null kid found or null if not found
+     * @throws \PDOException when mySQL related errors occur
+     * @throws \TypeError when a variable are not the correct data type
+     **/
+    public static function getKidByKidId(\PDO $pdo, $kidId) : ?Kid {
+        // sanitize the kidId before searching
+        try {
+            $kidId = self::validateUuid($kidId);
+        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+
+        // create query template
+        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $statement = $pdo->prepare($query);
+
+        // bind the parent id to the place holder in the template
+        $parameters = ["kidId" => $kidId->getBytes()];
+        $statement->execute($parameters);
+
+        // grab the kid from mySQL
+        try {
+            $kid = null;
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $row = $statement->fetch();
+            if($row !== false) {
+                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidCloudinaryToken"], $row["kidHash"], $row["kidName"], $row["kidUsername"]);
+            }
+        } catch(\Exception $exception) {
+            // if the row couldn't be converted, rethrow it
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+        return($kid);
+    } // end of getKidByKidId
+
+    /**
+     * gets the Kid by kidParentId
+     *
+     * @param \PDO $pdo PDO connection object
+     * @param Uuid|string $kidParentId kid id to search for
+     * @return Kid|null kid found or null if not found
+     * @throws \PDOException when mySQL related errors occur
+     * @throws \TypeError when a variable are not the correct data type
+     **/
+    public static function getKidByKidParentId(\PDO $pdo, $kidParentId) : ?Kid {
+        // sanitize the kidParentId before searching
+        try {
+            $kidParentId = self::validateUuid($kidParentId);
+        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+
+        // create query template
+        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $statement = $pdo->prepare($query);
+
+        // bind the parent id to the place holder in the template
+        $parameters = ["kidId" => $kidParentId->getBytes()];
+        $statement->execute($parameters);
+
+        // grab the kid from mySQL
+        try {
+            $kid = null;
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $row = $statement->fetch();
+            if($row !== false) {
+                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidCloudinaryToken"], $row["kidHash"], $row["kidName"], $row["kidUsername"]);
+            }
+        } catch(\Exception $exception) {
+            // if the row couldn't be converted, rethrow it
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+        return($kid);
+    } // end of getKidByKidParentId
+
+    /**
+     * gets the Kid by kidUsername
+     *
+     * @param \PDO $pdo PDO connection object
+     * @param Uuid|string $kidUsername kid username to search for
+     * @return Kid|null kid found or null if not found
+     * @throws \PDOException when mySQL related errors occur
+     * @throws \TypeError when a variable are not the correct data type
+     **/
+    public static function getKidByKidUsername(\PDO $pdo, $kidUsername) : ?Kid {
+        // sanitize the kidUsername before searching
+        try {
+            $kidUsername = self::validateUuid($kidUsername);
+        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+
+        // create query template
+        $query = "SELECT kidId, kidParentId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $statement = $pdo->prepare($query);
+
+        // bind the kid id to the place holder in the template
+        $parameters = ["kidId" => $kidUsername->getBytes()];
+        $statement->execute($parameters);
+
+        // grab the kid from mySQL
+        try {
+            $kid = null;
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $row = $statement->fetch();
+            if($row !== false) {
+                $kid = new Kid($row["kidId"], $row["kidParentId"], $row["kidAvatarUrl"], $row["kidCloudinaryToken"], $row["kidHash"], $row["kidName"], $row["kidUsername"]);
+            }
+        } catch(\Exception $exception) {
+            // if the row couldn't be converted, rethrow it
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+        return($kid);
+    } // end of getKidByKidUsername
+    /**
+     * formats the state variables for JSON serialization
+     *
+     * @return array resulting state variables to serialize
+     **/
+    public function jsonSerialize() : array {
+        $fields = get_object_vars($this);
+        $fields["kidId"] = $this->kidId->toString();
+        $fields["kidParentId"] = $this->kidParentId->toString();
+        return($fields);
+    }
+
+} //end of Kid class
+
