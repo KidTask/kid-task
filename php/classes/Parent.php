@@ -474,7 +474,7 @@ class Parent implements \JsonSerializable {
 		if(empty($parentUsername) === true) {
 			throw(new \PDOException("parent Username type is empty of invalid"));
 		}
-		
+
 		// create query template
 		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentUsername = :parentUsername";
 		$statement = $pdo->prepare($query);
