@@ -4,7 +4,7 @@ namespace Club\KidTask;
 require_once("Kid.php");
 require_once(dirname(__DIR__) . "/vendor/Kid.php");
 
-use Cassandra\Uuid;
+use Ramsey\Uuid\uuid;
 
 
 class Kid implements \JsonSerializable {
@@ -29,6 +29,13 @@ class Kid implements \JsonSerializable {
      * State variable containing the Hash of kid
      * @var string $kidHash
      */
+
+    private $kidCloudinaryToken;
+    /*
+     * Cloudinary Token for Kid
+     * @var string $kidCloudinaryToken
+     */
+
     private $kidHash;
     /*
      * name of the Kid
@@ -119,7 +126,7 @@ class Kid implements \JsonSerializable {
      * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidParentId is not a uuid or string
      **/
-    public function setkidParentId($newKidParentId): void {
+    public function setKidParentId($newKidParentId): void {
         try {
             $uuid = self::validateUuid($newKidParentId);
         } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -183,12 +190,12 @@ class Kid implements \JsonSerializable {
     public function setKidHash(string $newKidHash): void {
         //enforce that the hash is properly formatted
         $newKidHash = trim($newKidHash);
-        if(empty($newKidHash) === true) {
+        if(empty($kidHashInfo) === true) {
             throw(new \InvalidArgumentException("Kid password hash empty or insecure"));
         }
         //enforce the hash is really an Argon hash
         $newKidHash = password_get_info($newKidHash);
-        if($kidHashInfo["algoName"] !== "argon2i") {
+        if($newKidHash["algoName"] !== "argon2i") {
             throw(new \InvalidArgumentException("Kid hash is not a valid hash"));
         }
         //enforce that the hash is exactly 96 characters.
@@ -248,14 +255,13 @@ class Kid implements \JsonSerializable {
      * @throws \RangeException if $new is > 255 characters
      * @throws \TypeError if $newKidAvatarUrl is not a string
      */
-    public function setKidName(string $newParentName): void {
-        if($newParentName === null) {
+    public function setKidName(string $newKidName): void {
+        if($newKidName === null) {
             $this->kidName = null;
             return;
         }
-        if(strlen($newKidName) > 255) {
+        if(strlen($newKidName) > 256) {
             throw(new \RangeException("Name is too large"));
-        }
 
         //store parent name
         $this->kidName = $newKidName;
@@ -400,7 +406,7 @@ class Kid implements \JsonSerializable {
         $statement = $pdo->prepare($query);
 
         // bind the parent id to the place holder in the template
-        $parameters = ["kidId" => $kidId->getBytes()];
+        $parameters = ["kidId" => $kidParentId->getBytes()];
         $statement->execute($parameters);
 
         // grab the kid from mySQL
@@ -440,7 +446,7 @@ class Kid implements \JsonSerializable {
         $statement = $pdo->prepare($query);
 
         // bind the kid id to the place holder in the template
-        $parameters = ["kidUsername" => $kidUsername->getBytes()];
+        $parameters = ["kidId" => $kidUsername->getBytes()];
         $statement->execute($parameters);
 
         // grab the kid from mySQL
