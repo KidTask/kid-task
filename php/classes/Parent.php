@@ -56,20 +56,20 @@ class Parent implements \JsonSerializable {
 	 * constructor for this Parent
 	 *
 	 * @param string|Uuid $newParentId id of this Parent or null if a new Parent
-	 * @param $newParentActivationToken
-	 * @param $newParentAvatarUrl
-	 * @param $newParentCLoudinaryToken
-	 * @param $newParentEmail
-	 * @param $newParentHash
-	 * @param $newParentName
-	 * @param $newParentUsername
+	 * @param string $newParentActivationToken
+	 * @param string $newParentAvatarUrl
+	 * @param string $newParentCLoudinaryToken
+	 * @param string $newParentEmail
+	 * @param string $newParentHash
+	 * @param string $newParentName
+	 * @param string $newParentUsername
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-	public function __construct($newParentId, $newParentActivationToken, $newParentAvatarUrl, $newParentCloudinaryToken, $newParentEmail, $newParentHash, $newParentName, $newParentUsername) {
+	public function __construct(string $newParentId, string $newParentActivationToken, string $newParentAvatarUrl, string $newParentCloudinaryToken, string $newParentEmail, string $newParentHash, string $newParentName, string $newParentUsername) {
 		try {
 			$this->setParentId($newParentId);
 			$this->setParentActivationToken($newParentActivationToken);
@@ -432,7 +432,7 @@ class Parent implements \JsonSerializable {
 	 * gets the Parent by parentActivationToken
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $parentId parent id to search for
+	 * @param Uuid|string $parentActivationToken parent activation token to search for
 	 * @return Parent|null Parent found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
@@ -484,8 +484,6 @@ class Parent implements \JsonSerializable {
 		if(empty($parentUsername) === true) {
 			throw(new \PDOException("parent Username type is empty of invalid"));
 		}
-		// escape mySQL wild cards
-		$parentUsername = str_replace("_", "\\_", str_replace("%", "\\%", $parentUsername));
 
 		// create query template
 		$query = "SELECT parentId, parentActivationToken, parentAvatarUrl, parentCloudinaryToken, parentEmail, parentHash, parentName, parentUsername FROM parent WHERE parentUsername = :parentUsername";
