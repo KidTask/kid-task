@@ -427,7 +427,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 
 		$parameters = ["taskId" => $this->taskId->getBytes(), "taskKidId" => $this->taskKidId, "taskParentId" => $this->taskParentId->getBytes(),
 			"taskAvatarUrl" => $this->taskAvatarUrl, "taskCloudinaryToken" => $this->taskCloudinaryToken,
-			"taskContent" => $this->taskContent->, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete->(),
+			"taskContent" => $this->taskContent, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete,
 			"taskReward" => $this->taskReward ];
 
 		$statement->execute($parameters);
