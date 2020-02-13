@@ -150,7 +150,7 @@ class Step implements \JsonSerializable {
 	 *
 	 * @return int value of stepOrder
 	 **/
-	public function getStepOrder: int {
+	public function getStepOrder() : int {
 		return $this->stepOrder;
 	}//end of getStepOrder
 
@@ -231,7 +231,7 @@ class Step implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getStepBySteptId(\PDO $pdo, $stepId) : ?Step {
+	public static function getStepByStepId(\PDO $pdo, $stepId) : ?Step {
 		// sanitize the stepId before searching
 		try {
 			$stepId = self::validateUuid($stepId);
@@ -261,6 +261,47 @@ class Step implements \JsonSerializable {
 		}
 		return($step);
 	} // end of getStepByStepId
+
+	/**
+	 * gets the Step by stepTaskId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $stepTaskId step task id to search for
+	 * @return Step|null Step found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getStepByStepTaskId(\PDO $pdo, $stepTaskId) : ?Step {
+		// sanitize the stepId before searching
+		try {
+			$stepTaskId = self::validateUuid($stepTaskId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT stepId, stepTaskId, stepContent, stepOrder FROM step WHERE stepTaskId = :stepTaskId";
+		$statement = $pdo->prepare($query);
+
+		// bind the step id to the place holder in the template
+		$parameters = ["stepTaskId" => $stepTaskId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the step from mySQL
+		try {
+			$step = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$step = new Step($row["stepId"], $row["stepTaskId"], $row["stepContent"], $row["stepOrder"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($step);
+	} // end of getStepByStepTaskId
+
 
 	/**
 	 * formats the state variables for JSON serialization
