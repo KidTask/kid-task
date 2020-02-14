@@ -180,34 +180,29 @@ class ParentTest extends KidTaskTest {
 		$this->assertEquals($pdoParent->getParentUsername(), $this->VALID_USERNAME);
 	} //end of testGetValidParentByParentId
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	/**
+	 * test grabbing a Parent that does not exist
+	 **/
+	public function testGetInvalidParentByParentId() : void {
+		// grab a parent id that exceeds the maximum allowable parent id
+		$fakeParentId = generateUuidV4();
+		$parent = Parent::getParentByParentId($this->getPDO(), $fakeParentId );
+		$this->assertNull($parent);
+	}
 
 	/**
-	 * test grabbing a Parent by email
+	 * test grabbing a Parent by activation token
 	 **/
-	public function testGetValidParentByEmail() : void {
+	public function testGetValidParentByActivationToken() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("[arent");
+		$numRows = $this->getConnection()->getRowCount("parent");
 
-		$[arentId = generateUuidV4();
+		$parentId = generateUuidV4();
 		$parent = new Parent($parentId, $this->VALID_ACTIVATION, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
 		$parent->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoParent = Parent::getParentByParentEmail($this->getPDO(), $parent->getParentEmail());
+		$pdoParent = Parent::getParentByParentActivationToken($this->getPDO(), $parent->getParentActivationToken());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("parent"));
 		$this->assertEquals($pdoParent->getParentId(), $parentId);
 		$this->assertEquals($pdoParent->getParentActivationToken(), $this->VALID_ACTIVATION);
@@ -217,6 +212,18 @@ class ParentTest extends KidTaskTest {
 		$this->assertEquals($pdoParent->getParentHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoParent->getParentName(), $this->VALID_NAME);
 		$this->assertEquals($pdoParent->getParentUsername(), $this->VALID_USERNAME);
-	} //end of testGetValidParentByEmail method
+	} //end of testGetValidParentByActivationToken method
+
+	/**
+	 * test grabbing a Parent by an activation token that does not exists
+	 **/
+	public function testGetInvalidParentActivationToken() : void {
+		// grab an email that does not exist
+		$profile = Parent::getParentByParentActivationToken($this->getPDO(), "6675636b646f6e616c646472756d7066");
+		$this->assertNull($profile);
+	}
+
+
+
 
 } //end of Parent Test class
