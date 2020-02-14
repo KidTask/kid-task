@@ -79,8 +79,6 @@ abstract class KidTaskTest extends TestCase {
 	}
 
 
-
-
 	/**
 	 * sets up the database connection and provides it to PHPUnit
 	 *

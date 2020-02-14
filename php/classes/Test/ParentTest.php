@@ -58,6 +58,12 @@ class ParentTest extends KidTaskTest {
 	protected $VALID_NAME;
 
 	/**
+	 * valid NAME to use
+	 * @var $VALID_NAME2
+	 */
+	protected $VALID_NAME2 ="姓";
+
+	/**
 	 * valid username to use
 	 * @var $VALID_USERNAME
 	 */
@@ -69,8 +75,7 @@ class ParentTest extends KidTaskTest {
 	public final function setUp() : void {
 		parent::setUp();
 
-		//
-		$password = "abc123";
+		$password = "mypassword12";
 		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 	} //end setUp method
@@ -84,9 +89,7 @@ class ParentTest extends KidTaskTest {
 
 		$parentId = generateUuidV4();
 
-
-
-		$parent = new Parent($parentId, $this->VALID_ACTIVATION, $this->VALID_AVATAR_URL, this->VALID_CLOUDINARY_TOKEN, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+		$parent = new Parent($parentId, $this->VALID_ACTIVATION, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
 		$parent->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -99,8 +102,121 @@ class ParentTest extends KidTaskTest {
 		$this->assertEquals($pdoParent->getParentEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoParent->getParentHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoParent->getParentName(), $this->VALID_NAME);
-		$this->assertEquals($pdoParent->getParentUsername(), $this->VALID_NAME);
-	}
+		$this->assertEquals($pdoParent->getParentUsername(), $this->VALID_USERNAME);
+	} // end of testInsertValidParent() method
 
+	/**
+	 * test inserting a Parent, editing it, and then updating it
+	 **/
+	public function testUpdateValidParent() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("parent");
+
+		// create a new Parent and insert to into mySQL
+		$parentId = generateUuidV4();
+		$parent = new Parent($parentId, $this->VALID_ACTIVATION, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+		$parent->insert($this->getPDO());
+
+
+		// edit the Parent and update it in mySQL
+		$parent->setParentName($this->VALID_NAME2);
+		$parent->update($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoParent = Parent::getParentByParentId($this->getPDO(), $parent->getParentId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("parent"));
+		$this->assertEquals($pdoParent->getParentId(), $parentId);
+		$this->assertEquals($pdoParent->getParentActivationToken(), $this->VALID_ACTIVATION);
+		$this->assertEquals($pdoParent->getParentAvatarUrl(), $this->VALID_AVATAR_URL);
+		$this->assertEquals($pdoParent->getParentCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+		$this->assertEquals($pdoParent->getParentEmail(), $this->VALID_EMAIL);
+		$this->assertEquals($pdoParent->getParentHash(), $this->VALID_HASH);
+		$this->assertEquals($pdoParent->getParentName(), $this->VALID_NAME);
+		$this->assertEquals($pdoParent->getParentUsername(), $this->VALID_USERNAME);
+	} //end of testUpdateValid Parent
+
+	/**
+	 * test creating a Parent and then deleting it
+	 **/
+	public function testDeleteValidParent() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("parent");
+
+		$parentId = generateUuidV4();
+		$parent = new Parent($parentId, $this->VALID_ACTIVATION, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+		$parent->insert($this->getPDO());
+
+		// delete the Parent from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("parent"));
+		$parent->delete($this->getPDO());
+
+		// grab the data from mySQL and enforce the Parent does not exist
+		$pdoParent = Parent::getParentByParentId($this->getPDO(), $parent->getParentId());
+		$this->assertNull($pdoParent);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("parent"));
+	} // end of testDeleteValidParent method
+
+	/**
+	 * test inserting a Parent and regrabbing it from mySQL
+	 **/
+	public function testGetValidParentByParentId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("parent");
+
+		$parentId = generateUuidV4();
+		$parent = new Parent($parentId, $this->VALID_ACTIVATION, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+		$parent->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoParent = Parent::getParentByParentId($this->getPDO(), $parent->getParentId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("parent"));
+		$this->assertEquals($pdoParent->getParentId(), $parentId);
+		$this->assertEquals($pdoParent->getParentActivationToken(), $this->VALID_ACTIVATION);
+		$this->assertEquals($pdoParent->getParentAvatarUrl(), $this->VALID_AVATAR_URL);
+		$this->assertEquals($pdoParent->getParentCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+		$this->assertEquals($pdoParent->getParentEmail(), $this->VALID_EMAIL);
+		$this->assertEquals($pdoParent->getParentHash(), $this->VALID_HASH);
+		$this->assertEquals($pdoParent->getParentName(), $this->VALID_NAME);
+		$this->assertEquals($pdoParent->getParentUsername(), $this->VALID_USERNAME);
+	} //end of testGetValidParentByParentId
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * test grabbing a Parent by email
+	 **/
+	public function testGetValidParentByEmail() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("[arent");
+
+		$[arentId = generateUuidV4();
+		$parent = new Parent($parentId, $this->VALID_ACTIVATION, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_EMAIL, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+		$parent->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoParent = Parent::getParentByParentEmail($this->getPDO(), $parent->getParentEmail());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("parent"));
+		$this->assertEquals($pdoParent->getParentId(), $parentId);
+		$this->assertEquals($pdoParent->getParentActivationToken(), $this->VALID_ACTIVATION);
+		$this->assertEquals($pdoParent->getParentAvatarUrl(), $this->VALID_AVATAR_URL);
+		$this->assertEquals($pdoParent->getParentCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+		$this->assertEquals($pdoParent->getParentEmail(), $this->VALID_EMAIL);
+		$this->assertEquals($pdoParent->getParentHash(), $this->VALID_HASH);
+		$this->assertEquals($pdoParent->getParentName(), $this->VALID_NAME);
+		$this->assertEquals($pdoParent->getParentUsername(), $this->VALID_USERNAME);
+	} //end of testGetValidParentByEmail method
 
 } //end of Parent Test class
