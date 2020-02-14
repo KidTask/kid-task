@@ -5,7 +5,7 @@ use Ramsey\Uuid\uuid;
 
 require_once(dirname(__DIR__) . "/autoload.php");
 
-require_once(dirname(__DIR__) . "/lib/uuid.php");
+require_once(dirname(__DIR__) . "/../composer.json");
 
 /**
  * unit test for the Kid Class
@@ -13,4 +13,3 @@ require_once(dirname(__DIR__) . "/lib/uuid.php");
  * @ see php/classes/Kid.php
  * @author Jacob Lott
  */
-
