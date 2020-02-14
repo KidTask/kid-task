@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Persona, Use Case and Interaction Flow: Mama Mia</title>
+	<link href="../styles/nav-style.css" rel="stylesheet" type="text/css">
+</head>
+<nav class="main-nav">
+	<ul>
+		<li><a href="../index.html">Home</a></li>
+		<li><a href="elem-tim.html"> Persona: Elementary Tim</a></li>
+		<li><a href="prek-rem.html">Persona: Pre-K Rem</a></li>
+		<li><a href="mama-mia.html">Persona: Mama Mia</a></li>
+		<li><a href="conceptual-model.html">Conceptual Model & ERD</a></li>
+	</ul>
+</nav>
+<body>
+
+<h1>Entities & Attributes</h1>
+<h2>PARENT</h2>
+<p>parentId (primary key)<br>
+	parentActivationToken (for account verification)<br>
+	parentAvatarUrl <br>
+	parentCloudinaryToken <br>
+	parentEmail<br>
+	parentHash(for account password) <br>
+	parentName <br>
+	parentUsername<br>
+</p>
+
+<h2>KID</h2>
+<p>kidId (primary key)<br>
+	kidParentId (foreign key)<br>
+	kidAvatarUrl <br>
+	kidCloudinaryToken
+	kidHash <br>
+	kidName <br>
+	kidUsername<br>
+</p>
+
+<h2>TASK</h2>
+<p>taskId (primary key)<br>
+	taskKidId (foreign key)<br>
+	taskParentId (foreign key)<br>
+	taskAvatarUrl <br>
+	taskCloudinaryToken <br>
+	taskContent<br>
+	taskDueDate<br>
+	taskIsComplete <br>
+	taskReward<br>
+</p>
+
+<h2>STEPS</h2>
+<p>stepId (primary key) <br>
+	stepTaskId (foreign key) <br>
+	stepContent <br>
+	stepOrder <br>
+</p>
+
+<h1>Relations</h1>
+<p>One parent can add many kids - (1 to n) <br>
+One parent can add many tasks - (1 to n) <br>
+One kid can have many tasks - (1 to n) <br>
+One task can have many steps - (1 to n) <br>
+</p>
+<h1>ERD</h1>
+<img src="../images/Basic Database ER Diagram (Crow's Foot) (1).png" width="800px"/></body>
+</html>
