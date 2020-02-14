@@ -1,11 +1,12 @@
 <?php
 
 namespace Club\KidTask;
+use Club\KidTask\Test\KidTaskTest;
 use Ramsey\Uuid\uuid;
 
 require_once(dirname(__DIR__) . "/autoload.php");
 
-require_once(dirname(__DIR__) . "/../composer.json");
+require_once(dirname(__DIR__) . "/../uuid.php");
 
 /**
  * unit test for the Kid Class
@@ -14,203 +15,249 @@ require_once(dirname(__DIR__) . "/../composer.json");
  * @author Jacob Lott
  */
 
-class KidTest extends KidTestSetup {
-    /**
-     * @var string $VALID_KID
-     */
-    protected $VALID_KID = Kid::getKidByKidId();
+class KidTest extends KidTaskTest
+{
 
     /**
-     * @var string $VALID_GREAT_QUOTE1
+     * Kid's Parent Id
+     * @var string $VALID_PARENT_ID
      */
-    protected $VALID_GREAT_QUOTE1 = "Four score and seven years ago, our forefathers brought on this continent a new nation.";
+    protected $VALID_PARENT_ID = "KidParentId";
 
     /**
-     * protected constant for the person who is responsible for the quote
-     * @var  string $VALID_QUOTE_AUTHOR
+     * Avatar Url for Kid
+     * @var string $VALID_AVATAR_URL
      */
-    protected $VALID_QUOTE_AUTHOR = "goobldigupeguck";
+    protected $VALID_AVATAR_URL = "";
 
     /**
-     * protected constant for the person who posted the quote
-     * @var  string $VALID_QUOTE_POSTER
-     */
-    protected $VALID_QUOTE_POSTER = "SenatorArlo";
+     * Cloudinary Token for Kid
+     * @var $VALID_CLOUDINARY_TOKEN
+     **/
+    protected $VALID_CLOUDINARY_TOKEN = "@passingtests";
 
     /**
-     * protected constant for the rating of the quote
-     * @var  int $VALID_QUOTE_RATING
+     * valid hash to use
+     * @var $VALID_HASH
      */
-    protected $VALID_QUOTE_RATING = 3364;
+    protected $VALID_HASH;
 
     /**
-     * protected constant for the rating of the quote
-     * @var  string $VALID_QUOTE_RANKING1
-     */
-    protected $VALID_QUOTE_RATING1 = 223;
+     * valid username
+     * @var string $VALID_USERNAME
+     **/
+    protected $VALID_USERNAME = "Username";
 
     /**
-     * protected constant for the rating of the quote
-     * @var  string $VALID_QUOTE_RANKING2
+     * valid Name
+     * @var $VALID_NAME
      */
-
-    /**
-     * protected constant for the rating of the quote
-     */
-    protected $VALID_QUOTE_RATING2 = 332;
-
-    /**
-     * create all dependent objects so that the test can run properly
-     */
-
-    /**
-     * preform the actual insert method and enforce that is meets expectations I.E corrupted data is worth nothing
-     */
-
-    public function testValidQuoteInsert() {
-        $numRows = $this->getConnection()->getRowCount("quote");
-
-        //create the quote object
-        $quote = new Quote(generateUuidV4(), $this->VALID_GREAT_QUOTE, $this->VALID_QUOTE_AUTHOR, $this->VALID_QUOTE_POSTER, $this->VALID_QUOTE_RATING);
-        //insert the quote object
-        $quote->insert($this->getPDO());
-
-        //grab the data from MySQL and enforce that it meets expectations
-        $pdoQuote = Quote::getQuoteByQuoteId($this->getPDO(), $quote->getQuoteId());
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("quote"));
-        $this->assertEquals($pdoQuote->getQuoteId(), $quote->getQuoteId());
-        $this->assertEquals($pdoQuote->getQuote(), $quote->getQuote());
-        $this->assertEquals($pdoQuote->getQuoteAuthor(), $quote->getQuoteAuthor());
-        $this->assertEquals($pdoQuote->getQuotePoster(), $quote->getQuotePoster());
-        $this->assertEquals($pdoQuote->getQuoteRating(), $quote->getQuoteRating());
-    }
-
+    protected $VALID_NAME = "Name";
 
 
     /**
-     * create a quote object, update it in the database, and then enforce that it meets expectations
+     * run the default setup operation to create salt and hash.
      */
-    public function testValidQuoteUpdate() {
-        //grab the number of vows and save it for the test
-        $numRows = $this->getConnection()->getRowCount("quote");
+    public final function setUp(): void
+    {
+        parent::setUp();
 
-        //create the quote object then insert it
-        $quote = new Quote(generateUuidV4(), $this->VALID_GREAT_QUOTE, $this->VALID_QUOTE_POSTER, $this->VALID_QUOTE_AUTHOR, $this->VALID_QUOTE_RATING);
-        $quote->insert($this->getPDO());
-
-        //edit the quote object then insert the object back into the database
-        $quote->setQuoteRating($this->VALID_QUOTE_RATING1);
-        $quote->update($this->getPDO());
-        $pdoQuote =  Quote::getQuoteByQuoteId($this->getPDO(), $quote->getQuoteId());
-
-        $this->assertEquals($pdoQuote->getQuoteId(), $quote->getQuoteId());
-        $this->assertEquals($pdoQuote->getQuote(), $quote->getQuote());
-        $this->assertEquals($pdoQuote->getQuoteAuthor(), $quote->getQuoteAuthor());
-        $this->assertEquals($pdoQuote->getQuotePoster(), $quote->getQuotePoster());
-        $this->assertEquals($pdoQuote->getQuoteRating(), $quote->getQuoteRating());
+        //
+        $password = "abc123";
+        $this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+        $this->VALID_HASH = bin2hex(random_bytes(16));
     }
 
     /**
-     * create a quote object, delete it, then enforce that it was deleted
-     */
-    public function testValidQuoteDelete() {
-        //grab the number of vows and save it for the test
-        $numRows = $this->getConnection()->getRowCount("quote");
+     * test inserting a valid Kid and verify that the actual mySQL data matches
+     **/
+    public function testInsertValidKid(): void
+    {
+        // count the number of rows and save it for later
+        $numRows = $this->getConnection()->getRowCount("Kid");
 
-        //create the quote object
-        $quote = new Quote(generateUuidV4(), $this->VALID_GREAT_QUOTE, $this->VALID_QUOTE_AUTHOR, $this->VALID_QUOTE_POSTER, $this->VALID_QUOTE_RATING);
+        $kidId = generateUuidV4();
 
-        //insert the quote object
-        $quote->insert($this->getPDO());
 
-        //delete the quote from the database
-        $this->assertSame($numRows + 1, $this->getConnection()->getRowCount("quote"));
-        $quote->delete($this->getPDO());
+        $kid = new Kid($kidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid->insert($this->getPDO());
 
-        //enforce that the deletion was successful
-        $pdoQuote = Quote::getQuoteByQuoteId($this->getPDO(), $quote->getQuoteId());
-        $this->assertNull($pdoQuote);
-        $this->assertEquals($numRows, $this->getConnection()->getRowCount("quote"));
+        // grab the data from mySQL and enforce the fields match our expectations
+        $pdoKid = Kid::getKidByKidId($this->getPDO(), $kid->getKidId());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
+        $this->assertEquals($pdoKid->getKidId(), $kidId);
+        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
+        $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+        $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
+        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
     }
 
     /**
-     * try and grab a quote by a primary that does not exist
-     */
+     * test inserting a Kid, editing it, and then updating it
+     **/
+    public function testUpdateValidKid()
+    {
+        // count the number of rows and save it for later
+        $numRows = $this->getConnection()->getRowCount("kid");
 
-    public function testInvalidGetByQuoteId() {
-        //grab the quote by an invalid key
-        $quote = Quote::getQuoteByQuoteId($this->getPDO(), QuoteTestSetup::INVALID_KEY);
-        $this->assertEmpty($quote);
+        // create a new Kid and insert to into mySQL
+        $kidId = generateUuidV4();
+        $kid = new Kid($kidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid->insert($this->getPDO());
 
-    }
 
-    /**
-     * insert a quote object, grab it by the authors name , and enforce that it meets expectations
-     * @throws \Exception
-     */
-    public function testValidGetQuoteByAuthor() {
+        // edit the Kid and update it in mySQL
+        $kid->setKidId($this->VALID_PARENT_ID);
+        $kid->update($this->getPDO());
 
-        $numRows = $this->getConnection()->getRowCount("quote");
-        //create a quote object and insert it into the database
-        $quote = new Quote(generateUuidV4(), $this->VALID_GREAT_QUOTE, $this->VALID_QUOTE_AUTHOR, $this->VALID_QUOTE_POSTER, $this->VALID_QUOTE_RATING);
+        // grab the data from mySQL and enforce the fields match our expectations
+        $pdoKid = Kid::getKidByKidId($this->getPDO(), $Kid->getKidId());
 
-        //insert the quote into the database
-        $quote->insert($this->getPDO());
 
-        //grab the quote from the database.
-        $results = Quote::getQuoteByAuthor($this->getPDO(), $quote->getQuoteAuthor());
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("quote"));
-
-        $pdoQuote = $results[0];
-
-        $this->assertEquals($pdoQuote->getQuoteId(), $quote->getQuoteId());
-        $this->assertEquals($pdoQuote->getQuote(), $quote->getQuote());
-        $this->assertEquals($pdoQuote->getQuoteAuthor(), $quote->getQuoteAuthor());
-        $this->assertEquals($pdoQuote->getQuotePoster(), $quote->getQuotePoster());
-        $this->assertEquals($pdoQuote->getQuoteRating(), $quote->getQuoteRating());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($pdoKid->getKidId(), $kidId);
+        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
+        $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+        $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
+        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
     }
 
 
     /**
-     * try and grab the quote by an author that does not exist
-     */
-    public function testInvalidGetByAuthor() {
-        $quote = Quote::getQuoteByAuthor($this->getPDO(), "Jean Luc Picard");
-        $this->assertEmpty($quote);
+     * test creating a Kid and then deleting it
+     **/
+    public function testDeleteValidKid(): void
+    {
+        // count the number of rows and save it for later
+        $numRows = $this->getConnection()->getRowCount("kid");
+
+        $kidId = generateUuidV4();
+        $kid = new Kid($kidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid->insert($this->getPDO());
+
+
+        // delete the Kid from mySQL
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $kid->delete($this->getPDO());
+
+        // grab the data from mySQL and enforce the Kid does not exist
+        $pdoKid = Kid::getKidByKidId($this->getPDO(), $Kid->getKidId());
+        $this->assertNull($pdoKid);
+        $this->assertEquals($numRows, $this->getConnection()->getRowCount("Kid"));
     }
 
     /**
-     * insert a quote, use getALl method, then enforce it meets expectatin
+     * test inserting a Kid and regrabbing it from mySQL
+     **/
+    public function testGetValidKidByKidId(): void
+    {
+        // count the number of rows and save it for later
+        $numRows = $this->getConnection()->getRowCount("Kid");
+
+        $KidId = generateUuidV4();
+        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid->insert($this->getPDO());
+
+        // grab the data from mySQL and enforce the fields match our expectations
+        $pdoKid = Kid::getKidByKidId($this->getPDO(), $Kid->getKidId());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($pdoKid->getKidId(), $KidId);
+        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
+        $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+        $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
+        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
+    }
+
+    /**
+     * test grabbing a Kid that does not exist
+     **/
+    public function testGetInvalidKidByKidId(): void
+    {
+        // grab a Kid id that exceeds the maximum allowable Kid id
+        $fakeKidId = generateUuidV4();
+        $Kid = Kid::getKidByKidId($this->getPDO(), $fakeKidId);
+        $this->assertNull($Kid);
+    }
+
+    public function testGetValidKidByKidId()
+    {
+        // count the number of rows and save it for later
+        $numRows = $this->getConnection()->getRowCount("Kid");
+
+        $KidId = generateUuidV4();
+        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid->insert($this->getPDO());
+
+        //grab the data from MySQL
+        $results = Kid::getKidByKidId($this->getPDO(), $this->VALID_AVATAR_URL);
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+
+        //enforce no other objects are bleeding into Kid
+        $this->assertContainsOnlyInstancesOf("Club\KidTask\Test\KidTaskTest", $results);
+
+        //enforce the results meet expectations
+        $pdoKid = $results[0];
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($pdoKid->getKidId(), $KidId);
+        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
+        $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+        $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
+        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
+    }
+
+    /**
+     * test grabbing a Kid by Username
+     **/
+    public function testGetValidKidByUsername(): void
+    {
+        // count the number of rows and save it for later
+        $numRows = $this->getConnection()->getRowCount("Kid");
+
+        $KidId = generateUuidV4();
+        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid->insert($this->getPDO());
+
+        // grab the data from mySQL and enforce the fields match our expectations
+        $pdoKid = Kid::getKidByKidEmail($this->getPDO(), $Kid->getKidHash());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($pdoKid->getKidId(), $KidId);
+        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
+        $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+        $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
+        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
+    }
+
+    /**
+     * test grabbing a Kid by Kid Parent Id
      */
-    public function testGetAllQuotes() {
-        $numRows = $this->getConnection()->getRowCount("quote");
+    public function testGetValidKidByKidParentId(): void
+    {
+        // count the number of rows and save it for later
+        $numRows = $this->getConnection()->getRowCount("Kid");
 
-        //insert the quote into the database
-        $quote = new Quote(generateUuidV4(), $this->VALID_GREAT_QUOTE, $this->VALID_QUOTE_AUTHOR, $this->VALID_QUOTE_POSTER, $this->VALID_QUOTE_RATING);
+        $KidId = generateUuidV4();
+        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid->insert($this->getPDO());
 
-        //insert the quote into the database
-        $quote->insert($this->getPDO());
-
-        //grab the results from mySQL and enforce it meets expectations
-        $results = Quote::getAllQuotes($this->getPDO());
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("quote"));
-        $this->assertCount(1, $results);
-        //$this->assertContainsOnlyInstancesOf()
-
-        //grab the results from the array and make sure it meets expectations
-        $pdoQuote = $results[0];
-        //$this->assertEquals($pdoQuote->getQuoteId(), $quote->getQuoteId());
-        $this->assertEquals($pdoQuote->getQuote(), $quote->getQuote());
-        $this->assertEquals($pdoQuote->getQuoteId(), $quote->getQuoteId());
-        $this->assertEquals($pdoQuote->getQuoteAuthor(), $quote->getQuoteAuthor());
-        $this->assertEquals($pdoQuote->getQuotePoster(), $quote->getQuotePoster());
-        $this->assertEquals($pdoQuote->getQuoteRating(), $quote->getQuoteRating());
-
-
+        // grab the data from mySQL and enforce the fields match our expectations
+        $pdoKid = Kid::getKidByKidActivationToken($this->getPDO(), $Kid->getKidParentId());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($pdoKid->getKidId(), $KidId);
+        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
+        $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+        $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
+        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
     }
 }
-
-
-
-
-
