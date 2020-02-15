@@ -366,7 +366,7 @@ class Adult implements \JsonSerializable {
 		$query = "UPDATE adult SET adultActivationToken = :adultActivationToken, adultAvatarUrl = :adultAvatarUrl, adultCloudinaryToken =:adultCloudinaryToken, adultEmail = :adultEmail, adultHash = :adultHash, adultName = :adultName, adultUsername = :adultUsername WHERE adultId = :adultId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["adultId" => $this->adultId->getBytes(), "adultActivationToken" => $this->adultActivationToken, "adultAvatarUrl" => $this->adultAvatarUrl, "adultCloudinaryToken" => $this->adultCloudinaryToken, "adultEmail" => $this->adultEmail, "adultHash" => $this->adultHash, "adultName" => $this->adultName "adultUsername" => $this->adultUsername];
+		$parameters = ["adultId" => $this->adultId->getBytes(), "adultActivationToken" => $this->adultActivationToken, "adultAvatarUrl" => $this->adultAvatarUrl, "adultCloudinaryToken" => $this->adultCloudinaryToken, "adultEmail" => $this->adultEmail, "adultHash" => $this->adultHash, "adultName" => $this->adultName, "adultUsername" => $this->adultUsername];
 		$statement->execute($parameters);
 	}//end of update pdo method
 
