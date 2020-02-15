@@ -2,9 +2,9 @@
 	<testsuites>
 		<testsuite name="KidTask Data Design">
 			<file>ParentTest.php</file>
-			<file>KidTest.php</file>
+			<!--<file>KidTest.php</file>
 			<file>TaskTest.php</file>
-			<file>StepTest.php</file>
+			<file>StepTest.php</file>-->
 		</testsuite>
 	</testsuites>
 	<filter>

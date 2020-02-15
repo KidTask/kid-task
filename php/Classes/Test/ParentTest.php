@@ -1,9 +1,7 @@
 <?php
 
 namespace Club\KidTask\Test;
-use Club\KidTask\{
-	Parent, Kid, Task, Step
-};
+use Club\KidTask\Parent;
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
