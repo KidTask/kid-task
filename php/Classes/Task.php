@@ -85,7 +85,7 @@ class Task implements \JsonSerializable {
 	 *
 	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
 	 * @param string|Uuid $newTaskKidId id if the Kid that has task
-	 * @param string|Uuid $newTaskParentId id of the Parent making task
+	 * @param string|Uuid $newTaskParentId id of the Adult making task
 	 * @param string|null $newTaskAvatarUrl avatar URL of task
 	 * @param string|null $newTaskCloudinaryToken id of avatar image for task
 	 * @param string $newTaskContent string containing task content

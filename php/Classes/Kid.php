@@ -53,7 +53,7 @@ class Kid implements \JsonSerializable {
      * constructor for this Kid
      *
      * @param string|Uuid $newKidId The Kid's Id
-     * @param string|Uuid $newKidParentId The Kid's Parent Id
+     * @param string|Uuid $newKidParentId The Kid's Adult Id
      * @param $newKidAvatarUrl
      * @param $newKidCloudinaryToken
      * @param $newKidHash
@@ -94,7 +94,7 @@ class Kid implements \JsonSerializable {
     /**
      * mutator method for Kid id
      *
-     * @param Uuid|string $newKidId new value of Parent id
+     * @param Uuid|string $newKidId new value of Adult id
      * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidId is not a uuid or string
      **/
@@ -111,18 +111,18 @@ class Kid implements \JsonSerializable {
     } //end of setKidId function
 
     /**
-     * accessor method for Kid Parent id
+     * accessor method for Kid Adult id
      *
-     * @return Uuid value of Kid Parent id (or null if new Profile)
+     * @return Uuid value of Kid Adult id (or null if new Profile)
      **/
     public function getKidParentId() : Uuid {
         return($this->kidParentId);
     } //end of getKidParentId function
 
     /**
-     * mutator method for Kid Parent id
+     * mutator method for Kid Adult id
      *
-     * @param Uuid|string $newKidParentId new value of Parent id
+     * @param Uuid|string $newKidParentId new value of Adult id
      * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidParentId is not a uuid or string
      **/
@@ -134,7 +134,7 @@ class Kid implements \JsonSerializable {
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
 
-        // convert and store the Kid Parent id
+        // convert and store the Kid Adult id
         $this->kidParentId = $uuid;
     } //end of setKidParentId function
 
@@ -212,7 +212,7 @@ class Kid implements \JsonSerializable {
     /**
      * accessor method for kid cloudinary token
      *
-     * @return string value of Parent activation token
+     * @return string value of Adult activation token
      **/
     public function getKidCloudinaryToken(): string {
         return $this->kidCloudinaryToken;
