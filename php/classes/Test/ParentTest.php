@@ -43,7 +43,7 @@ class ParentTest extends KidTaskTest {
 	 * valid email to use
 	 * @var string $VALID_EMAIL
 	 **/
-	protected $VALID_EMAIL = "test@phpunit.com";
+	protected $VALID_EMAIL = "test@gmail.com";
 
 	/**
 	 * valid hash to use
