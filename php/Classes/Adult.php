@@ -69,7 +69,7 @@ class Adult implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-	public function __construct(string $newAdultId, string $newAdultActivationToken, ?string $newAdultAvatarUrl, ?string $newAdultCloudinaryToken, string $newAdultEmail, string $newAdultHash, ?string $newAdultName, string $newAdultUsername) {
+	public function __construct(string $newAdultId, string $newAdultActivationToken, string $newAdultAvatarUrl, string $newAdultCloudinaryToken, string $newAdultEmail, string $newAdultHash, string $newAdultName, string $newAdultUsername) {
 		try {
 			$this->setAdultId($newAdultId);
 			$this->setAdultActivationToken($newAdultActivationToken);
@@ -152,7 +152,7 @@ class Adult implements \JsonSerializable {
 	 *
 	 * @return string value of Adult avatar url
 	 **/
-	public function getAdultAvatarUrl(): ?string {
+	public function getAdultAvatarUrl(): string {
 		return $this->adultAvatarUrl;
 	} //end of getAdultAvatarUrl function
 
@@ -163,7 +163,7 @@ class Adult implements \JsonSerializable {
 		 @throws \TypeError if $newAdultAvatarUrl is not a string
 		*/
 
-	public function setAdultAvatarUrl(?string $newAdultAvatarUrl): void {
+	public function setAdultAvatarUrl($newAdultAvatarUrl): void {
 		//verify url is secure
 		$newAdultAvatarUrl = trim($newAdultAvatarUrl);
 		$newAdultAvatarUrl = filter_var($newAdultAvatarUrl, FILTER_VALIDATE_URL);
@@ -183,7 +183,7 @@ class Adult implements \JsonSerializable {
 	 *
 	 * @return string value of Adult cloudinary token
 	 **/
-	public function getAdultCloudinaryToken(): ?string {
+	public function getAdultCloudinaryToken(): string {
 		return $this->adultCloudinaryToken;
 	} //end of getAdultCloudinaryToken function
 
@@ -193,7 +193,7 @@ class Adult implements \JsonSerializable {
 		 @throws \RangeException if $newAdultCloudinaryToken is > 255 characters
 		 @throws \TypeError if $newAdultCloudinaryToken is not a string
 		*/
-	public function setAdultCloudinaryToken(?string $newAdultCloudinaryToken): void {
+	public function setAdultCloudinaryToken($newAdultCloudinaryToken): void {
 		//verify string is secure
 		$newAdultCloudinaryToken = trim($newAdultCloudinaryToken);
 		$newAdultCloudinaryToken = filter_var($newAdultCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -267,9 +267,9 @@ class Adult implements \JsonSerializable {
 		if($adultHashInfo["algoName"] !== "argon2i") {
 			throw(new \InvalidArgumentException("Adult hash is not a valid hash"));
 		}
-		//enforce that the hash is exactly 97 characters.
-		if(strlen($newAdultHash) > 97 || strlen($newAdultHash) < 89) {
-			throw(new \RangeException("Adult hash must be 97 characters"));
+		//enforce that the hash is exactly 98 characters.
+		if(strlen($newAdultHash) !== 98) {
+			throw(new \RangeException("Adult hash must be 98 characters"));
 		}
 		//store the hash
 		$this->adultHash = $newAdultHash;
@@ -280,7 +280,7 @@ class Adult implements \JsonSerializable {
 	 *
 	 * @return string value of Name
 	 */
-	public function getAdultName(): ?string {
+	public function getAdultName(): string {
 		return $this->adultName;
 	}//end of getAdultName method
 
@@ -291,7 +291,7 @@ class Adult implements \JsonSerializable {
 	 * @throws \RangeException if $new is > 255 characters
 	 * @throws \TypeError if $newAdultAvatarUrl is not a string
 	 */
-	public function setAdultName(?string $newAdultName): void {
+	public function setAdultName(string $newAdultName): void {
 		//remove whitespace and validate adult name
 		$newAdultName = trim($newAdultName);
 		$newAdultName = filter_var($newAdultName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -439,10 +439,10 @@ class Adult implements \JsonSerializable {
 	 **/
 	public static function getAdultByAdultActivationToken(\PDO $pdo, $adultActivationToken) : ?Adult {
 		// sanitize the adultId before searching
-		$adultActivationToken = strtolower(trim($adultActivationToken));
-		$adultActivationToken = filter_var($adultActivationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($adultActivationToken) === true) {
-			throw(new \PDOException("adult activation token is empty of invalid"));
+		try {
+			$adultId = self::validateUuid($adultId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template

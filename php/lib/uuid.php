@@ -1,5 +1,9 @@
 <?php
+<<<<<<< HEAD
+namespace Club\KidTask;
+=======
 
+>>>>>>> parent-test
 
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\UuidInterface;

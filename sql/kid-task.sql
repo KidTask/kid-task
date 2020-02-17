@@ -7,9 +7,15 @@ CREATE TABLE adult (
 	adultId binary(16) not null,
 	adultActivationToken char(32),
 	adultAvatarUrl varchar(255),
+<<<<<<< HEAD
+	adultCloudinaryToken VARCHAR(255),
+	adultEmail varchar(128) not null,
+	adultHash char(98) not null,
+=======
 	adultCloudinaryToken varchar(255),
 	adultEmail varchar(128) not null,
 	adultHash char(97) not null,
+>>>>>>> parent-test
 	adultName nvarchar(255),
 	adultUsername varchar(32) not null,
 	unique (adultEmail),
