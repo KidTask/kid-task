@@ -53,7 +53,11 @@ class Kid implements \JsonSerializable {
      * constructor for this Kid
      *
      * @param string|Uuid $newKidId The Kid's Id
+<<<<<<< HEAD:php/classes/Kid.php
      * @param string|Uuid $newKidAdultId The Kid's Adult Id
+=======
+     * @param string|Uuid $newKidParentId The Kid's Adult Id
+>>>>>>> parent-test:php/Classes/Kid.php
      * @param $newKidAvatarUrl
      * @param $newKidCloudinaryToken
      * @param $newKidHash
@@ -121,7 +125,12 @@ class Kid implements \JsonSerializable {
 
     /**
      * mutator method for Kid Adult id
+<<<<<<< HEAD:php/classes/Kid.php
      * @param Uuid|string $newKidAdultId new value of Adult id
+=======
+     *
+     * @param Uuid|string $newKidParentId new value of Adult id
+>>>>>>> parent-test:php/Classes/Kid.php
      * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidAdultId is not a uuid or string
      **/
@@ -134,8 +143,13 @@ class Kid implements \JsonSerializable {
         }
 
         // convert and store the Kid Adult id
+<<<<<<< HEAD:php/classes/Kid.php
         $this->kidAdultId = $uuid;
     } //end of setKidAdultId function
+=======
+        $this->kidParentId = $uuid;
+    } //end of setKidParentId function
+>>>>>>> parent-test:php/Classes/Kid.php
 
     /**
      * accessor method for Kid avatar url

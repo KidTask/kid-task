@@ -3,12 +3,12 @@
 namespace Club\KidTask\Test;
 use Club\KidTask\Adult;
 
+
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
-
 /**
  * Full PHPUnit test for the Adult class
  *
@@ -29,19 +29,19 @@ class AdultTest extends KidTaskTest {
 	 * valid avatar url to use
 	 * @var string $VALID_AVATAR_URL
 	 **/
-	protected $VALID_AVATAR_URL = "www.twitter.com";
+	protected $VALID_AVATAR_URL = "https://twitter.com/";
 
 	/**
 	 * valid cloudinary token to use
 	 * @var string $VALID_CLOUDINARY_TOKEN
 	 **/
-	protected $VALID_CLOUDINARY_TOKEN = "www.twitter.com";
+	protected $VALID_CLOUDINARY_TOKEN = "https://twitter.com/";
 
 	/**
 	 * valid email to use
 	 * @var string $VALID_EMAIL
 	 **/
-	protected $VALID_EMAIL = "test@gmail.com";
+	protected $VALID_EMAIL = "fuj@gmail.com";
 
 	/**
 	 * valid hash to use
@@ -74,7 +74,7 @@ class AdultTest extends KidTaskTest {
 		parent::setUp();
 
 		$password = "mypassword12";
-		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7]);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 	} //end setUp method
 
@@ -129,7 +129,7 @@ class AdultTest extends KidTaskTest {
 		$this->assertEquals($pdoAdult->getAdultCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoAdult->getAdultEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoAdult->getAdultHash(), $this->VALID_HASH);
-		$this->assertEquals($pdoAdult->getAdultName(), $this->VALID_NAME);
+		$this->assertEquals($pdoAdult->getAdultName(), $this->VALID_NAME2);
 		$this->assertEquals($pdoAdult->getAdultUsername(), $this->VALID_USERNAME);
 	} //end of testUpdateValid Adult
 
@@ -217,7 +217,7 @@ class AdultTest extends KidTaskTest {
 	 * test grabbing a Adult by an activation token that does not exists
 	 **/
 	public function testGetInvalidAdultActivationToken() : void {
-		// grab an email that does not exist
+		// grab an activation token that does not exist
 		$profile = Adult::getAdultByAdultActivationToken($this->getPDO(), "6675636b646f6e616c646472756d7066");
 		$this->assertNull($profile);
 	} //end of testGetInvalidAdultActivationToken method
