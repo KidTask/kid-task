@@ -439,10 +439,10 @@ class Adult implements \JsonSerializable {
 	 **/
 	public static function getAdultByAdultActivationToken(\PDO $pdo, $adultActivationToken) : ?Adult {
 		// sanitize the adultId before searching
-		try {
-			$adultId = self::validateUuid($adultId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		$adultActivationToken = strtolower(trim($adultActivationToken));
+		$adultActivationToken = filter_var($adultActivationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($adultActivationToken) === true) {
+			throw(new \PDOException("adult activation token is empty of invalid"));
 		}
 
 		// create query template

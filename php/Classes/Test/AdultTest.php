@@ -217,7 +217,7 @@ class AdultTest extends KidTaskTest {
 	 * test grabbing a Adult by an activation token that does not exists
 	 **/
 	public function testGetInvalidAdultActivationToken() : void {
-		// grab an email that does not exist
+		// grab an activation token that does not exist
 		$profile = Adult::getAdultByAdultActivationToken($this->getPDO(), "6675636b646f6e616c646472756d7066");
 		$this->assertNull($profile);
 	} //end of testGetInvalidAdultActivationToken method
