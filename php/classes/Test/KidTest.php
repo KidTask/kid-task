@@ -19,10 +19,10 @@ class KidTest extends KidTaskTest
 {
 
     /**
-     * Kid's Parent Id
-     * @var string $VALID_PARENT_ID
+     * Kid's Adult Id
+     * @var string $VALID_ADULT_ID
      */
-    protected $VALID_PARENT_ID = "KidParentId";
+    protected $VALID_ADULT_ID = "KidAdultId";
 
     /**
      * Avatar Url for Kid
@@ -60,7 +60,7 @@ class KidTest extends KidTaskTest
      */
     public final function setUp(): void
     {
-        parent::setUp();
+        Adult::setUp();
 
         //
         $password = "abc123";
@@ -79,14 +79,14 @@ class KidTest extends KidTaskTest
         $kidId = generateUuidV4();
 
 
-        $kid = new Kid($kidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid = new Kid($kidId, $this->VALID_ADULT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
         $kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
         $pdoKid = Kid::getKidByKidId($this->getPDO(), $kid->getKidId());
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
         $this->assertEquals($pdoKid->getKidId(), $kidId);
-        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->VALID_ADULT_ID);
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
@@ -104,12 +104,12 @@ class KidTest extends KidTaskTest
 
         // create a new Kid and insert to into mySQL
         $kidId = generateUuidV4();
-        $kid = new Kid($kidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid = new Kid($kidId, $this->VALID_ADULT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
         $kid->insert($this->getPDO());
 
 
         // edit the Kid and update it in mySQL
-        $kid->setKidId($this->VALID_PARENT_ID);
+        $kid->setKidId($this->VALID_ADULT_ID);
         $kid->update($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
@@ -118,7 +118,7 @@ class KidTest extends KidTaskTest
 
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
         $this->assertEquals($pdoKid->getKidId(), $kidId);
-        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->VALID_ADULT_ID);
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
@@ -136,7 +136,7 @@ class KidTest extends KidTaskTest
         $numRows = $this->getConnection()->getRowCount("kid");
 
         $kidId = generateUuidV4();
-        $kid = new Kid($kidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid = new Kid($kidId, $this->VALID_ADULT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
         $kid->insert($this->getPDO());
 
 
@@ -159,14 +159,14 @@ class KidTest extends KidTaskTest
         $numRows = $this->getConnection()->getRowCount("Kid");
 
         $KidId = generateUuidV4();
-        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid = new Kid($KidId, $this->VALID_ADULT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
         $Kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
         $pdoKid = Kid::getKidByKidId($this->getPDO(), $Kid->getKidId());
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
         $this->assertEquals($pdoKid->getKidId(), $KidId);
-        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->VALID_ADULT_ID);
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
@@ -185,13 +185,13 @@ class KidTest extends KidTaskTest
         $this->assertNull($Kid);
     }
 
-    public function testGetValidKidByKidId()
+    public function testGetValidKidByKidAdultId()
     {
         // count the number of rows and save it for later
         $numRows = $this->getConnection()->getRowCount("Kid");
 
         $KidId = generateUuidV4();
-        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid = new Kid($KidId, $this->VALID_ADULT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
         $Kid->insert($this->getPDO());
 
         //grab the data from MySQL
@@ -205,7 +205,7 @@ class KidTest extends KidTaskTest
         $pdoKid = $results[0];
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
         $this->assertEquals($pdoKid->getKidId(), $KidId);
-        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->VALID_ADULT_ID);
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
@@ -222,14 +222,14 @@ class KidTest extends KidTaskTest
         $numRows = $this->getConnection()->getRowCount("Kid");
 
         $KidId = generateUuidV4();
-        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid = new Kid($KidId, $this->VALID_ADULT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
         $Kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
         $pdoKid = Kid::getKidByKidEmail($this->getPDO(), $Kid->getKidHash());
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
         $this->assertEquals($pdoKid->getKidId(), $KidId);
-        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->VALID_ADULT_ID);
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
@@ -238,22 +238,22 @@ class KidTest extends KidTaskTest
     }
 
     /**
-     * test grabbing a Kid by Kid Parent Id
+     * test grabbing a Kid by Kid Adult Id
      */
-    public function testGetValidKidByKidParentId(): void
+    public function testGetValidKidByKidAdultId(): void
     {
         // count the number of rows and save it for later
         $numRows = $this->getConnection()->getRowCount("Kid");
 
         $KidId = generateUuidV4();
-        $Kid = new Kid($KidId, $this->VALID_PARENT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $Kid = new Kid($KidId, $this->VALID_ADULT_ID, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
         $Kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
-        $pdoKid = Kid::getKidByKidActivationToken($this->getPDO(), $Kid->getKidParentId());
+        $pdoKid = Kid::getKidByKidActivationToken($this->getPDO(), $Kid->getKidAdultId());
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
         $this->assertEquals($pdoKid->getKidId(), $KidId);
-        $this->assertEquals($pdoKid->getKidParentId(), $this->VALID_PARENT_ID);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->VALID_ADULT_ID);
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
