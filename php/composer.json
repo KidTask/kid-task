@@ -6,8 +6,7 @@
     "phpseclib/phpseclib": "2.0.11",
     "swiftmailer/swiftmailer": "@stable",
     "lcobucci/jwt": "3.2",
-    "ramsey/uuid": "@stable",
-    "license": "proprietary"
+    "ramsey/uuid": "@stable"
   },
   "scripts":{
     "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage"
