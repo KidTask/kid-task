@@ -152,7 +152,7 @@ class Adult implements \JsonSerializable {
 	 *
 	 * @return string value of Adult avatar url
 	 **/
-	public function getAdultAvatarUrl(): string {
+	public function getAdultAvatarUrl(): ?string {
 		return $this->adultAvatarUrl;
 	} //end of getAdultAvatarUrl function
 
@@ -163,7 +163,7 @@ class Adult implements \JsonSerializable {
 		 @throws \TypeError if $newAdultAvatarUrl is not a string
 		*/
 
-	public function setAdultAvatarUrl($newAdultAvatarUrl): void {
+	public function setAdultAvatarUrl(?string $newAdultAvatarUrl): void {
 		//verify url is secure
 		$newAdultAvatarUrl = trim($newAdultAvatarUrl);
 		$newAdultAvatarUrl = filter_var($newAdultAvatarUrl, FILTER_VALIDATE_URL);
@@ -183,7 +183,7 @@ class Adult implements \JsonSerializable {
 	 *
 	 * @return string value of Adult cloudinary token
 	 **/
-	public function getAdultCloudinaryToken(): string {
+	public function getAdultCloudinaryToken(): ?string {
 		return $this->adultCloudinaryToken;
 	} //end of getAdultCloudinaryToken function
 
@@ -193,7 +193,7 @@ class Adult implements \JsonSerializable {
 		 @throws \RangeException if $newAdultCloudinaryToken is > 255 characters
 		 @throws \TypeError if $newAdultCloudinaryToken is not a string
 		*/
-	public function setAdultCloudinaryToken($newAdultCloudinaryToken): void {
+	public function setAdultCloudinaryToken(?string $newAdultCloudinaryToken): void {
 		//verify string is secure
 		$newAdultCloudinaryToken = trim($newAdultCloudinaryToken);
 		$newAdultCloudinaryToken = filter_var($newAdultCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -280,7 +280,7 @@ class Adult implements \JsonSerializable {
 	 *
 	 * @return string value of Name
 	 */
-	public function getAdultName(): string {
+	public function getAdultName(): ?string {
 		return $this->adultName;
 	}//end of getAdultName method
 
@@ -291,7 +291,7 @@ class Adult implements \JsonSerializable {
 	 * @throws \RangeException if $new is > 255 characters
 	 * @throws \TypeError if $newAdultAvatarUrl is not a string
 	 */
-	public function setAdultName(string $newAdultName): void {
+	public function setAdultName(?string $newAdultName): void {
 		//remove whitespace and validate adult name
 		$newAdultName = trim($newAdultName);
 		$newAdultName = filter_var($newAdultName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);

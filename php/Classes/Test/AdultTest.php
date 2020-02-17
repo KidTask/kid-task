@@ -9,7 +9,6 @@ require_once(dirname(__DIR__) . "/autoload.php");
 
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
-var_dump(dirname(__DIR__, 2));
 /**
  * Full PHPUnit test for the Adult class
  *
@@ -130,7 +129,7 @@ class AdultTest extends KidTaskTest {
 		$this->assertEquals($pdoAdult->getAdultCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoAdult->getAdultEmail(), $this->VALID_EMAIL);
 		$this->assertEquals($pdoAdult->getAdultHash(), $this->VALID_HASH);
-		$this->assertEquals($pdoAdult->getAdultName(), $this->VALID_NAME);
+		$this->assertEquals($pdoAdult->getAdultName(), $this->VALID_NAME2);
 		$this->assertEquals($pdoAdult->getAdultUsername(), $this->VALID_USERNAME);
 	} //end of testUpdateValid Adult
 
