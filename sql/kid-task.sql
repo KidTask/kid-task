@@ -9,7 +9,7 @@ CREATE TABLE adult (
 	adultAvatarUrl varchar(255),
 	adultCloudinaryToken VARCHAR(255),
 	adultEmail varchar(128) not null,
-	adultHash char(98) not null,
+	adultHash CHAR(97) not null,
 	adultName nvarchar(255),
 	adultUsername varchar(32) not null,
 	unique (adultEmail),

@@ -30,13 +30,13 @@ class AdultTest extends KidTaskTest {
 	 * valid avatar url to use
 	 * @var string $VALID_AVATAR_URL
 	 **/
-	protected $VALID_AVATAR_URL = "www.twitter.com";
+	protected $VALID_AVATAR_URL = "https://twitter.com/";
 
 	/**
 	 * valid cloudinary token to use
 	 * @var string $VALID_CLOUDINARY_TOKEN
 	 **/
-	protected $VALID_CLOUDINARY_TOKEN = "www.twitter.com";
+	protected $VALID_CLOUDINARY_TOKEN = "https://twitter.com/";
 
 	/**
 	 * valid email to use

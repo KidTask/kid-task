@@ -267,9 +267,9 @@ class Adult implements \JsonSerializable {
 		if($adultHashInfo["algoName"] !== "argon2i") {
 			throw(new \InvalidArgumentException("Adult hash is not a valid hash"));
 		}
-		//enforce that the hash is exactly 98 characters.
-		if(strlen($newAdultHash) !== 98) {
-			throw(new \RangeException("Adult hash must be 98 characters"));
+		//enforce that the hash is exactly 97 characters.
+		if(strlen($newAdultHash) > 97 || strlen($newAdultHash) < 89) {
+			throw(new \RangeException("Adult hash must be 97 characters"));
 		}
 		//store the hash
 		$this->adultHash = $newAdultHash;
