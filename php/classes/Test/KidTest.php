@@ -1,12 +1,12 @@
 <?php
 
 namespace Club\KidTask;
-use Club\KidTask\Test\KidTaskTest;
+use Club\KidTask\{Adult, Kid, Test\KidTaskTest};
 use Ramsey\Uuid\uuid;
 
-require_once(dirname(__DIR__) . "/autoload.php");
+require_once(dirname(__DIR__) . "../vendor/autoload.php");
 
-require_once(dirname(__DIR__) . "/../uuid.php");
+require_once(dirname(__DIR__,2) . "../lib/uuid.php");
 
 /**
  * unit test for the Kid Class
