@@ -9,6 +9,7 @@
     "ramsey/uuid": "@stable"
   },
   "scripts":{
-    "phpunit": "php/vendor/bin/phpunit -c php/Classes/Test --coverage-html coverage"
+    "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage",
+    "license": "Apache 2.0"
   }
 }
