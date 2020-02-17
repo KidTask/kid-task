@@ -1,8 +1,8 @@
 <?php
 namespace Club\KidTask;
 
-require_once("Kid.php");
-require_once(dirname(__DIR__) . "/vendor/Kid.php");
+require_once("autoload.php");
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\uuid;
 
