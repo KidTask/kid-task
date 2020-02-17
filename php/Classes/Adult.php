@@ -69,7 +69,7 @@ class Adult implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 */
-	public function __construct(string $newAdultId, string $newAdultActivationToken, string $newAdultAvatarUrl, string $newAdultCloudinaryToken, string $newAdultEmail, string $newAdultHash, string $newAdultName, string $newAdultUsername) {
+	public function __construct(string $newAdultId, string $newAdultActivationToken, ?string $newAdultAvatarUrl, ?string $newAdultCloudinaryToken, string $newAdultEmail, string $newAdultHash, ?string $newAdultName, string $newAdultUsername) {
 		try {
 			$this->setAdultId($newAdultId);
 			$this->setAdultActivationToken($newAdultActivationToken);

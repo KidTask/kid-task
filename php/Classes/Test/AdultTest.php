@@ -3,12 +3,13 @@
 namespace Club\KidTask\Test;
 use Club\KidTask\Adult;
 
+
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
-
+var_dump(dirname(__DIR__, 2));
 /**
  * Full PHPUnit test for the Adult class
  *
@@ -74,7 +75,7 @@ class AdultTest extends KidTaskTest {
 		parent::setUp();
 
 		$password = "mypassword12";
-		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7]);
 		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 	} //end setUp method
 
