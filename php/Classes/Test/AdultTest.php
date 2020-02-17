@@ -41,7 +41,7 @@ class AdultTest extends KidTaskTest {
 	 * valid email to use
 	 * @var string $VALID_EMAIL
 	 **/
-	protected $VALID_EMAIL = "test@gmail.com";
+	protected $VALID_EMAIL = "roooiiiob@gmail.com";
 
 	/**
 	 * valid hash to use
