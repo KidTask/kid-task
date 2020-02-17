@@ -479,4 +479,3 @@ class Kid implements \JsonSerializable {
     }
 
 } //end of Kid class
-
