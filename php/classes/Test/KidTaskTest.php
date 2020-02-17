@@ -48,7 +48,7 @@ abstract class KidTaskTest extends TestCase {
 
 		// add all the tables for the project here
 		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
-		$dataset->addTable("parent");
+		$dataset->addTable("adult");
 		$dataset->addTable("kid");
 		$dataset->addTable("task");
 		$dataset->addTable("step");
@@ -77,8 +77,6 @@ abstract class KidTaskTest extends TestCase {
 	public final function getTearDownOperation() : Operation {
 		return(Factory::DELETE_ALL());
 	}
-
-
 
 
 	/**

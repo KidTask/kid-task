@@ -1,7 +1,14 @@
 {
   "require": {
-    "ramsey/uuid": "@stable",
-    "ext-json": "*",
-    "ext-cassandra": "*"
+    "fzaninotto/faker": "@stable",
+    "phpunit/dbunit": "@stable",
+    "phpunit/phpunit": "@stable",
+    "phpseclib/phpseclib": "2.0.11",
+    "swiftmailer/swiftmailer": "@stable",
+    "lcobucci/jwt": "3.2",
+    "ramsey/uuid": "@stable"
+  },
+  "scripts":{
+    "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage"
   }
 }
