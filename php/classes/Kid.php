@@ -201,8 +201,9 @@ class Kid implements \JsonSerializable {
             throw(new \InvalidArgumentException("Kid hash is not a valid hash"));
         }
         //enforce that the hash is exactly 98 characters.
-        if(strlen($newKidHash) !== 98) {
-            throw(new \RangeException("Kid hash must be 98 characters"));
+        if(strlen($newKidHash) > 97 || strlen($newKidHash) < 89 ) {
+            throw(new \RangeException("user hash is out of range"));
+}
         }
         //store the hash
         $this->kidHash = $newKidHash;
