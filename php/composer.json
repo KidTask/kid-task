@@ -10,6 +10,6 @@
     "vendor/autoload.php":  "@stable"
   },
   "scripts":{
-    "phpunit": "vendor/bin/phpunit -c Classes/Test --coverage-html coverage"
+    "phpunit": "php/vendor/bin/phpunit -c php/classes/Test --coverage-html coverage"
   }
 }
