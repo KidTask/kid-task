@@ -9,6 +9,6 @@
     "ramsey/uuid": "@stable"
   },
   "scripts":{
-    "phpunit": "php/lib/vendor/bin/phpunit -c php/classes/Test --coverage-html coverage"
+    "phpunit": "vendor/bin/phpunit -c classes/Test --coverage-html coverage"
   }
 }
