@@ -7,9 +7,9 @@
     "swiftmailer/swiftmailer": "@stable",
     "lcobucci/jwt": "3.2",
     "ramsey/uuid": "@stable",
-    "vendor/autoload.php":  "@stable",
+    "vendor/autoload.php":  "@stable"
   },
   "scripts":{
-    "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage"
+    "phpunit": ".php/classes/Test/phpunit.xml -c ./Classes/Test --coverage-html coverage"
   }
 }
