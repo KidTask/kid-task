@@ -53,11 +53,7 @@ class Kid implements \JsonSerializable {
      * constructor for this Kid
      *
      * @param string|Uuid $newKidId The Kid's Id
-<<<<<<< HEAD:php/classes/Kid.php
      * @param string|Uuid $newKidAdultId The Kid's Adult Id
-=======
-     * @param string|Uuid $newKidParentId The Kid's Adult Id
->>>>>>> parent-test:php/Classes/Kid.php
      * @param $newKidAvatarUrl
      * @param $newKidCloudinaryToken
      * @param $newKidHash
@@ -125,12 +121,7 @@ class Kid implements \JsonSerializable {
 
     /**
      * mutator method for Kid Adult id
-<<<<<<< HEAD:php/classes/Kid.php
      * @param Uuid|string $newKidAdultId new value of Adult id
-=======
-     *
-     * @param Uuid|string $newKidParentId new value of Adult id
->>>>>>> parent-test:php/Classes/Kid.php
      * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidAdultId is not a uuid or string
      **/
@@ -143,14 +134,9 @@ class Kid implements \JsonSerializable {
         }
 
         // convert and store the Kid Adult id
-<<<<<<< HEAD:php/classes/Kid.php
+
         $this->kidAdultId = $uuid;
     } //end of setKidAdultId function
-=======
-        $this->kidParentId = $uuid;
-    } //end of setKidParentId function
->>>>>>> parent-test:php/Classes/Kid.php
-
     /**
      * accessor method for Kid avatar url
      *
@@ -204,20 +190,16 @@ class Kid implements \JsonSerializable {
         //enforce that the hash is properly formatted
         $newKidHash = trim($newKidHash);
         if(empty($newKidHash) === true) {
-
             throw(new \InvalidArgumentException("Kid password hash empty or insecure"));
         }
         //enforce the hash is really an Argon hash
         $kidHashInfo = password_get_info($newKidHash);
-
         if($kidHashInfo["algoName"] !== "argon2i") {
-
             throw(new \InvalidArgumentException("Kid hash is not a valid hash"));
         }
-        //enforce that the hash is exactly 98 characters.
-        if(strlen($newKidHash) > 97 || strlen($newKidHash) < 89 ) {
-            throw(new \RangeException("user hash is out of range"));
-}
+        //enforce that the hash is exactly 97 characters.
+        if(strlen($newKidHash) > 97 || strlen($newKidHash) < 89) {
+            throw(new \RangeException("Kid hash must be 97 characters"));
         }
         //store the hash
         $this->kidHash = $newKidHash;
@@ -226,7 +208,7 @@ class Kid implements \JsonSerializable {
     /**
      * accessor method for kid cloudinary token
      *
-     * @return string value of Adult activation token
+     * @return string value of Kid Cloudinary Token
      **/
     public function getKidCloudinaryToken(): string {
         return $this->kidCloudinaryToken;
@@ -240,18 +222,19 @@ class Kid implements \JsonSerializable {
      * @throws \RangeException if $newKidCloudinaryToken is not exactly 32 characters
      * @throws \TypeError if $newKidCloudinaryToken is not a string
      **/
-    public function setKidCloudinaryToken(string $newKidCloudinaryToken): void {
-        if($newKidCloudinaryToken === null) {
-            $this->kidCloudinaryToken = null;
-            return;
+
+    public function setKidCloudinaryToken(?string $newKidCloudinaryToken): void {
+        //verify string is secure
+        $newKidCloudinaryToken = trim($newKidCloudinaryToken);
+        $newKidCloudinaryToken = filter_var($newKidCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        if(empty($newKidCloudinaryToken)===true) {
+            throw(new \InvalidArgumentException("kid cloudinary token is insecure"));
         }
-        $newKidCloudinaryToken = strtolower(trim($newKidCloudinaryToken));
-        if(ctype_xdigit($newKidCloudinaryToken) === false) {
-            throw(new\RangeException("user activation is not valid"));
+        //verify url will fit database
+        if(strlen($newKidCloudinaryToken) > 255) {
+            throw(new \RangeException("kid cloudinary token is too large"));
         }
-        if(strlen($newKidCloudinaryToken) !== 32){
-            throw(new\RangeException("Activation Token must be 32 characters "));
-        }
+
         $this->kidCloudinaryToken = $newKidCloudinaryToken;
     } //end of setKidCloudinaryToken function
 
