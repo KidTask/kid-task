@@ -2,9 +2,6 @@
 
 namespace Club\KidTask;
 use Club\KidTask\{Adult, Kid, Test\KidTaskTest};
-use Ramsey\Uuid\generateUuidV4;
-use Ramsey\Uuid\uuid;
-use function Ramsey\Uuid\uuid\generateUuidV4;
 
 require_once(dirname(__DIR__) . "/autoload.php");
 
@@ -17,8 +14,7 @@ require_once(dirname(__DIR__,2) . "/lib/uuid.php");
  * @author Jacob Lott
  */
 
-class KidTest extends KidTaskTest
-{
+class KidTest extends KidTaskTest {
 
     /**
      * Kid's Adult Id
