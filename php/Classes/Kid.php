@@ -54,18 +54,18 @@ class Kid implements \JsonSerializable {
      *
      * @param string|Uuid $newKidId The Kid's Id
      * @param string|Uuid $newKidAdultId The Kid's Adult Id
-     * @param $newKidAvatarUrl
-     * @param $newKidCloudinaryToken
-     * @param $newKidHash
-     * @param $newKidName
-     * @param $newKidUsername
+     * @param string|$newKidAvatarUrl
+     * @param string|$newKidCloudinaryToken
+     * @param string|$newKidHash
+     * @param string|$newKidName
+     * @param string|$newKidUsername
      * @throws \InvalidArgumentException if data types are not valid
      * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
      * @throws \TypeError if data types violate type hints
      * @throws \Exception if some other exception occurs
      * @Documentation https://php.net/manual/en/language.oop5.decon.php
      */
-    public function __construct($newKidId, $newKidAdultId, $newKidAvatarUrl, $newKidCloudinaryToken, $newKidHash, $newKidName, $newKidUsername) {
+    public function __construct( $newKidId, $newKidAdultId, ?string $newKidAvatarUrl, ?string $newKidCloudinaryToken, string $newKidHash, ?string $newKidName, string $newKidUsername) {
         try {
             $this->setKidId($newKidId);
             $this->setKidAdultId($newKidAdultId);
@@ -142,7 +142,7 @@ class Kid implements \JsonSerializable {
      *
      * @return string value of Kid avatar url
      **/
-    public function getKidAvatarUrl(): string {
+    public function getKidAvatarUrl(): ?string {
         return $this->kidAvatarUrl;
     } //end of getKidAvatarUrl function
 
@@ -153,7 +153,7 @@ class Kid implements \JsonSerializable {
          @throws \TypeError if $newKidAvatarUrl is not a string
         */
 
-    public function setKidAvatarUrl($newKidAvatarUrl): void {
+    public function setKidAvatarUrl(?string $newKidAvatarUrl): void {
         //verify url is secure
         $newKidAvatarUrl = trim($newKidAvatarUrl);
         $newKidAvatarUrl = filter_var($newKidAvatarUrl, FILTER_VALIDATE_URL);
@@ -210,7 +210,7 @@ class Kid implements \JsonSerializable {
      *
      * @return string value of Kid Cloudinary Token
      **/
-    public function getKidCloudinaryToken(): string {
+    public function getKidCloudinaryToken(): ?string {
         return $this->kidCloudinaryToken;
     } //end of getKidCloudinaryToken function
 
@@ -244,7 +244,7 @@ class Kid implements \JsonSerializable {
      *
      * @return string value of Name
      */
-    public function getKidName(): string {
+    public function getKidName(): ?string {
         return $this->kidName;
     }//end of getKidName method
 
@@ -255,7 +255,7 @@ class Kid implements \JsonSerializable {
      * @throws \RangeException if $new is > 255 characters
      * @throws \TypeError if $newKidAvatarUrl is not a string
      */
-    public function setKidName(string $newKidName): void {
+    public function setKidName(?string $newKidName): void {
         if($newKidName === null) {
             $this->kidName = null;
             return;
@@ -301,11 +301,11 @@ class Kid implements \JsonSerializable {
     public function insert(\PDO $pdo) : void {
 
         // create query template
-        $query = "INSERT INTO kid(kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername) VALUES(:kidId, :kidAdultId, :kidAvatarUrl, :kidHash, :kidName, :kidUsername)";
+        $query = "INSERT INTO kid(kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername) VALUES(:kidId, :kidAdultId, :kidAvatarUrl, :kidCloudinaryToken, :kidHash, :kidName, :kidUsername)";
         $statement = $pdo->prepare($query);
 
         // bind the member variables to the place holders in the template
-        $parameters = ["kidId" => $this->kidId->getBytes(), "kidAdultId" => $this->kidAdultId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
+        $parameters = ["kidId" => $this->kidId->getBytes(), "kidAdultId" => $this->kidAdultId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidCloudinaryToken" => $this->kidCloudinaryToken, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
         $statement->execute($parameters);
     }//end of pdo insert function
 
@@ -319,10 +319,10 @@ class Kid implements \JsonSerializable {
     public function update(\PDO $pdo) : void {
 
         // create query template
-        $query = "UPDATE kid SET kidAdultId = :kidAdultId, kidAvatarUrl = :kidAvatarUrl, kidCloudinaryToken = :kidCloudinaryToken, kidHash = :kidHash, kidName = :kidName, kidUsername = :kidUsername WHERE kidId = :kidId";
+        $query = "UPDATE kid SET kidId = :kidId, kidAdultId = :kidAdultId, kidAvatarUrl = :kidAvatarUrl, kidCloudinaryToken = :kidCloudinaryToken, kidHash = :kidHash, kidName = :kidName, kidUsername = :kidUsername WHERE kidId = :kidId";
         $statement = $pdo->prepare($query);
 
-        $parameters = ["kidId" => $this->kidId->getBytes(), "kidAdultId" => $this->kidAdultId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
+        $parameters = ["kidId" => $this->kidId->getBytes(), "kidAdultId" => $this->kidAdultId->getBytes(), "kidAvatarUrl" => $this->kidAvatarUrl, "kidCloudinaryToken" => $this->kidCloudinaryToken, "kidHash" => $this->kidHash, "kidName" => $this->kidName, "kidUsername" => $this->kidUsername];
         $statement->execute($parameters);
     }//end of update pdo method
 
@@ -403,11 +403,11 @@ class Kid implements \JsonSerializable {
         }
 
         // create query template
-        $query = "SELECT kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $query = "SELECT kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidAdultId = :kidAdultId";
         $statement = $pdo->prepare($query);
 
         // bind the Adult id to the place holder in the template
-        $parameters = ["kidId" => $kidAdultId->getBytes()];
+        $parameters = ["kidAdultId" => $kidAdultId->getBytes()];
         $statement->execute($parameters);
 
         // grab the kid from mySQL
@@ -429,25 +429,22 @@ class Kid implements \JsonSerializable {
      * gets the Kid by kidUsername
      *
      * @param \PDO $pdo PDO connection object
-     * @param Uuid|string $kidUsername kid username to search for
+     * @param string $kidUsername kid username to search for
      * @return Kid|null kid found or null if not found
      * @throws \PDOException when mySQL related errors occur
      * @throws \TypeError when a variable are not the correct data type
      **/
     public static function getKidByKidUsername(\PDO $pdo, $kidUsername) : ?Kid {
         // sanitize the kidUsername before searching
-        try {
-            $kidUsername = self::validateUuid($kidUsername);
-        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-            throw(new \PDOException($exception->getMessage(), 0, $exception));
-        }
+        $kidUsername = strtolower(trim($kidUsername));
+        $kidUsername = filter_var($kidUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         // create query template
-        $query = "SELECT kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidId = :kidId";
+        $query = "SELECT kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidUsername = :kidUsername";
         $statement = $pdo->prepare($query);
 
-        // bind the kid id to the place holder in the template
-        $parameters = ["kidId" => $kidUsername->getBytes()];
+        // bind the kid username to the place holder in the template
+        $parameters = ["kidUsername" => $kidUsername];
         $statement->execute($parameters);
 
         // grab the kid from mySQL

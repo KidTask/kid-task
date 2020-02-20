@@ -78,9 +78,9 @@ $this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7
 $this->VALID_ACTIVATION = bin2hex(random_bytes(16));
 } //end setUp method
 
-/**
-* test inserting a valid Adult and verify that the actual mySQL data matches
-**/
+    /**
+     * test inserting a valid Adult and verify that the actual mySQL data matches
+     */
 public function testInsertValidAdult() : void {
 // count the number of rows and save it for later
 $numRows = $this->getConnection()->getRowCount("adult");

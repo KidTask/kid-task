@@ -60,30 +60,3 @@ CREATE TABLE step (
 );
 
 
-CREATE TABLE task (
-	taskId binary(16) not null ,
-	taskKidId binary(16) not null,
-	taskAdultId binary(16) not null,
-	taskAvatarUrl VARCHAR(255),
-	taskCloudinaryToken VARCHAR(255),
-	taskContent VARCHAR(255) not null,
-	taskDueDate DATETIME(6),
-	taskIsComplete TINYINT,
-	taskReward varchar(255),
-	index(taskAdultId),
-	index (taskKidId),
-	foreign key(taskKidId) references kid(kidId),
-	foreign key(taskAdultId) references adult(adultId),
-	primary key(taskId)
-);
-
-CREATE TABLE step (
-	stepId binary(16) not null,
-	stepTaskId binary(16) not null,
-	stepContent varchar(255) not null,
-	stepOrder SMALLINT,
-	index(stepTaskId),
-	foreign key(stepTaskId) references task(taskId),
-	primary key(stepId)
-);
-

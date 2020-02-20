@@ -1,7 +1,7 @@
 <?php
 
-namespace Club\KidTask;
-use Club\KidTask\{Adult, Kid, Test\KidTaskTest};
+namespace Club\KidTask\Test;
+use Club\KidTask\{Adult, Kid};
 
 require_once(dirname(__DIR__) . "/autoload.php");
 
@@ -51,10 +51,12 @@ class KidTest extends KidTaskTest {
      * @var $VALID_NAME
      */
     protected $VALID_NAME = "Name";
-    //private $adult;
-    private $kidAdultId;
 
-
+    /**
+     * valid Name
+     * @var $VALID_NAME2
+     */
+    protected $VALID_NAME2 = "Name2";
     /**
      * run the default setup operation to create salt and hash.
      * @throws \Exception
@@ -78,24 +80,25 @@ class KidTest extends KidTaskTest {
     public function testInsertValidKid(): void
     {
         // count the number of rows and save it for later
-//        $numRows = $this->getConnection()->getRowCount("Kid");
+        $numRows = $this->getConnection()->getRowCount("kid");
 
         $kidId = generateUuidV4();
 
 
-        $kid = new Kid($kidId, $this->kidAdultId, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
         $kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
         $pdoKid = Kid::getKidByKidId($this->getPDO(), $kid->getKidId());
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
         $this->assertEquals($pdoKid->getKidId(), $kidId);
-        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult->getAdultId());
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
-        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
         $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
+
     }
 
 
@@ -111,26 +114,26 @@ class KidTest extends KidTaskTest {
 
         // create a new Kid and insert to into mySQL
         $kidId = generateUuidV4();
-        $kid = new Kid($kidId, $this->kidAdultId, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
         $kid->insert($this->getPDO());
 
 
         // edit the Kid and update it in mySQL
-        $kid->setKidId($this->adult);
+        $kid->setKidName($this->VALID_NAME2);
         $kid->update($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
-        $pdoKid = Kid::getKidByKidId($this->getPDO(), $Kid->getKidId());
+        $pdoKid = Kid::getKidByKidId($this->getPDO(), $kid->getKidId());
 
 
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
         $this->assertEquals($pdoKid->getKidId(), $kidId);
-        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult->getAdultId());
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
+        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME2);
         $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
-        $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
     }
 
 
@@ -145,18 +148,18 @@ class KidTest extends KidTaskTest {
         $numRows = $this->getConnection()->getRowCount("kid");
 
         $kidId = generateUuidV4();
-        $kid = new Kid($kidId, $this->kidAdultId, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
+        $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
         $kid->insert($this->getPDO());
 
 
         // delete the Kid from mySQL
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
         $kid->delete($this->getPDO());
 
         // grab the data from mySQL and enforce the Kid does not exist
-        $pdoKid = Kid::getKidByKidId($this->getPDO(), $Kid->getKidId());
+        $pdoKid = Kid::getKidByKidId($this->getPDO(), $kid->getKidId());
         $this->assertNull($pdoKid);
-        $this->assertEquals($numRows, $this->getConnection()->getRowCount("Kid"));
+        $this->assertEquals($numRows, $this->getConnection()->getRowCount("kid"));
     }
 
     /**
@@ -167,22 +170,22 @@ class KidTest extends KidTaskTest {
     public function testGetValidKidByKidId(): void
     {
         // count the number of rows and save it for later
-        $numRows = $this->getConnection()->getRowCount("Kid");
+        $numRows = $this->getConnection()->getRowCount("kid");
 
-        $KidId = generateUuidV4();
-        $Kid = new Kid($KidId, $this->kidAdultId, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
-        $Kid->insert($this->getPDO());
+        $kidId = generateUuidV4();
+        $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+        $kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
-        $pdoKid = Kid::getKidByKidId($this->getPDO(), $Kid->getKidId());
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
-        $this->assertEquals($pdoKid->getKidId(), $KidId);
-        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult);
+        $pdoKid = Kid::getKidByKidId($this->getPDO(), $kid->getKidId());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
+        $this->assertEquals($pdoKid->getKidId(), $kidId);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult->getAdultId());
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
-        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
         $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
     }
 
     /**
@@ -202,22 +205,22 @@ class KidTest extends KidTaskTest {
     public function testGetValidKidByUsername(): void
     {
         // count the number of rows and save it for later
-        $numRows = $this->getConnection()->getRowCount("Kid");
+        $numRows = $this->getConnection()->getRowCount("kid");
 
-        $KidId = generateUuidV4();
-        $Kid = new Kid($KidId, $this->kidAdultId, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
-        $Kid->insert($this->getPDO());
+        $kidId = generateUuidV4();
+        $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+        $kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
-        $pdoKid = Kid::getKidByKidEmail($this->getPDO(), $Kid->getKidHash());
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
-        $this->assertEquals($pdoKid->getKidId(), $KidId);
-        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult);
+        $pdoKid = Kid::getKidByKidUsername($this->getPDO(), $kid->getKidUsername());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
+        $this->assertEquals($pdoKid->getKidId(), $kidId);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult->getAdultId());
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
-        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
         $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
     }
 
     /**
@@ -226,21 +229,21 @@ class KidTest extends KidTaskTest {
     public function testGetValidKidByKidAdultId() : void
     {
         // count the number of rows and save it for later
-        $numRows = $this->getConnection()->getRowCount("Kid");
+        $numRows = $this->getConnection()->getRowCount("kid");
 
-        $KidId = generateUuidV4();
-        $Kid = new Kid($KidId, $this->kidAdultId, $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_USERNAME, $this->VALID_NAME);
-        $Kid->insert($this->getPDO());
+        $kidId = generateUuidV4();
+        $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+        $kid->insert($this->getPDO());
 
         // grab the data from mySQL and enforce the fields match our expectations
-        $pdoKid = Kid::getKidByKidActivationToken($this->getPDO(), $Kid->getKidAdultId());
-        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("Kid"));
-        $this->assertEquals($pdoKid->getKidId(), $KidId);
-        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult);
+        $pdoKid = Kid::getKidByKidAdultId($this->getPDO(), $kid->getKidAdultId());
+        $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
+        $this->assertEquals($pdoKid->getKidId(), $kidId);
+        $this->assertEquals($pdoKid->getKidAdultId(), $this->adult->getAdultId());
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
         $this->assertEquals($pdoKid->getKidCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
         $this->assertEquals($pdoKid->getKidHash(), $this->VALID_HASH);
-        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
         $this->assertEquals($pdoKid->getKidName(), $this->VALID_NAME);
+        $this->assertEquals($pdoKid->getKidUsername(), $this->VALID_USERNAME);
     }
 }
