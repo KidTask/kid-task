@@ -1,2 +1,2 @@
 # kid-task
-Capstone project creating a kid's cleanup app
+Capstone project creating a kid's cleanup app 
