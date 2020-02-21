@@ -32,16 +32,17 @@ class Task implements \JsonSerializable {
 	private $taskId;
 
 	/**
+	 * adult id for this Task; this is the foreign key
+	 * @var Uuid $taskAdultId
+	 **/
+	private $taskAdultId;
+
+	/**
 	 * kid id for this Task; this is a foreign key
 	 * @var Uuid $taskKidId
 	 **/
 	private $taskKidId;
 
-	/**
-	 * parent id for this Task; this is the foreign key
-	 * @var Uuid $taskParentId
-	 **/
-	private $taskParentId;
 
 	/**
 	 * avatar for this Task;
@@ -84,8 +85,8 @@ class Task implements \JsonSerializable {
 	 * constructor for this Author
 	 *
 	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
+	 * @param string|Uuid $newTaskAdultId id of the Adult making task
 	 * @param string|Uuid $newTaskKidId id if the Kid that has task
-	 * @param string|Uuid $newTaskParentId id of the Adult making task
 	 * @param string|null $newTaskAvatarUrl avatar URL of task
 	 * @param string|null $newTaskCloudinaryToken id of avatar image for task
 	 * @param string $newTaskContent string containing task content
@@ -98,12 +99,12 @@ class Task implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct(string $newTaskId, string $newTaskKidId, string $newTaskParentId, string $newTaskAvatarUrl, string $newTaskCloudinaryToken,
+	public function __construct(string $newTaskId,  string $newTaskAdultId, string $newTaskKidId, string $newTaskAvatarUrl, string $newTaskCloudinaryToken,
 										 string $newTaskContent, \DateTime $newTaskDueDate, int $newTaskIsComplete, string $newTaskReward = null) {
 		try {
 			$this->setTaskId($newTaskId);
+			$this->setTaskAdultId($newTaskAdultId);
 			$this->setTaskKidId($newTaskKidId);
-			$this->setTaskParentId($newTaskParentId);
 			$this->setTaskAvatarUrl($newTaskAvatarUrl);
 			$this->setTaskCloudinaryToken($newTaskCloudinaryToken);
 			$this->setTaskContent($newTaskContent);
@@ -175,30 +176,30 @@ class Task implements \JsonSerializable {
 
 
 	/**
-	 * accessor method for task by parent id
+	 * accessor method for task by adult id
 	 *
-	 * @return Uuid value of task parent id (or null if new Task)
+	 * @return Uuid value of task adult id (or null if new Task)
 	 **/
-	public function getTaskParentId(): Uuid {
-		return ($this->taskParentId);
+	public function getTaskAdultId(): Uuid {
+		return ($this->taskAdultId);
 	}
 
 	/**
-	 * mutator method for task parent id
+	 * mutator method for task adult id
 	 *
-	 * @param Uuid| string $newTaskParentId value of new task parent id
-	 * @throws \RangeException if $newTaskParentId is not positive
-	 * @throws \TypeError if the task parent Id is not
+	 * @param Uuid| string $newTaskAdultId value of new task adult id
+	 * @throws \RangeException if $newTaskAdultId is not positive
+	 * @throws \TypeError if the task adult Id is not
 	 **/
-	public function setTaskParentId($newTaskParentId): void {
+	public function setTaskAdultId($newTaskAdultId): void {
 		try {
-			$uuid = self::validateUuid($newTaskParentId);
+			$uuid = self::validateUuid($newTaskAdultId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		// convert and store the task parent id
-		$this->taskParentId = $uuid;
+		// convert and store the task adult id
+		$this->taskAdultId = $uuid;
 	}
 
 
@@ -350,7 +351,7 @@ class Task implements \JsonSerializable {
 	 *
 	 * @return int value of task is complete
 	 **/
-	public function getTaskIsComplete(): int {
+	public function getTaskIsComplete(): ?int {
 		return $this->taskIsComplete;
 	}
 
@@ -361,10 +362,14 @@ class Task implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newTaskIsComplete is not a valid int
 	 * @throws \RangeException if $newTaskIsComplete is > 3
 	 **/
-	public function setTaskIsComplete(int $newTaskIsComplete): void {
+	public function setTaskIsComplete(?int $newTaskIsComplete): void {
 		// verify task is complete is 0, 1, 2
 		$newTaskIsComplete = trim($newTaskIsComplete);
 		$newTaskIsComplete = filter_var($newTaskIsComplete);
+		if(empty($newTaskIsComplete) === true) {
+			$this->taskIsComplete = null;
+			return;
+		}
 		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2)) {
 			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-2"));
 		}
@@ -418,14 +423,14 @@ class Task implements \JsonSerializable {
 	public function insert(\PDO $pdo): void {
 
 		// create query template
-		$query = "INSERT INTO task(taskId, taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward) 
-VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken,  :taskContent, :taskDueDate, :taskIsComplete, :taskReward)";
+		$query = "INSERT INTO task(taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward) 
+VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,  :taskContent, :taskDueDate, :taskIsComplete, :taskReward)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->taskDueDate->format("Y-m-d H:i:s.u");
 
-		$parameters = ["taskId" => $this->taskId->getBytes(), "taskKidId" => $this->taskKidId, "taskParentId" => $this->taskParentId->getBytes(),
+		$parameters = ["taskId" => $this->taskId->getBytes(), "taskAdultId" => $this->taskAdultId->getBytes(), "taskKidId" => $this->taskKidId->getBytes(),
 			"taskAvatarUrl" => $this->taskAvatarUrl, "taskCloudinaryToken" => $this->taskCloudinaryToken,
 			"taskContent" => $this->taskContent, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete,
 			"taskReward" => $this->taskReward ];
@@ -445,12 +450,15 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 	public function update(\PDO $pdo) : void {
 
 		// create query template
-		$query = "UPDATE task SET  taskKidId = :taskKidId, taskParentId = :taskParentId,
+		$query = "UPDATE task SET taskAdultId = :taskAdultId,  taskKidId = :taskKidId, 
     taskAvatarUrl = :taskAvatarUrl, taskCloudinaryToken = :taskCloudinaryToken,
     taskContent = :taskContent, taskDueDate = :taskDueDate, taskIsComplete = :taskIsComplete, taskReward = :taskReward WHERE taskId = :taskId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["taskId" => $this->taskId->getBytes(), "taskKidId" => $this->taskKidId->getBytes(), "taskParentId" => $this->taskParentId->getBytes(),
+		// bind the member variables to the place holders in the template
+		$formattedDate = $this->taskDueDate->format("Y-m-d H:i:s.u");
+
+		$parameters = ["taskId" => $this->taskId->getBytes(), "taskAdultId" => $this->taskAdultId->getBytes(), "taskKidId" => $this->taskKidId->getBytes(),
 			"taskAvatarUrl" => $this->taskAvatarUrl, "taskCloudinaryToken" =>$this->taskCloudinaryToken,
 			"taskContent" => $this->taskContent, "taskDueDate" => $formattedDate, "taskIsComplete"=> $this->taskIsComplete,
 			"taskReward" => $this->taskReward];
@@ -482,7 +490,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 	 *
 	 * @param \PDO $pdo The database connection object.
 	 * @param Uuid $taskKidId The kid id associate with task.
-	 * @return \SplFixedArray An array of task objects that match the task parent id.
+	 * @return \SplFixedArray An array of task objects that match the task adult id.
 	 * @throws \PDOException MySQL errors generated by the statement.
 	 **/
 	public static function getTaskByTaskKidId(\PDO $pdo, Uuid $taskKidId) : \SplFixedArray {
@@ -493,7 +501,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT taskId,taskKidId ,taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskKidId = :taskKidId";
+		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskKidId = :taskKidId";
 		$statement = $pdo->prepare($query);
 
 		// bind the task kid id to the place holder in the template
@@ -509,7 +517,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 				$statement->setFetchMode(\PDO::FETCH_ASSOC);
 				$row = $statement->fetch();
 				if($row !== false) {
-					$tasks = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"],
+					$tasks = new Task($row["taskId"], $row["taskAdultId"], $row["taskKidId"],
 						$row["taskAvatarUrl"], $row["taskCloudinaryToken"],
 						$row["taskContent"], $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
 				}
@@ -544,7 +552,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 		$taskContent = str_replace("_", "\\_", str_replace("%", "\\%", $taskContent));
 
 		// create query template
-		$query = "SELECT taskId, taskKidId, taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent = :taskContent";
+		$query = "SELECT taskId, taskAdultId, taskKidId,  taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent = :taskContent";
 		$statement = $pdo->prepare($query);
 
 		// bind the task content to the place holder in the template
@@ -557,7 +565,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$task = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"],
+				$task = new Task($row["taskId"], $row["taskAdultId"], $row["taskKidId"],
 					$row["taskAvatarUrl"], $row["taskCloudinaryToken"],
 					$row["taskContent"], $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
 				$tasks[$tasks->key()] = $task;
@@ -578,26 +586,26 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 
 
 	/**
-	 * Gets all tasks posted by task parent id.
+	 * Gets all tasks posted by task adult id.
 	 *
 	 * @param \PDO $pdo The database connection object.
-	 * @param Uuid $taskParentId The parent id associate with task.
-	 * @return \SplFixedArray An array of task objects that match the task parent id.
+	 * @param Uuid $taskAdultId The adult id associate with task.
+	 * @return \SplFixedArray An array of task objects that match the task adult id.
 	 * @throws \PDOException MySQL errors generated by the statement.
 	 **/
-	public static function getTasksByTaskParentId(\PDO $pdo, Uuid $taskParentId) : \SplFixedArray {
+	public static function getTasksByTaskAdultId(\PDO $pdo, Uuid $taskAdultId) : \SplFixedArray {
 		try {
-			// sanitize the taskParentId before searching
-			$taskParentId = self::validateUuid($taskParentId);
+			// sanitize the taskAdultId before searching
+			$taskAdultId = self::validateUuid($taskAdultId);
 		} catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT taskId, taskKidId, taskParentId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskParentId = :taskParentId";
+		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskAdultId = :taskAdultId";
 		$statement = $pdo->prepare($query);
 
-		// bind the task parent id to the place holder in the template
-		$parameters = ["taskParentId" => $taskParentId->getBytes()];
+		// bind the task adult id to the place holder in the template
+		$parameters = ["taskAdultId" => $taskAdultId->getBytes()];
 		$statement->execute($parameters);
 
 		// build an array of tasks
@@ -609,7 +617,7 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 				$statement->setFetchMode(\PDO::FETCH_ASSOC);
 				$row = $statement->fetch();
 				if($row !== false) {
-					$tasks = new Task($row["taskId"], $row["taskKidId"], $row["taskParentId"],
+					$tasks = new Task($row["taskId"], $row["taskAdultId"], $row["taskKidId"],
 						$row["taskAvatarUrl"], $row["taskCloudinaryToken"],
 						$row["taskContent"], $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
 				}
@@ -625,6 +633,45 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 
 
 
+	/**
+	 * gets the Tasks by task is complete
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param int $taskIsComplete task completion level
+	 * @return int|null int or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when variables are not the correct data type
+	 **/
+	public static function getTaskByTaskIsComplete(\PDO $pdo, int $taskIsComplete) : ?int {
+		try {
+			// sanitize the description before searching
+			$newTaskIsComplete = filter_var($taskIsComplete, FILTER_SANITIZE_NUMBER_INT);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskIsComplete = :taskIsComplete";
+		$statement = $pdo->prepare($query);
+
+		// bind the task taskIsComplete to the place holder in the template
+
+		if(empty($newTaskIsComplete) === true) {
+			$this->taskIsComplete = null;
+			return;
+		}
+
+		//Still need  // bind the + // grab the
+
+
+
+	} // end of getTaskByTaskIsComplete
+
+
+
+
+
+
 
 	/**
 	 * formats the state variables for JSON serialization
@@ -635,8 +682,9 @@ VALUES( :taskId, :taskKidId, :taskParentId, :taskAvatarUrl, :taskCloudinaryToken
 		$fields = get_object_vars($this);
 
 		$fields["taskId"] = $this->taskId->toString();
+		$fields["taskAdultId"] = $this->taskAdultId->toString();
 		$fields["taskKidId"] = $this->taskKidId->toString();
-		$fields["taskParentId"] = $this->taskParentId->toString();
+
 
 		//format the date so that the front end can consume it
 		$fields["taskDueDate"] = round(floatval($this->taskDueDate->format("U.u")) * 1000);
