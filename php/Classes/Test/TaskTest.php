@@ -3,7 +3,7 @@
 namespace Club\KidTask\Test;
 
 use Club\KidTask\{
-	Adult, Kid, Task, Step
+	Adult, Kid, Task
 };
 
 // grab the class under scrutiny
@@ -130,13 +130,13 @@ class TaskTest extends KidTaskTest {
 	 * @throws \Exception
 	 */
 	public function testInsertValidTask(): void {
-//		// count the number of rows and save it for later
-//		$numRows = $this->getConnection()->getRowCount("task");
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("task");
 
 		// Create a new task and insert into mySQL
 		$taskId = generateUuidV4();
 
-		$task = new Task(taskId, $this->adult->getAdultId(), $this->kid->getKidtId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
+		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
 		$task->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -268,7 +268,7 @@ class TaskTest extends KidTaskTest {
 	}
 
 	/**
-	 * test grabbing a Task by Task Adult Id
+	 * test grabbing a Task by Task is complete
 	 */
 	public function testGetValidTaskByTaskIsComplete(): void {
 		// count the number of rows and save it for later
