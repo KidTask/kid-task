@@ -82,7 +82,7 @@ class Task implements \JsonSerializable {
 
 
 	/**
-	 * constructor for this Author
+	 * constructor for this Task
 	 *
 	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
 	 * @param string|Uuid $newTaskAdultId id of the Adult making task
@@ -644,7 +644,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 	 **/
 	public static function getTaskByTaskIsComplete(\PDO $pdo, int $taskIsComplete) : ?int {
 		try {
-			// sanitize the description before searching
+			// sanitize the int before searching
 			$newTaskIsComplete = filter_var($taskIsComplete, FILTER_SANITIZE_NUMBER_INT);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
@@ -654,15 +654,28 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskIsComplete = :taskIsComplete";
 		$statement = $pdo->prepare($query);
 
-		// bind the task taskIsComplete to the place holder in the template
 
-		if(empty($newTaskIsComplete) === true) {
-			$this->taskIsComplete = null;
-			return;
+		// bind the task is complete to the place holder in the template
+		$parameters = ["taskIsComplete" => $taskIsComplete];
+		$statement->execute($parameters);
+
+
+		// build an array of tasks
+		$tasks = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$task = new Task($row["taskId"], $row["taskAdultId"], $row["taskKidId"],
+					$row["taskAvatarUrl"], $row["taskCloudinaryToken"],
+					$row["taskContent"], $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
+				$tasks[$tasks->key()] = $task;
+				$tasks->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
 		}
-
-		//Still need  // bind the + // grab the
-
+		return($tasks);
 
 
 	} // end of getTaskByTaskIsComplete

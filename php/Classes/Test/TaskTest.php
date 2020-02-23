@@ -1,6 +1,7 @@
 <?php
 
 namespace Club\KidTask\Test;
+
 use Club\KidTask\{
 	Adult, Kid, Task, Step
 };
@@ -12,9 +13,9 @@ require_once(dirname(__DIR__) . "/autoload.php");
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 /**
- * Full PHPUnit test for the Task class
+ * PHPUnit test for the Task class
  *
- * This is a complete PHPUnit test of the Like class. It is complete because *ALL* mySQL/PDO enabled methods
+ * This is a complete PHPUnit test of the Task class. It is complete because *ALL* mySQL/PDO enabled methods
  * are tested for both invalid and valid inputs.
  *
  * @see Task
@@ -80,6 +81,12 @@ class TaskTest extends KidTaskTest {
 	protected $VALID_TASKISCOMPLETE = 0;
 
 	/**
+	 * if Task is complete
+	 * @var int $VALID_TASKISCOMPLETE2
+	 **/
+	protected $VALID_TASKISCOMPLETE2 = 1;
+
+	/**
 	 * reward for Task
 	 * @var string $VALID_TASKREWARD
 	 **/
@@ -89,18 +96,18 @@ class TaskTest extends KidTaskTest {
 	/**
 	 * create dependent objects before running each test
 	 **/
-	public final function setUp()  : void {
+	public final function setUp(): void {
 		// run the default setUp() method first
 		parent::setUp();
 		$password = "abc123";
 		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7]);
 
 		// create and insert a Adult to own the test Task
-		$this->adult = new Adult(generateUuidV4(), null,"https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de",$this->VALID_HASH,  "Mom", "Mother");
+		$this->adult = new Adult(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de", $this->VALID_HASH, "Mom", "Mother");
 		$this->adult->insert($this->getPDO());
 
 		// create and insert a Kid to own the test Task
-		$this->kid = new Kid(generateUuidV4(), null,"https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif",$this->VALID_HASH, "Timothy" , "Ocho");
+		$this->kid = new Kid(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", $this->VALID_HASH, "Timothy", "Ocho");
 		$this->kid->insert($this->getPDO());
 
 
@@ -122,15 +129,14 @@ class TaskTest extends KidTaskTest {
 	 *
 	 * @throws \Exception
 	 */
-	public function testInsertValidTask(): void
-	{
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("task");
+	public function testInsertValidTask(): void {
+//		// count the number of rows and save it for later
+//		$numRows = $this->getConnection()->getRowCount("task");
 
+		// Create a new task and insert into mySQL
 		$taskId = generateUuidV4();
 
-
-		$task = new Task(taskId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
+		$task = new Task(taskId, $this->adult->getAdultId(), $this->kid->getKidtId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
 		$task->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -153,8 +159,7 @@ class TaskTest extends KidTaskTest {
 	 *
 	 * @throws \Exception
 	 */
-	public function testDeleteValidTask(): void
-	{
+	public function testDeleteValidTask(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("task");
 
@@ -178,8 +183,7 @@ class TaskTest extends KidTaskTest {
 	 *
 	 * @throws \Exception
 	 */
-	public function testGetValidTaskByTaskId(): void
-	{
+	public function testGetValidTaskByTaskId(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("task");
 
@@ -200,11 +204,11 @@ class TaskTest extends KidTaskTest {
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
 	}
+
 	/**
 	 * test grabbing a Task that does not exist
 	 **/
-	public function testGetInvalidTaskByTaskId(): void
-	{
+	public function testGetInvalidTaskByTaskId(): void {
 		// grab a Kid id that exceeds the maximum allowable Kid id
 		$fakeTaskId = generateUuidV4();
 		$task = Task::getTaskByTaskId($this->getPDO(), $fakeTaskId);
@@ -241,8 +245,7 @@ class TaskTest extends KidTaskTest {
 	/**
 	 * test grabbing a Task by Task Adult Id
 	 */
-	public function testGetValidTaskByTaskAdultId() : void
-	{
+	public function testGetValidTaskByTaskAdultId(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("task");
 
@@ -267,8 +270,7 @@ class TaskTest extends KidTaskTest {
 	/**
 	 * test grabbing a Task by Task Adult Id
 	 */
-	public function testGetValidTaskByTaskIsComplete() : void
-	{
+	public function testGetValidTaskByTaskIsComplete(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("task");
 
@@ -289,7 +291,6 @@ class TaskTest extends KidTaskTest {
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
 	}
-
 
 
 }// end of TaskTest
