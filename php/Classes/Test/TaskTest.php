@@ -294,9 +294,8 @@ class TaskTest extends KidTaskTest {
 	 **/
 	public function testGetInvalidTaskByTaskAdultId(): void {
 		// grab a task id that exceeds the maximum allowable task Adult id
-		$fakeTaskId = generateUuidV4();
-		$task = Task::getTaskByTaskAdultId($this->getPDO(), $fakeTaskId);
-		$this->assertNull($task);
+		$task = Task::getTaskByTaskAdultId($this->getPDO(), generateUuidV4());
+		$this->assertCount(0, $task);
 	}
 
 	/**
@@ -316,7 +315,7 @@ class TaskTest extends KidTaskTest {
 
 		$results = Task::getTaskByTaskContent($this->getPDO(), $task->getTaskContent());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
-		$this->assertCount(1, $results);
+		$this->assertCount(0, $results);
 
 		// enforce no other objects are bleeding into the test
 		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Club\\KidTask", $results);
@@ -360,7 +359,7 @@ class TaskTest extends KidTaskTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Task::getTaskByTaskIsComplete($this->getPDO(), $task->getTaskIsComplete());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
-		$this->assertCount(1, $results);
+		$this->assertCount(0, $results);
 
 		// enforce no other objects are bleeding into the test
 		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Club\\KidTask", $results);

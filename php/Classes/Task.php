@@ -493,7 +493,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
 	public static function getTaskByTaskId(\PDO $pdo, $taskId) : ?Task {
-		// sanitize the kidId before searching
+		// sanitize the taskId before searching
 		try {
 			$taskId = self::validateUuid($taskId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
