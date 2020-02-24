@@ -23,6 +23,7 @@ use Ramsey\Uuid\Uuid;
  **/
 class Task implements \JsonSerializable {
 	use ValidateUuid;
+	use ValidateDate;
 
 	//All STATE VARIABLES
 	/**
@@ -84,7 +85,7 @@ class Task implements \JsonSerializable {
 	/**
 	 * constructor for this Task
 	 *
-	 * @param string|Uuid $newTaskId id of this Task or null if a new Author
+	 * @param string|Uuid $newTaskId id of this Task or null if a new Task
 	 * @param string|Uuid $newTaskAdultId id of the Adult making task
 	 * @param string|Uuid $newTaskKidId id if the Kid that has task
 	 * @param string|null $newTaskAvatarUrl avatar URL of task
@@ -99,8 +100,8 @@ class Task implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
-	public function __construct(string $newTaskId,  string $newTaskAdultId, string $newTaskKidId, string $newTaskAvatarUrl, string $newTaskCloudinaryToken,
-										 string $newTaskContent, \DateTime $newTaskDueDate, int $newTaskIsComplete, string $newTaskReward = null) {
+	public function __construct( $newTaskId, $newTaskAdultId, $newTaskKidId, ?string $newTaskAvatarUrl, ?string $newTaskCloudinaryToken,
+										 string $newTaskContent, ?string $newTaskDueDate, ?int $newTaskIsComplete, ?string $newTaskReward ) {
 		try {
 			$this->setTaskId($newTaskId);
 			$this->setTaskAdultId($newTaskAdultId);
@@ -131,7 +132,7 @@ class Task implements \JsonSerializable {
 	/**
 	 * mutator method for task id
 	 *
-	 * @param Uuid| string $newTaskId value of new task id
+	 * @param Uuid|string $newTaskId value of new task id
 	 * @throws \RangeException if $newTaskId is not positive
 	 * @throws \TypeError if the task Id is not
 	 **/
@@ -147,38 +148,11 @@ class Task implements \JsonSerializable {
 	}
 
 
-	/**
-	 * accessor method for task kid id
-	 *
-	 * @return Uuid value of task kid id (or null if new Task)
-	 **/
-	public function getTaskKidId(): Uuid {
-		return ($this->taskKidId);
-	}
-
-	/**
-	 * mutator method for task kid id
-	 *
-	 * @param Uuid| string $newTaskKidId value of new task kid id
-	 * @throws \RangeException if $newTaskKidId is not positive
-	 * @throws \TypeError if the task kid Id is not
-	 **/
-	public function setTaskKidId($newTaskKidId): void {
-		try {
-			$uuid = self::validateUuid($newTaskKidId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 0, $exception));
-		}
-		// convert and store the task kid id
-		$this->taskKidId = $uuid;
-	}
-
 
 	/**
 	 * accessor method for task by adult id
 	 *
-	 * @return Uuid value of task adult id (or null if new Task)
+	 * @return Uuid value of task adult id
 	 **/
 	public function getTaskAdultId(): Uuid {
 		return ($this->taskAdultId);
@@ -204,11 +178,41 @@ class Task implements \JsonSerializable {
 
 
 	/**
+	 * accessor method for task kid id
+	 *
+	 * @return Uuid value of task kid id (or null if new Task)
+	 **/
+	public function getTaskKidId(): Uuid {
+		return ($this->taskKidId);
+	}
+
+	/**
+	 * mutator method for task kid id
+	 *
+	 * @param Uuid| string $newTaskKidId value of new task kid id
+	 * @throws \RangeException if $newTaskKidId is not positive
+	 * @throws \TypeError if the task kid Id is not a UUID
+	 **/
+	public function setTaskKidId($newTaskKidId): void {
+		try {
+			$uuid = self::validateUuid($newTaskKidId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store the task kid id
+		$this->taskKidId = $uuid;
+	}
+
+
+
+
+	/**
 	 * accessor method for task avatar url
 	 *
 	 * @return string value of the task avatar url
 	 */
-	public function getTaskAvatarUrl(): string {
+	public function getTaskAvatarUrl(): ?string {
 		return ($this->taskAvatarUrl);
 	}
 
@@ -220,21 +224,18 @@ class Task implements \JsonSerializable {
 	 * @throws \RangeException if the string is not less than 1000 characters
 	 * @throws \TypeError if the task content is not a string
 	 */
-	public function setTaskAvatarUrl(string $newTaskAvatarUrl): void {
+	public function setTaskAvatarUrl(?string $newTaskAvatarUrl): void {
+		//verify url is secure
 		$newTaskAvatarUrl = trim($newTaskAvatarUrl);
-		$newTaskAvatarUrl = filter_var($newTaskAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newTaskAvatarUrl) === true) {
-			$this->taskAvatarUrl = null;
-			return;
+		$newTaskAvatarUrl = filter_var($newTaskAvatarUrl, FILTER_VALIDATE_URL);
+		if(empty($newTaskAvatarUrl)===true) {
+			throw(new \InvalidArgumentException("url is empty or insecure"));
 		}
-		$newTaskAvatarUrl = strtolower(trim($newTaskAvatarUrl));
-		if(ctype_xdigit($newTaskAvatarUrl) === false) {
-			throw(new\RangeException("task avatar url is not valid"));
+		//verify url will fit database
+		if(strlen($newTaskAvatarUrl) > 255) {
+			throw(new \RangeException("Adult avatar url is too large"));
 		}
-		//make sure user activation token is only 1000 characters
-		if(strlen($newTaskAvatarUrl) > 1000) {
-			throw(new\RangeException("task avatar url has to be less than 1000"));
-		}
+
 		$this->taskAvatarUrl = $newTaskAvatarUrl;
 	}
 
@@ -245,7 +246,7 @@ class Task implements \JsonSerializable {
 	 *
 	 * @return string value of the task cloudinary token
 	 */
-	public function getTaskCloudinaryToken(): string {
+	public function getTaskCloudinaryToken(): ?string {
 		return ($this->taskCloudinaryToken);
 	}
 
@@ -254,10 +255,10 @@ class Task implements \JsonSerializable {
 	 *
 	 * @param string $newTaskCloudinaryToken new value of task cloudinary token
 	 * @throws \InvalidArgumentException  if the task cloudinary token is not a string or insecure
-	 * @throws \RangeException if the string is not less than 1000 characters
+	 * @throws \RangeException if the string is not less than 255 characters
 	 * @throws \TypeError if the task content is not a string
 	 */
-	public function setTaskCloudinaryToken(string $newTaskCloudinaryToken): void {
+	public function setTaskCloudinaryToken(?string $newTaskCloudinaryToken): void {
 		$newTaskCloudinaryToken = trim($newTaskCloudinaryToken);
 		$newTaskCloudinaryToken = filter_var($newTaskCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newTaskCloudinaryToken) === true) {
@@ -268,9 +269,9 @@ class Task implements \JsonSerializable {
 		if(ctype_xdigit($newTaskCloudinaryToken) === false) {
 			throw(new\RangeException("task cloudinary token is not valid"));
 		}
-		//make sure user activation token is only 1000 characters
-		if(strlen($newTaskCloudinaryToken) > 1000) {
-			throw(new\RangeException("task cloudinary token has to be less than 1000"));
+		//make sure user activation token is only 255 characters
+		if(strlen($newTaskCloudinaryToken) > 255) {
+			throw(new\RangeException("task cloudinary token has to be less than 255"));
 		}
 		$this->taskCloudinaryToken = $newTaskCloudinaryToken;
 	}
@@ -290,23 +291,19 @@ class Task implements \JsonSerializable {
 	 *
 	 * @param string $newTaskContent new value of task content
 	 * @throws \InvalidArgumentException  if the task content is not a string or insecure
-	 * @throws \RangeException if the string is not less than 1000 characters
+	 * @throws \RangeException if the string is not less than 255 characters
 	 * @throws \TypeError if the task content is not a string
 	 */
 	public function setTaskContent(string $newTaskContent): void {
 		$newTaskContent = trim($newTaskContent);
 		$newTaskContent = filter_var($newTaskContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newTaskContent) === true) {
-			$this->taskContent = null;
-			return;
+			throw(new \InvalidArgumentException("task content is empty or insecure"));
 		}
-		$newTaskContent = strtolower(trim($newTaskContent));
-		if(ctype_xdigit($newTaskContent) === false) {
-			throw(new\RangeException("task content is not valid"));
-		}
-		//make sure user activation token is only 1000 characters
-		if(strlen($newTaskContent) > 1000) {
-			throw(new\RangeException("task content has to be less than 1000"));
+
+		//make sure task content is only 255 characters
+		if(strlen($newTaskContent) > 255) {
+			throw(new\RangeException("task content has to be less than 255"));
 		}
 		$this->taskContent = $newTaskContent;
 	}
@@ -450,7 +447,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 	public function update(\PDO $pdo) : void {
 
 		// create query template
-		$query = "UPDATE task SET taskAdultId = :taskAdultId,  taskKidId = :taskKidId, 
+		$query = "UPDATE task SET taskAdultId = :taskAdultId, taskKidId = :taskKidId, 
     taskAvatarUrl = :taskAvatarUrl, taskCloudinaryToken = :taskCloudinaryToken,
     taskContent = :taskContent, taskDueDate = :taskDueDate, taskIsComplete = :taskIsComplete, taskReward = :taskReward WHERE taskId = :taskId";
 		$statement = $pdo->prepare($query);
@@ -593,7 +590,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 	 * @return \SplFixedArray An array of task objects that match the task adult id.
 	 * @throws \PDOException MySQL errors generated by the statement.
 	 **/
-	public static function getTasksByTaskAdultId(\PDO $pdo, Uuid $taskAdultId) : \SplFixedArray {
+	public static function getTaskByTaskAdultId(\PDO $pdo, Uuid $taskAdultId) : \SplFixedArray {
 		try {
 			// sanitize the taskAdultId before searching
 			$taskAdultId = self::validateUuid($taskAdultId);
@@ -627,7 +624,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 			}
 		}
 		return($tasks);
-	}
+	} // end of getTasksByTaskAdultId
 
 
 

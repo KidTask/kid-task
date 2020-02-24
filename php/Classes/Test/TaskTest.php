@@ -25,14 +25,14 @@ class TaskTest extends KidTaskTest {
 
 	/**
 	 * Adult that created the Task; this is for foreign key relations
-	 * @var string Adult profile
+	 * @var string Adult
 	 **/
 	protected $adult = null;
 
 
 	/**
 	 * Kid that is assigned the Task; this is for foreign key relations
-	 * @var string Kid profile
+	 * @var string Kid
 	 **/
 	protected $kid = null;
 
@@ -41,7 +41,7 @@ class TaskTest extends KidTaskTest {
 	 * Avatar Url for Task
 	 * @var string $VALID_AVATAR_URL
 	 */
-	protected $VALID_AVATAR_URL = "https://images.unsplash.com/photo-1543373894-5e1d9d237f41?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=751&q=80";
+	protected $VALID_AVATAR_URL = "https://media.giphy.com/media/szxw88uS1cq4M/giphy.gif";
 
 	/**
 	 * Cloudinary token for Task
@@ -50,7 +50,7 @@ class TaskTest extends KidTaskTest {
 	protected $VALID_CLOUDINARY_TOKEN = null;
 
 	/**
-	 * valid kid hash to create the adult profile object to own the test
+	 * valid hash to create the adult + kid object to own the test
 	 * @var $VALID_HASH
 	 */
 	protected $VALID_HASH;
@@ -92,6 +92,15 @@ class TaskTest extends KidTaskTest {
 	 **/
 	protected $VALID_TASKREWARD = "You get $5";
 
+	/**
+	 * Valid timestamp to use as sunriseTweetDate
+	 */
+	protected $VALID_SUNRISEDATE = null;
+
+	/**
+	 * Valid timestamp to use as sunsetTweetDate
+	 */
+	protected $VALID_SUNSETDATE = null;
 
 	/**
 	 * create dependent objects before running each test
@@ -103,11 +112,11 @@ class TaskTest extends KidTaskTest {
 		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7]);
 
 		// create and insert a Adult to own the test Task
-		$this->adult = new Adult(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de", $this->VALID_HASH, "Mom", "Mother");
+		$this->adult = new Adult(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "null", "test@phpunit.de", $this->VALID_HASH, "Mom", "Mother");
 		$this->adult->insert($this->getPDO());
 
 		// create and insert a Kid to own the test Task
-		$this->kid = new Kid(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", $this->VALID_HASH, "Timothy", "Ocho");
+		$this->kid = new Kid(generateUuidV4(), $this->adult->getAdultId(), "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "null", $this->VALID_HASH, "Timothy", "Ocho");
 		$this->kid->insert($this->getPDO());
 
 
@@ -122,7 +131,7 @@ class TaskTest extends KidTaskTest {
 		$this->VALID_SUNSETDATE = new\DateTime();
 		$this->VALID_SUNSETDATE->add(new \DateInterval("P10D"));
 
-	}
+	} //end setup function
 
 	/**
 	 * test inserting a valid Task and verify that the actual mySQL data matches
@@ -152,7 +161,7 @@ class TaskTest extends KidTaskTest {
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
 
-	}
+	} // end testInsertValidTask
 
 	/**
 	 * test creating a Task and then deleting it
@@ -254,7 +263,7 @@ class TaskTest extends KidTaskTest {
 		$task->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoTask = Task::getTaskByTaskId($this->getPDO(), $task->getTaskId());
+		$pdoTask = Task::getTaskByTaskAdultId($this->getPDO(), $task->getTaskId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
 		$this->assertEquals($pdoTask->getTaskId(), $taskId);
 		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
