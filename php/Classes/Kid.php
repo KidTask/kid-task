@@ -256,6 +256,8 @@ class Kid implements \JsonSerializable {
      * @throws \TypeError if $newKidAvatarUrl is not a string
      */
     public function setKidName(?string $newKidName): void {
+        $newKidCloudinaryToken = trim($newKidName);
+        $newKidCloudinaryToken = filter_var($newKidName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         if($newKidName === null) {
             $this->kidName = null;
             return;
