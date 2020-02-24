@@ -142,7 +142,7 @@ class TaskTest extends KidTaskTest {
 	 */
 	public function testInsertValidTask(): void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("task");
+	$numRows = $this->getConnection()->getRowCount("task");
 
 		// Create a new task and insert into mySQL
 		$taskId = generateUuidV4();
