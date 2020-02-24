@@ -85,7 +85,7 @@ class Task implements \JsonSerializable {
 	/**
 	 * constructor for this Task
 	 *
-	 * @param string|Uuid $newTaskId id of this Task or null if a new Task
+	 * @param string|Uuid $newTaskId id of this Task
 	 * @param string|Uuid $newTaskAdultId id of the Adult making task
 	 * @param string|Uuid $newTaskKidId id if the Kid that has task
 	 * @param string|null $newTaskAvatarUrl avatar URL of task
@@ -101,7 +101,7 @@ class Task implements \JsonSerializable {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 	public function __construct( $newTaskId, $newTaskAdultId, $newTaskKidId, ?string $newTaskAvatarUrl, ?string $newTaskCloudinaryToken,
-										 string $newTaskContent, ?string $newTaskDueDate, ?int $newTaskIsComplete, ?string $newTaskReward ) {
+										 string $newTaskContent, $newTaskDueDate = null, $newTaskIsComplete = null, ?string $newTaskReward ) {
 		try {
 			$this->setTaskId($newTaskId);
 			$this->setTaskAdultId($newTaskAdultId);
@@ -119,11 +119,10 @@ class Task implements \JsonSerializable {
 		}
 	}
 
-
 	/**
 	 * accessor method for task id
 	 *
-	 * @return Uuid value of task id (or null if new Task)
+	 * @return Uuid value of task id
 	 **/
 	public function getTaskId(): Uuid {
 		return ($this->taskId);
@@ -134,7 +133,7 @@ class Task implements \JsonSerializable {
 	 *
 	 * @param Uuid|string $newTaskId value of new task id
 	 * @throws \RangeException if $newTaskId is not positive
-	 * @throws \TypeError if the task Id is not
+	 * @throws \TypeError if the task Id is not uuid or string
 	 **/
 	public function setTaskId($newTaskId): void {
 		try {
@@ -150,13 +149,13 @@ class Task implements \JsonSerializable {
 
 
 	/**
-	 * accessor method for task by adult id
+	 * accessor method for task  adult id
 	 *
 	 * @return Uuid value of task adult id
 	 **/
 	public function getTaskAdultId(): Uuid {
 		return ($this->taskAdultId);
-	}
+	} //end of getTaskAdultId
 
 	/**
 	 * mutator method for task adult id
@@ -331,6 +330,7 @@ class Task implements \JsonSerializable {
 		// base case: if the date is null, use the current date and time
 		if($newTaskDueDate === null) {
 			$this->taskDueDate = new \DateTime();
+			return;
 		}
 		// store the task due date using the ValidateDate trait
 		try {
@@ -396,7 +396,7 @@ class Task implements \JsonSerializable {
 		//enforce that the task reward is properly formatted
 
 		$newTaskReward = trim($newTaskReward);
-		$newTaskReward = filter_var($newTaskReward, FILTER_SANITIZE_STRING, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		$newTaskReward = filter_var($newTaskReward, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newTaskReward) === true) {
 		$this->taskReward = null;
 		return;
@@ -447,7 +447,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 	public function update(\PDO $pdo) : void {
 
 		// create query template
-		$query = "UPDATE task SET taskAdultId = :taskAdultId, taskKidId = :taskKidId, 
+		$query = "UPDATE task SET taskId = :taskId, taskAdultId = :taskAdultId, taskKidId = :taskKidId, 
     taskAvatarUrl = :taskAvatarUrl, taskCloudinaryToken = :taskCloudinaryToken,
     taskContent = :taskContent, taskDueDate = :taskDueDate, taskIsComplete = :taskIsComplete, taskReward = :taskReward WHERE taskId = :taskId";
 		$statement = $pdo->prepare($query);
@@ -479,6 +479,50 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 		$parameters = ["taskId" => $this->taskId->getBytes()];
 		$statement->execute($parameters);
 	} //end of delete pdo method
+
+
+
+
+	/**
+	 * gets the task by taskId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $taskId task id to search for
+	 * @return Task|null task found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getTaskByTaskId(\PDO $pdo, $taskId) : ?Task {
+		// sanitize the kidId before searching
+		try {
+			$taskId = self::validateUuid($taskId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskId = :taskId";
+		$statement = $pdo->prepare($query);
+
+		// bind the Adult id to the place holder in the template
+		$parameters = ["taskId" => $taskId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the task from mySQL
+		try {
+			$task = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$taskId = new Task($row["taskId"], $row["taskAdultId"], $row["taskKidId"], $row["taskAvatarUrl"], $row["taskCloudinaryToken"], $row["taskContent"], $row["taskDueDate"], $row["taskIsComplete"], $row["taskReward"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($task);
+	} // end of getKidByKidId
+
 
 
 

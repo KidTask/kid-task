@@ -104,15 +104,17 @@ class TaskTest extends KidTaskTest {
 
 	/**
 	 * create dependent objects before running each test
+	 * @throws \Exception
 	 **/
 	public final function setUp(): void {
+
 		// run the default setUp() method first
 		parent::setUp();
 		$password = "abc123";
 		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7]);
 
 		// create and insert a Adult to own the test Task
-		$this->adult = new Adult(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "null", "test@phpunit.de", $this->VALID_HASH, "Mom", "Mother");
+		$this->adult = new Adult(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "null", "test@phpunit.co", $this->VALID_HASH, "Mom", "Mother");
 		$this->adult->insert($this->getPDO());
 
 		// create and insert a Kid to own the test Task
@@ -157,11 +159,48 @@ class TaskTest extends KidTaskTest {
 		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
 		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
-		$this->assertEquals($pdoTask->getTaskDueDate(), $this->VALID_TASKDUEDATE);
+		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp(), $this->VALID_TASKDUEDATE -> getTimestamp());
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
 
 	} // end testInsertValidTask
+
+
+	/**
+	 * test inserting a Task, editing it, and then updating it
+	 *
+	 * @throws \Exception
+	 **/
+	public function testUpdateValidTask(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("task");
+
+		// Create a new task and insert into mySQL
+		$taskId = generateUuidV4();
+
+		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
+		$task->insert($this->getPDO());
+
+		// edit the Task and update it in mySQL
+		$task->setTaskContent($this->VALID_TASKCONTENT2);
+		$task->update($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoTask = Task::getTaskByTaskId($this->getPDO(), $task->getTaskId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
+		$this->assertEquals($pdoTask->getTaskId()->toString(), $taskId->toString());
+		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
+		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
+		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
+		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
+		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp(), $this->VALID_TASKDUEDATE -> getTimestamp());
+		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
+		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
+
+	} // end testUpdateValidTask
+
+
 
 	/**
 	 * test creating a Task and then deleting it
@@ -182,7 +221,7 @@ class TaskTest extends KidTaskTest {
 		$task->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the Task does not exist
-		$pdoTask = Kid::getTaskByTaskId($this->getPDO(), $task->getTaskId());
+		$pdoTask = Task::getTaskByTaskId($this->getPDO(), $task->getTaskId());
 		$this->assertNull($pdoTask);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("task"));
 	}
@@ -226,32 +265,6 @@ class TaskTest extends KidTaskTest {
 
 
 	/**
-	 * test grabbing a Task by task content
-	 **/
-	public function testGetValidTaskByTaskContent(): void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("task");
-
-		$taskId = generateUuidV4();
-		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
-		$task->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoTask = Task::getTaskByTaskContent($this->getPDO(), $task->getTaskContent());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
-		$this->assertEquals($pdoTask->getTaskId(), $taskId);
-		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
-		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
-		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
-		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
-		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
-		$this->assertEquals($pdoTask->getTaskDueDate(), $this->VALID_TASKDUEDATE);
-		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
-		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
-	}
-
-
-	/**
 	 * test grabbing a Task by Task Adult Id
 	 */
 	public function testGetValidTaskByTaskAdultId(): void {
@@ -277,6 +290,63 @@ class TaskTest extends KidTaskTest {
 	}
 
 	/**
+	 * test grabbing a Task that does not exist
+	 **/
+	public function testGetInvalidTaskByTaskAdultId(): void {
+		// grab a task id that exceeds the maximum allowable task Adult id
+		$fakeTaskId = generateUuidV4();
+		$task = Task::getTaskByTaskAdultId($this->getPDO(), $fakeTaskId);
+		$this->assertNull($task);
+	}
+
+	/**
+	 * test grabbing a Task by task content
+	 *
+	 * @throws \Exception
+	 **/
+	public function testGetValidTaskByTaskContent(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("task");
+
+		$taskId = generateUuidV4();
+		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
+		$task->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+
+		$results = Task::getTaskByTaskContent($this->getPDO(), $task->getTaskContent());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
+		$this->assertCount(1, $results);
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Club\\KidTask", $results);
+
+
+		// grab the results from the array and validate it
+		$pdoTask = $results[0];
+		$this->assertEquals($pdoTask->getTaskId(), $taskId);
+		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
+		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
+		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
+		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
+		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp, $this->VALID_TASKDUEDATE->getTimestamp());
+		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
+		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
+	}
+
+	/**
+	 * test grabbing a Task that does not exist
+	 **/
+	public function testGetInvalidTaskByTaskContent(): void {
+		// grab a task by content that does not exist
+		$task = Task::getTaskByTaskContent($this->getPDO(), "this is not real content");
+		$this->assertCount(0, $task);
+	}
+
+
+
+	/**
 	 * test grabbing a Task by Task is complete
 	 */
 	public function testGetValidTaskByTaskIsComplete(): void {
@@ -288,15 +358,22 @@ class TaskTest extends KidTaskTest {
 		$task->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoTask = Task::getTaskByTaskIsComplete($this->getPDO(), $task->getTaskIsComplete());
+		$results = Task::getTaskByTaskIsComplete($this->getPDO(), $task->getTaskIsComplete());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
+		$this->assertCount(1, $results);
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Club\\KidTask", $results);
+
+		// grab the result from the array to validate it
+		$pdoTask = $results[0];
 		$this->assertEquals($pdoTask->getTaskId(), $taskId);
 		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
 		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
 		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
 		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
-		$this->assertEquals($pdoTask->getTaskDueDate(), $this->VALID_TASKDUEDATE);
+		$this->assertEquals($pdoTask->getTaskDueDate() ->getTimestamp(), $this->VALID_TASKDUEDATE->getTimestamp());
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
 	}
