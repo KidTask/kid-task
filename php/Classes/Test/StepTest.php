@@ -90,5 +90,40 @@ class StepTest extends KidTaskTest {
 		$this->assertEquals($pdoStep->getStepOrder(), $this->VALID_STEP_ORDER);
 	} // end of testInsertValidStep()
 
+	/**
+	 * test grabbing a Step that does not exist
+	 **/
+	public function testGetInvalidStepByStepId() : void {
+// grab a adult id that exceeds the maximum allowable adult id
+		$fakeStepId = generateUuidV4();
+		$step = Step::getStepByStepId($this->getPDO(), $fakeStepId );
+		$this->assertNull($step);
+	} // end of testGetInvalidAdultByAdultId method
+
+
+	/**
+	 * test creating a Step and then deleting it
+	 **/
+	public function testDeleteValidStep() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("step");
+
+		$stepId = generateUuidV4();
+
+		// create a new Step and insert to into mySQL
+		$step = new Step($stepId, $this->task->getTaskId(), $this->VALID_STEP_CONTENT, $this->VALID_STEP_ORDER);
+		$step->insert($this->getPDO());
+
+		// delete the Step from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("step"));
+		$step->delete($this->getPDO());
+
+		// grab the data from mySQL and enforce the Step does not exist
+		$pdoStep = Step::getStepByStepId($this->getPDO(), $step->getStepId());
+		$this->assertNull($pdoStep);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("step"));
+	} // end of testDeleteValidStep()
+
+
 
 }//end StepTest
