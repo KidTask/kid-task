@@ -366,7 +366,7 @@ class Task implements \JsonSerializable {
 		$newTaskIsComplete = trim($newTaskIsComplete);
 		$newTaskIsComplete = filter_var($newTaskIsComplete);
 		if(empty($newTaskIsComplete) === true) {
-			$this->taskIsComplete = null;
+			$this->taskIsComplete = 0;
 			return;
 		}
 		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2)) {
@@ -595,7 +595,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 		$taskContent = str_replace("_", "\\_", str_replace("%", "\\%", $taskContent));
 
 		// create query template
-		$query = "SELECT taskId, taskAdultId, taskKidId,  taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent = :taskContent";
+		$query = "SELECT taskId, taskAdultId, taskKidId,  taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskContent LIKE :taskContent";
 		$statement = $pdo->prepare($query);
 
 		// bind the task content to the place holder in the template
@@ -640,7 +640,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskAdultId = :taskAdultId";
+		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskAdultId LIKE :taskAdultId";
 		$statement = $pdo->prepare($query);
 
 		// bind the task adult id to the place holder in the template
@@ -688,7 +688,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 		}
 		// verify task is complete is 0, 1, 2
 		if(empty($taskIsComplete) === true) {
-			$taskIsComplete = null;
+			$taskIsComplete = 0;
 		}
 		if(!($taskIsComplete === 0 || $taskIsComplete === 1 || $taskIsComplete === 2)) {
 			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-2"));

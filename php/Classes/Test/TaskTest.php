@@ -375,7 +375,7 @@ class TaskTest extends KidTaskTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Task::getTaskByTaskIsComplete($this->getPDO(), $task->getTaskIsComplete());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
-		$this->assertCount(0, $results);
+		$this->assertCount(1, $results);
 
 		// enforce no other objects are bleeding into the test
 		$this->assertContainsOnlyInstancesOf("Club\\KidTask\\Task", $results);
