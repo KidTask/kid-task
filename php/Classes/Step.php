@@ -271,7 +271,8 @@ class Step implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getStepByStepTaskId(\PDO $pdo, $stepTaskId) : ?Step {
+	public static function getStepByStepTaskId(\PDO $pdo, $stepTaskId) : \SPLFixedArray {
+
 		// sanitize the stepId before searching
 		try {
 			$stepTaskId = self::validateUuid($stepTaskId);
@@ -283,24 +284,24 @@ class Step implements \JsonSerializable {
 		$query = "SELECT stepId, stepTaskId, stepContent, stepOrder FROM step WHERE stepTaskId = :stepTaskId";
 		$statement = $pdo->prepare($query);
 
-		// bind the step id to the place holder in the template
+		// bind the task adult id to the place holder in the template
 		$parameters = ["stepTaskId" => $stepTaskId->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the step from mySQL
-		try {
-			$step = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
+		$steps = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
 				$step = new Step($row["stepId"], $row["stepTaskId"], $row["stepContent"], $row["stepOrder"]);
+				$steps[$steps->key()] = $step;
+				$steps->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
-		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($step);
-	} // end of getStepByStepTaskId
+		return ($steps);
+	}// end of getStepByStepTaskId
 
 
 	/**

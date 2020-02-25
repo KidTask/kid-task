@@ -45,6 +45,12 @@ class StepTest extends KidTaskTest {
 	protected $VALID_STEP_ORDER = 1;
 
 	/**
+	 * valid order for step
+	 * @var int $VALID_STEP_ORDER2
+	 **/
+	protected $VALID_STEP_ORDER2 = 5;
+
+	/**
 	 * create dependent objects before running each test
 	 **/
 	public final function setUp() : void {
@@ -91,15 +97,30 @@ class StepTest extends KidTaskTest {
 	} // end of testInsertValidStep()
 
 	/**
-	 * test grabbing a Step that does not exist
+	 * test inserting a Adult, editing it, and then updating it
 	 **/
-	public function testGetInvalidStepByStepId() : void {
-// grab a adult id that exceeds the maximum allowable adult id
-		$fakeStepId = generateUuidV4();
-		$step = Step::getStepByStepId($this->getPDO(), $fakeStepId );
-		$this->assertNull($step);
-	} // end of testGetInvalidAdultByAdultId method
+	public function testUpdateValidAdult() {
+// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("adult");
 
+// create a new Step and insert to into mySQL
+		$stepId = generateUuidV4();
+		// create a new Step and insert to into mySQL
+		$step = new Step($stepId, $this->task->getTaskId(), $this->VALID_STEP_CONTENT, $this->VALID_STEP_ORDER);
+		$step->insert($this->getPDO());
+
+
+// edit the Adult and update it in mySQL
+		$step->setStepOrder($this->VALID_STEP_ORDER2);
+		$step->update($this->getPDO());
+
+// grab the data from mySQL and enforce the fields match our expectations
+		$pdoStep = Step::getStepById($this->getPDO(), $step->getStepId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("step"));
+		$this->assertEquals($pdoStep->getStepTaskId(), $this->task->getTaskId());
+		$this->assertEquals($pdoStep->getStepContent(), $this->VALID_STEP_CONTENT);
+		$this->assertEquals($pdoStep->getStepOrder(), $this->VALID_STEP_ORDER2);
+	} //end of testUpdateValid Adult
 
 	/**
 	 * test creating a Step and then deleting it
@@ -123,6 +144,44 @@ class StepTest extends KidTaskTest {
 		$this->assertNull($pdoStep);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("step"));
 	} // end of testDeleteValidStep()
+
+	/**
+	 * test grabbing a Step that does not exist
+	 **/
+	public function testGetInvalidStepByStepId() : void {
+// grab a adult id that exceeds the maximum allowable adult id
+		$fakeStepId = generateUuidV4();
+		$step = Step::getStepByStepId($this->getPDO(), $fakeStepId );
+		$this->assertNull($step);
+	} // end of testGetInvalidAdultByAdultId method
+
+
+	/**
+	 * test grabbing a Step by task id
+	 **/
+	public function testGetValidStepByTaskId() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("step");
+
+		// create a new Step and insert to into mySQL
+		$stepId = generateUuidV4();
+		$step = new Step($stepId, $this->task->getTaskId(), $this->VALID_STEP_CONTENT, $this->VALID_STEP_ORDER);
+		$step->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Step::getStepByStepTaskId($this->getPDO(), $this->task->getTaskId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("step"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Club\\KidTask\\Step", $results);
+
+		// grab the result from the array and validate it
+		$pdoStep = $results[0];
+		$this->assertEquals($pdoStep->getStepId(), $this->getStepId());
+		$this->assertEquals($pdoStep->getStepTaskId(), $this->task->getTaskId());
+	} //end of testGetValidStepByTaskId()
+
+
+
 
 
 
