@@ -17,7 +17,6 @@ public static function getTweetsByTweetDate(\PDO $pdo, DateTime $tweetDate) : \S
 	$endDate->add(new DateInterval('P1D'));
 
 
-
 	//getTasksByTaskParentId
 	//getTasksByTaskParentIdAndTaskKidId
 //getTaskByKidId
