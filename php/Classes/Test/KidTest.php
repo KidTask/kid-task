@@ -67,7 +67,7 @@ class KidTest extends KidTaskTest {
         parent::setUp();
         $password = "abc123";
         $this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7]);
-        //create and insert a Profile to own the test Tweet
+        //create and insert a Adult to own the test Kid
         $this->adult = new Adult(generateUuidV4(),null ,"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif","null" , "test@phpunit.de","$this->VALID_HASH", "Name", "null");
         $this->adult->insert($this->getPDO());
     }

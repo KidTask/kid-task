@@ -23,7 +23,7 @@ CREATE TABLE kid (
 	kidAdultId binary(16) not null,
 	kidAvatarUrl varchar(255),
 	kidCloudinaryToken VARCHAR(255),
-	kidHash char(98) not null,
+	kidHash char(97) not null,
 	kidName nvarchar(255),
 	kidUsername varchar(32) not null,
 	unique (kidUsername),
@@ -34,8 +34,8 @@ CREATE TABLE kid (
 
 CREATE TABLE task (
 	taskId binary(16) not null ,
-	taskKidId binary(16) not null,
 	taskAdultId binary(16) not null,
+	taskKidId binary(16) not null,
 	taskAvatarUrl VARCHAR(255),
 	taskCloudinaryToken VARCHAR(255),
 	taskContent VARCHAR(255) not null,

@@ -3,8 +3,8 @@
 		<testsuite name="KidTask Data Design">
 			<file>AdultTest.php</file>
 			<file>KidTest.php</file>
-			<!--<file>TaskTest.php</file>
-			<file>StepTest.php</file>-->
+			<file>TaskTest.php</file>
+			<!--<file>StepTest.php</file>-->
 		</testsuite>
 	</testsuites>
 	<filter>
