@@ -150,12 +150,18 @@ class TaskTest extends KidTaskTest {
 		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
 		$task->insert($this->getPDO());
 
+
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoTask = Task::getTaskByTaskId($this->getPDO(), $task->getTaskId());
+		//var_dump($pdoTask);
+
+
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
-		$this->assertEquals($pdoTask->getTaskId(), $taskId);
-		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
-		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
+		$this->assertEquals($pdoTask->getTaskId()->toString(), $taskId->toString());
+
+
+		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId()->toString());
+		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId()->toString());
 		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
 		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
@@ -189,11 +195,11 @@ class TaskTest extends KidTaskTest {
 		$pdoTask = Task::getTaskByTaskId($this->getPDO(), $task->getTaskId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
 		$this->assertEquals($pdoTask->getTaskId()->toString(), $taskId->toString());
-		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
-		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
+		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId()->toString());
+		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId()->toString());
 		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
 		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
-		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
+		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT2);
 		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp(), $this->VALID_TASKDUEDATE -> getTimestamp());
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
@@ -242,13 +248,13 @@ class TaskTest extends KidTaskTest {
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoTask = Task::getTaskByTaskId($this->getPDO(), $task->getTaskId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
-		$this->assertEquals($pdoTask->getTaskId(), $taskId);
-		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
-		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
+		$this->assertEquals($pdoTask->getTaskId()->toString(), $taskId->toString());
+		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId()->toString());
+		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId()->toString());
 		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
 		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
-		$this->assertEquals($pdoTask->getTaskDueDate(), $this->VALID_TASKDUEDATE);
+		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp(), $this->VALID_TASKDUEDATE->getTimestamp());
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
 	}
@@ -271,22 +277,31 @@ class TaskTest extends KidTaskTest {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("task");
 
+		// create a new Tweet and insert to into mySQL
 		$taskId = generateUuidV4();
 		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
 		$task->insert($this->getPDO());
 
+
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoTask = Task::getTaskByTaskAdultId($this->getPDO(), $task->getTaskId());
+		$results = Task::getTaskByTaskAdultId($this->getPDO(), $task->getTaskAdultId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Club\\KidTask\\Task", $results);
+
+		//grab the result from the array and validate it
+		$pdoTask = $results[0];
+
 		$this->assertEquals($pdoTask->getTaskId(), $taskId);
 		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
 		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
 		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
 		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
-		$this->assertEquals($pdoTask->getTaskDueDate(), $this->VALID_TASKDUEDATE);
+		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp(), $this->VALID_TASKDUEDATE->getTimestamp());
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
+
 	}
 
 	/**
@@ -311,14 +326,15 @@ class TaskTest extends KidTaskTest {
 		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
 		$task->insert($this->getPDO());
 
-		// grab the data from mySQL and enforce the fields match our expectations
 
+
+		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Task::getTaskByTaskContent($this->getPDO(), $task->getTaskContent());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
-		$this->assertCount(0, $results);
+		$this->assertCount(1, $results);
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Club\\KidTask", $results);
+		$this->assertContainsOnlyInstancesOf("Club\\KidTask\\Task", $results);
 
 
 		// grab the results from the array and validate it
@@ -329,7 +345,7 @@ class TaskTest extends KidTaskTest {
 		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
 		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
 		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
-		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp, $this->VALID_TASKDUEDATE->getTimestamp());
+		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp(), $this->VALID_TASKDUEDATE->getTimestamp());
 		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
 		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
 	}
@@ -362,7 +378,7 @@ class TaskTest extends KidTaskTest {
 		$this->assertCount(0, $results);
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\Club\\KidTask", $results);
+		$this->assertContainsOnlyInstancesOf("Club\\KidTask\\Task", $results);
 
 		// grab the result from the array to validate it
 		$pdoTask = $results[0];
