@@ -89,7 +89,7 @@ class StepTest extends KidTaskTest {
 		$step->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoStep = Step::getStepById($this->getPDO(), $step->getStepId());
+		$pdoStep = Step::getStepByStepId($this->getPDO(), $step->getStepId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("step"));
 		$this->assertEquals($pdoStep->getStepTaskId(), $this->task->getTaskId());
 		$this->assertEquals($pdoStep->getStepContent(), $this->VALID_STEP_CONTENT);
@@ -99,9 +99,9 @@ class StepTest extends KidTaskTest {
 	/**
 	 * test inserting a Adult, editing it, and then updating it
 	 **/
-	public function testUpdateValidAdult() {
+	public function testUpdateValidStep() {
 // count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("adult");
+		$numRows = $this->getConnection()->getRowCount("step");
 
 // create a new Step and insert to into mySQL
 		$stepId = generateUuidV4();
@@ -181,7 +181,7 @@ class StepTest extends KidTaskTest {
 		$this->assertEquals($pdoStep->getStepTaskId(), $this->task->getTaskId());
 		$this->assertEquals($pdoStep->getStepContent(), $this->VALID_STEP_CONTENT);
 		$this->assertEquals($pdoStep->getStepOrder(), $this->VALID_STEP_ORDER);
-	} //end of testGetValidStepByTaskId()
+	} //end of testGetValidStepByTaskId() 
 
 	/**
 	 * test grabbing a Step by invalid task id
