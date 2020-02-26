@@ -234,7 +234,6 @@ class KidTest extends KidTaskTest {
         $kidId = generateUuidV4();
         $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
         $kid->insert($this->getPDO());
-        var_dump($kid);
 
         // grab the data from mySQL and enforce the fields match our expectations
         $results = Kid::getKidByKidAdultId($this->getPDO(), $kid->getKidAdultId());
