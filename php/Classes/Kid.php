@@ -392,28 +392,24 @@ class Kid implements \JsonSerializable {
      *
      * @param \PDO $pdo PDO connection object
      * @param Uuid|string $kidAdultId kid id to search for
-     * @return Kid|null kid found or null if not found
+     * @return \SplFixedArray kid found or null if not found
      * @throws \PDOException when mySQL related errors occur
      * @throws \TypeError when a variable are not the correct data type
      **/
-    public static function getKidByKidAdultId(\PDO $pdo, string $kidAdultId) : \SplFixedArray {
+    public static function getKidByKidAdultId(\PDO $pdo, $kidAdultId) : \SplFixedArray {
         // sanitize the description before searching
-        $kidAdultId = trim($kidAdultId);
-        $kidAdultId = filter_var($kidAdultId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        if(empty($kidAdultId) === true) {
-            throw(new \PDOException("kidAdultId is invalid"));
+        try {
+            $kidAdultId = self::validateUuid($kidAdultId);
+        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
         }
-
-        // escape any mySQL wild cards
-        $kidAdultId = str_replace("_", "\\_", str_replace("%", "\\%", $kidAdultId));
 
         // create query template
         $query = "SELECT kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidAdultId LIKE :kidAdultId";
         $statement = $pdo->prepare($query);
 
         // bind the kid content to the place holder in the template
-        $kidAdultId = "%$kidAdultId%";
-        $parameters = ["kidAdultId" => $kidAdultId];
+        $parameters = ["kidAdultId" => $kidAdultId ->getBytes()];
         $statement->execute($parameters);
 
         // build an array of kids

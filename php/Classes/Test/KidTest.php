@@ -234,10 +234,19 @@ class KidTest extends KidTaskTest {
         $kidId = generateUuidV4();
         $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
         $kid->insert($this->getPDO());
+        var_dump($kid);
 
         // grab the data from mySQL and enforce the fields match our expectations
-        $pdoKid = Kid::getKidByKidAdultId($this->getPDO(), $kid->getKidAdultId());
+        $results = Kid::getKidByKidAdultId($this->getPDO(), $kid->getKidAdultId());
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
+        $this->assertCount(1, $results);
+
+        // enforce no other objects are bleeding into the test
+        $this->assertContainsOnlyInstancesOf("Club\\KidTask\\Kid", $results);
+
+
+        // grab the results from the array and validate it
+        $pdoKid = $results[0];
         $this->assertEquals($pdoKid->getKidId(), $kidId);
         $this->assertEquals($pdoKid->getKidAdultId(), $this->adult->getAdultId());
         $this->assertEquals($pdoKid->getKidAvatarUrl(), $this->VALID_AVATAR_URL);
