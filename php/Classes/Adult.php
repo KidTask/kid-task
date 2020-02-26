@@ -198,7 +198,8 @@ class Adult implements \JsonSerializable {
         $newAdultCloudinaryToken = trim($newAdultCloudinaryToken);
         $newAdultCloudinaryToken = filter_var($newAdultCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         if(empty($newAdultCloudinaryToken)===true) {
-            throw(new \InvalidArgumentException("token is insecure"));
+        		$newAdultCloudinaryToken = null;
+            return;
         }
         //verify url will fit database
         if(strlen($newAdultCloudinaryToken) > 255) {
