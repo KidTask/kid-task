@@ -396,36 +396,45 @@ class Kid implements \JsonSerializable {
      * @throws \PDOException when mySQL related errors occur
      * @throws \TypeError when a variable are not the correct data type
      **/
-    public static function getKidByKidAdultId(\PDO $pdo, $kidAdultId) : ?Kid {
-        // sanitize the kidAdultId before searching
-        try {
-            $kidAdultId = self::validateUuid($kidAdultId);
-        } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-            throw(new \PDOException($exception->getMessage(), 0, $exception));
+    public static function getKidByKidAdultId(\PDO $pdo, string $kidAdultId) : \SplFixedArray {
+        // sanitize the description before searching
+        $kidAdultId = trim($kidAdultId);
+        $kidAdultId = filter_var($kidAdultId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        if(empty($kidAdultId) === true) {
+            throw(new \PDOException("kidAdultId is invalid"));
         }
+
+        // escape any mySQL wild cards
+        $kidAdultId = str_replace("_", "\\_", str_replace("%", "\\%", $kidAdultId));
 
         // create query template
-        $query = "SELECT kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidAdultId = :kidAdultId";
+        $query = "SELECT kidId, kidAdultId, kidAvatarUrl, kidCloudinaryToken, kidHash, kidName, kidUsername FROM kid WHERE kidAdultId LIKE :kidAdultId";
         $statement = $pdo->prepare($query);
 
-        // bind the Adult id to the place holder in the template
-        $parameters = ["kidAdultId" => $kidAdultId->getBytes()];
+        // bind the kid content to the place holder in the template
+        $kidAdultId = "%$kidAdultId%";
+        $parameters = ["kidAdultId" => $kidAdultId];
         $statement->execute($parameters);
 
-        // grab the kid from mySQL
-        try {
-            $kid = null;
-            $statement->setFetchMode(\PDO::FETCH_ASSOC);
-            $row = $statement->fetch();
-            if($row !== false) {
-                $kid = new Kid($row["kidId"], $row["kidAdultId"], $row["kidAvatarUrl"], $row["kidCloudinaryToken"], $row["kidHash"], $row["kidName"], $row["kidUsername"]);
+        // build an array of kids
+        $kids = new \SplFixedArray($statement->rowCount());
+        $statement->setFetchMode(\PDO::FETCH_ASSOC);
+        while(($row = $statement->fetch()) !== false) {
+            try {
+                $kid = new Kid($row["kidId"], $row["kidAdultId"], $row["kidAvatarUrl"],
+                    $row["kidCloudinaryToken"], $row["kidHash"],
+                    $row["kidName"], $row["kidUsername"]);
+                $kids[$kids->key()] = $kid;
+                $kids->next();
+            } catch(\Exception $exception) {
+                // if the row couldn't be converted, rethrow it
+                throw(new \PDOException($exception->getMessage(), 0, $exception));
             }
-        } catch(\Exception $exception) {
-            // if the row couldn't be converted, rethrow it
-            throw(new \PDOException($exception->getMessage(), 0, $exception));
         }
-        return($kid);
-    } // end of getKidByKidAdultId
+        return($kids);
+    } //end of getKidByKidAdultId
+
+
 
     /**
      * gets the Kid by kidUsername
