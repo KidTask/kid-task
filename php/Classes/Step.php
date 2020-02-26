@@ -267,7 +267,7 @@ class Step implements \JsonSerializable {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $stepTaskId step task id to search for
-	 * @return Step|null Step found or null if not found
+	 * @return \SplFixedArray of steps for taskId
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
