@@ -305,6 +305,44 @@ class TaskTest extends KidTaskTest {
 	}
 
 	/**
+	 * test grabbing a Task by Task Kid Id
+	 */
+	public function testGetValidTaskByTaskKidId(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("task");
+
+		// create a new Tweet and insert to into mySQL
+		$taskId = generateUuidV4();
+		$task = new Task($taskId, $this->adult->getAdultId(), $this->kid->getKidId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_TASKCONTENT, $this->VALID_TASKDUEDATE, $this->VALID_TASKISCOMPLETE, $this->VALID_TASKREWARD);
+		$task->insert($this->getPDO());
+
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Task::getTaskByTaskKidId($this->getPDO(), $task->getTaskKidId());
+		var_dump($results);
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("task"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Club\\KidTask\\Task", $results);
+
+		//grab the result from the array and validate it
+		$pdoTask = $results[0];
+
+		$this->assertEquals($pdoTask->getTaskId(), $taskId);
+		$this->assertEquals($pdoTask->getTaskAdultId(), $this->adult->getAdultId());
+		$this->assertEquals($pdoTask->getTaskKidId(), $this->kid->getKidId());
+		$this->assertEquals($pdoTask->getTaskAvatarUrl(), $this->VALID_AVATAR_URL);
+		$this->assertEquals($pdoTask->getTaskCloudinaryToken(), $this->VALID_CLOUDINARY_TOKEN);
+		$this->assertEquals($pdoTask->getTaskContent(), $this->VALID_TASKCONTENT);
+		$this->assertEquals($pdoTask->getTaskDueDate()->getTimestamp(), $this->VALID_TASKDUEDATE->getTimestamp());
+		$this->assertEquals($pdoTask->getTaskIsComplete(), $this->VALID_TASKISCOMPLETE);
+		$this->assertEquals($pdoTask->getTaskReward(), $this->VALID_TASKREWARD);
+
+	}
+
+
+
+
+	/**
 	 * test grabbing a Task that does not exist
 	 **/
 	public function testGetInvalidTaskByTaskAdultId(): void {

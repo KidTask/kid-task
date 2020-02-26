@@ -37,8 +37,8 @@ class Step implements \JsonSerializable {
 	 *
 	 * @param string|Uuid $newStepId id of this Step or null if a new Step
 	 * @param string|Uuid $newStepTaskId id of this stepTask or null if a new stepTask
-	 * @param $newStepContent
-	 * @param $newStepOrder
+	 * @param $newStepContent description of the step
+	 * @param $newStepOrder order of the step
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints

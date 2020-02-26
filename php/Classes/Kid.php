@@ -52,13 +52,13 @@ class Kid implements \JsonSerializable {
     /**
      * constructor for this Kid
      *
-     * @param string|Uuid $newKidId The Kid's Id
-     * @param string|Uuid $newKidAdultId The Kid's Adult Id
-     * @param string|$newKidAvatarUrl
-     * @param string|$newKidCloudinaryToken
-     * @param string|$newKidHash
-     * @param string|$newKidName
-     * @param string|$newKidUsername
+     * @param string|Uuid $newKidId The Kid's Id, primary id
+     * @param string|Uuid $newKidAdultId The Kid's Adult Id, foreign key
+     * @param string|$newKidAvatarUrl avatar url for kid, can be null
+     * @param string|$newKidCloudinaryToken cloudinary token for kid, can be null
+     * @param string|$newKidHash password hash for kid
+     * @param string|$newKidName name of kid, can be null
+     * @param string|$newKidUsername username for kid, used to log in
      * @throws \InvalidArgumentException if data types are not valid
      * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
      * @throws \TypeError if data types violate type hints
@@ -158,8 +158,9 @@ class Kid implements \JsonSerializable {
         $newKidAvatarUrl = trim($newKidAvatarUrl);
         $newKidAvatarUrl = filter_var($newKidAvatarUrl, FILTER_VALIDATE_URL);
         if(empty($newKidAvatarUrl)===true) {
-            throw(new \InvalidArgumentException("url is empty or insecure"));
-        }
+			  $this->kidAvatarUrl = null;
+			  return;
+		  }
         //verify url will fit database
         if(strlen($newKidAvatarUrl) > 255) {
             throw(new \RangeException("Adult avatar url is too large"));
@@ -228,7 +229,8 @@ class Kid implements \JsonSerializable {
         $newKidCloudinaryToken = trim($newKidCloudinaryToken);
         $newKidCloudinaryToken = filter_var($newKidCloudinaryToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         if(empty($newKidCloudinaryToken)===true) {
-            throw(new \InvalidArgumentException("kid cloudinary token is insecure"));
+			  $this->kidCloudinaryToken = null;
+			  return;
         }
         //verify url will fit database
         if(strlen($newKidCloudinaryToken) > 255) {
@@ -256,16 +258,16 @@ class Kid implements \JsonSerializable {
      * @throws \TypeError if $newKidAvatarUrl is not a string
      */
     public function setKidName(?string $newKidName): void {
-        $newKidCloudinaryToken = trim($newKidName);
-        $newKidCloudinaryToken = filter_var($newKidName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $newKidName = trim($newKidName);
+        $newKidName = filter_var($newKidName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         if($newKidName === null) {
             $this->kidName = null;
             return;
         }
-        if(strlen($newKidName) > 256) {
+        if(strlen($newKidName) > 255) {
             throw(new \RangeException("Name is too large"));
         }
-        //store Adult name
+        //store Kid name
         $this->kidName = $newKidName;
     }
 
@@ -285,9 +287,15 @@ class Kid implements \JsonSerializable {
      * @throws \TypeError if $newKidUsername is not a string
      **/
     public function setKidUsername(string $newKidUsername): void {
+		 $newKidUsername = trim($newKidUsername);
+		 $newKidUsername = filter_var($newKidUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         if(empty($newKidUsername) === true) {
             throw(new \InvalidArgumentException("username is empty"));
         }
+
+		 if(strlen($newKidUsername) > 255) {
+			 throw(new \RangeException("Username is too large"));
+		 }
 
         // store the username
         $this->kidUsername = $newKidUsername;
@@ -477,7 +485,8 @@ class Kid implements \JsonSerializable {
         $fields = get_object_vars($this);
         $fields["kidId"] = $this->kidId->toString();
         $fields["kidAdultId"] = $this->kidAdultId->toString();
-        return($fields);
+		 unset($fields["kidHash"]);
+		 return($fields);
     }
 
 } //end of Kid class

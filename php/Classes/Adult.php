@@ -56,13 +56,13 @@ class Adult implements \JsonSerializable {
      * constructor for this Adult
      *
      * @param string|Uuid $newAdultId id of this Adult or null if a new Adult
-     * @param string $newAdultActivationToken
-     * @param string $newAdultAvatarUrl
-     * @param string $newAdultCLoudinaryToken
-     * @param string $newAdultEmail
-     * @param string $newAdultHash
-     * @param string $newAdultName
-     * @param string $newAdultUsername
+     * @param string $newAdultActivationToken activation token for adult
+     * @param string $newAdultAvatarUrl avatar url for adult, can be null
+     * @param string $newAdultCLoudinaryToken cloudinary token for adult, can be null
+     * @param string $newAdultEmail email for adult
+     * @param string $newAdultHash password hash for the adult
+     * @param string $newAdultName name for adult, can be null
+     * @param string $newAdultUsername username for adult, used to log in
      * @throws \InvalidArgumentException if data types are not valid
      * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
      * @throws \TypeError if data types violate type hints
@@ -168,7 +168,8 @@ class Adult implements \JsonSerializable {
         $newAdultAvatarUrl = trim($newAdultAvatarUrl);
         $newAdultAvatarUrl = filter_var($newAdultAvatarUrl, FILTER_VALIDATE_URL);
         if(empty($newAdultAvatarUrl)===true) {
-            throw(new \InvalidArgumentException("url is empty or insecure"));
+			  $this->adultAvatarUrl = null;
+			  return;
         }
         //verify url will fit database
         if(strlen($newAdultAvatarUrl) > 255) {
@@ -331,6 +332,10 @@ class Adult implements \JsonSerializable {
         if(empty($newAdultUsername) === true) {
             throw(new \InvalidArgumentException("username is empty"));
         }
+
+		 if(strlen($newAdultUsername) > 255) {
+			 throw(new \RangeException("username is too large"));
+		 }
 
         // store the username
         $this->adultUsername = $newAdultUsername;
@@ -517,7 +522,8 @@ class Adult implements \JsonSerializable {
     public function jsonSerialize() : array {
         $fields = get_object_vars($this);
         $fields["adultId"] = $this->adultId->toString();
-
-        return($fields);
+        unset($fields["adultHash"]);
+		  unset($fields["adultActivationToken"]);
+		  return($fields);
     } //end of jsonSerialize
 }//end of Adult class
