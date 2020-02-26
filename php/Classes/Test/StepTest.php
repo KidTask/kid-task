@@ -180,9 +180,13 @@ class StepTest extends KidTaskTest {
 		$this->assertEquals($pdoStep->getStepTaskId(), $this->task->getTaskId());
 	} //end of testGetValidStepByTaskId()
 
-
-
-
+	/**
+	 * test grabbing a Step by invalid task id
+	 **/
+	public function testGetInvalidStepByStepTaskId(): void {
+		$step = Step::getStepByStepTaskId($this->getPDO(), generateUuidV4());
+		$this->assertCount(0, $step);
+	}
 
 
 }//end StepTest
