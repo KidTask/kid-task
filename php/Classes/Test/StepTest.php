@@ -115,7 +115,7 @@ class StepTest extends KidTaskTest {
 		$step->update($this->getPDO());
 
 // grab the data from mySQL and enforce the fields match our expectations
-		$pdoStep = Step::getStepById($this->getPDO(), $step->getStepId());
+		$pdoStep = Step::getStepByStepId($this->getPDO(), $step->getStepId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("step"));
 		$this->assertEquals($pdoStep->getStepTaskId(), $this->task->getTaskId());
 		$this->assertEquals($pdoStep->getStepContent(), $this->VALID_STEP_CONTENT);
@@ -159,7 +159,7 @@ class StepTest extends KidTaskTest {
 	/**
 	 * test grabbing a Step by task id
 	 **/
-	public function testGetValidStepByTaskId() : void {
+	public function testGetValidStepByStepTaskId() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("step");
 
@@ -169,15 +169,18 @@ class StepTest extends KidTaskTest {
 		$step->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Step::getStepByStepTaskId($this->getPDO(), $this->task->getTaskId());
+		$results = Step::getStepByStepTaskId($this->getPDO(), $step->getStepTaskId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("step"));
 		$this->assertCount(1, $results);
 		$this->assertContainsOnlyInstancesOf("Club\\KidTask\\Step", $results);
 
 		// grab the result from the array and validate it
 		$pdoStep = $results[0];
-		$this->assertEquals($pdoStep->getStepId(), $this->getStepId());
+
+		$this->assertEquals($pdoStep->getStepId(), $stepId);
 		$this->assertEquals($pdoStep->getStepTaskId(), $this->task->getTaskId());
+		$this->assertEquals($pdoStep->getStepContent(), $this->VALID_STEP_CONTENT);
+		$this->assertEquals($pdoStep->getStepOrder(), $this->VALID_STEP_ORDER);
 	} //end of testGetValidStepByTaskId()
 
 	/**
