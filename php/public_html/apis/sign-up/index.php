@@ -39,7 +39,7 @@ try {
 		$requestObject = json_decode($requestContent);
 
 		//account email is a required field
-		if(empty($requestObject->aduleEmail) === true) {
+		if(empty($requestObject->adultEmail) === true) {
 			throw(new \InvalidArgumentException ("No account email present", 405));
 		}
 
