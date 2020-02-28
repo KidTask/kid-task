@@ -38,17 +38,17 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//account email is a required field
+		//adult-account email is a required field
 		if(empty($requestObject->adultEmail) === true) {
-			throw(new \InvalidArgumentException ("No account email present", 405));
+			throw(new \InvalidArgumentException ("No adult-account email present", 405));
 		}
 
-		//account username is a required field
+		//adult-account username is a required field
 		if(empty($requestObject->adultUsername) === true) {
 			throw(new \InvalidArgumentException ("No parent username", 405));
 		}
 
-		//verify that account password is present
+		//verify that adult-account password is present
 		if(empty($requestObject->adultPassword) === true) {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
@@ -72,7 +72,7 @@ try {
 		//compose the email message to send with th activation token
 		$messageSubject = "Kid Task -- Activate Your Account";
 
-		//building the activation link that can travel to another server and still work. This is the link that will be clicked to confirm the account.
+		//building the activation link that can travel to another server and still work. This is the link that will be clicked to confirm the adult-account.
 		//make sure URL is /public_html/api/activation/$activation
 		$basePath = dirname($_SERVER["SCRIPT_NAME"], 3);
 
@@ -85,7 +85,7 @@ try {
 		//compose message to send with email
 		$message = <<< EOF
 		<h2>Welcome to Kid Task.</h2>
-		<p>In order to start assigning tasks to your kid(s) confirm your account </p>
+		<p>In order to start assigning tasks to your kid(s) confirm your adult-account </p>
 		<p><a href="$confirmLink">$confirmLink</a></p>
 		EOF;
 
@@ -146,7 +146,7 @@ try {
 		}
 
 		// update reply
-		$reply->message = "Thank you for creating an account with Kid Task";
+		$reply->message = "Thank you for creating an adult-account with Kid Task";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}

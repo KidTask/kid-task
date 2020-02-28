@@ -20,7 +20,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 **/
 class AdultTest extends KidTaskTest {
 /**
-* placeholder until account activation is created
+* placeholder until adult-account activation is created
 * @var string $VALID_ACTIVATION
 */
 protected $VALID_ACTIVATION;
