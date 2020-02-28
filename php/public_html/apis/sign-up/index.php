@@ -58,10 +58,6 @@ try {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
 
-		//make sure the password and confirm password match
-		if($requestObject->adultPassword !== $requestObject->adultPasswordConfirm) {
-			throw(new \InvalidArgumentException("passwords do not match"));
-		}
 
 		$hash = password_hash($requestObject->adultPassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
 
