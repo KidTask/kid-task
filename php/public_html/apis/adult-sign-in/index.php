@@ -43,8 +43,8 @@ try {
         $requestObject = json_decode($requestContent);
 
         //check to make sure the password and email field is not empty.s
-        if(empty($requestObject->adultEmail) === true) {
-            throw(new\InvalidArgumentException("email address not provided.", 401));
+        if(empty($requestObject->adultUsername) === true) {
+            throw(new\InvalidArgumentException("username not provided.", 401));
         } else {
             $adultEmail = filter_var($requestObject->adultEmail, FILTER_SANITIZE_EMAIL);
         }
@@ -56,7 +56,7 @@ try {
         }
 
         //grab the adult from the database by the email provided
-        $adult = Adult::getAdultByAdultEmail($pdo, $adultEmail);
+        $adult = Adult::getAdultByAdultUsername($pdo, $adultEmail);
         if(empty($adult) === true) {
             throw (new \InvalidArgumentException("Invalid Email", 401));
         }
