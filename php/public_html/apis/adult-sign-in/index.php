@@ -1,14 +1,15 @@
 <?php
 
-namespace CLub\KidTask;
+
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once dirname(__DIR__,3) . "/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 
-use Club\KidTask;
+use Club\KidTask\Adult;
 
 /**
  * api for signing in to Kid Task as an Adult
@@ -42,11 +43,11 @@ try {
         $requestContent = file_get_contents("php://input");
         $requestObject = json_decode($requestContent);
 
-        //check to make sure the password and email field is not empty.s
+        //check to make sure the password and username field is not empty.s
         if(empty($requestObject->adultUsername) === true) {
             throw(new\InvalidArgumentException("username not provided.", 401));
         } else {
-            $adultEmail = filter_var($requestObject->adultEmail, FILTER_SANITIZE_EMAIL);
+            $adultUsername = filter_var($requestObject->adultUsername, FILTER_SANITIZE_STRING);
         }
 
         if(empty($requestObject->adultPassword) === true) {
@@ -55,17 +56,17 @@ try {
             $adultPassword = $requestObject->adultPassword;
         }
 
-        //grab the adult from the database by the email provided
-        $adult = Adult::getAdultByAdultUsername($pdo, $adultEmail);
+        //grab the adult from the database by the username provided
+        $adult = Adult::getAdultByAdultUsername($pdo, $adultUsername);
         if(empty($adult) === true) {
-            throw (new \InvalidArgumentException("Invalid Email", 401));
+            throw (new \InvalidArgumentException("Invalid Username", 401));
         }
-        $adult->setAdultActivationToken;
+        $adult->setAdultActivationToken(null);
         $adult->update($pdo);
 
         //verify hash is correct
         if(password_verify($requestObject->adultPassword, $adult->getAdultHash()) === false) {
-            throw(new \InvalidArgumentException("Password or email is incorrect", 401));
+            throw(new \InvalidArgumentException("Password or username is incorrect", 401));
         }
 
         //grab adult from database and put into a session
@@ -78,6 +79,7 @@ try {
         //create the Auth payload
         $authObject = (object) [
             "adultId" => $adult->getAdultId(),
+			  "adultUsername" => $adult->getAdultUsername()
         ];
 
         //create and set the JWT TOKEN
