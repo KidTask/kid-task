@@ -7,7 +7,7 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use Club\KidTask\Test\Adult;
+use Club\KidTask\Adult;
 
 /**
  * api for signing up to Kid Task
@@ -59,7 +59,7 @@ try {
 		}
 
 
-		$hash = password_hash($requestObject->adultPassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$hash = password_hash($requestObject->adultPassword, PASSWORD_ARGON2I, ["time_cost" => 32]);
 
 		$adultActivationToken = bin2hex(random_bytes(16));
 
