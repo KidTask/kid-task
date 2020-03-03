@@ -37,7 +37,7 @@ try {
 
 		// enforce the user is signed in
 		if(empty($_SESSION["adult"]) === true) {
-			throw(new \InvalidArgumentException("you must be logged in to add kids", 401));
+			throw(new \InvalidArgumentException("you must be logged in to create kids", 401));
 		}
 
 		//enforce the end user has a JWT token
@@ -84,7 +84,10 @@ try {
 		}
 
 		$kid = new Kid(generateUuidV4(), getKidAdultId(), $requestObject->kidAvatarUrl, $requestObject->kidCloudinaryToken, $hash, $requestObject->kidName, $requestObject->kidUsername);
+		$kid->insert($pdo);
 
+		// insert reply
+		$reply->message = "Kid created OK";
 
 	} else {
 		throw (new InvalidArgumentException("Invalid HTTP method request", 418));
