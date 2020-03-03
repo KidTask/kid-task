@@ -63,8 +63,23 @@ try {
 
 		$adultActivationToken = bin2hex(random_bytes(16));
 
+		//make sure name is valid (optional field)
+		if (empty($requestObject->adultName) === true) {
+			$requestObject->adultName = null;
+		}
+
+		//make sure cloudinary token is valid (optional field)
+		if (empty($requestObject->adultCloudinaryToken) === true) {
+			$requestObject->adultCloudinaryToken = null;
+		}
+
+		//make sure Avatar Url is valid (optional field)
+		if (empty($requestObject->adultAvatarUrl) === true) {
+			$requestObject->adultAvatarUrl = null;
+		}
+
 		//create the adult object and prepare to insert into the database
-		$adult = new Adult(generateUuidV4(), $adultActivationToken, null, null, $requestObject->adultEmail, $hash, null, $requestObject->adultUsername);
+		$adult = new Adult(generateUuidV4(), $adultActivationToken, $requestObject->adultAvatarUrl, $requestObject->adultCloudinaryToken, $requestObject->adultEmail, $hash, $requestObject->adultName, $requestObject->adultUsername);
 
 		//insert the profile into the database
 		$adult->insert($pdo);
