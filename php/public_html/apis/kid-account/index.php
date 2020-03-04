@@ -53,13 +53,13 @@ try {
         setXsrfCookie();
 
         //gets a post by content
-        if(empty($id) === false) {
+        if(empty($kidId) === false) {
             $reply->data = Kid::getKidByKidId($pdo, $kidId);
 
-        } else if(empty($profileAtHandle) === false) {
+        } else if(empty($kidAdultId) === false) {
             $reply->data = Kid::getKidByKidAdultId($pdo, $kidAdultId);
 
-        } else if(empty($profileEmail) === false) {
+        } else if(empty($kidUsername) === false) {
 
             $reply->data = Kid::getKidByKidUsername($pdo, $kidUsername);
         }
@@ -73,7 +73,7 @@ try {
         //validateJwtHeader();
 
         //enforce the user is signed in and only trying to edit their own profile
-        if(empty($_SESSION["kid"]) === true || $_SESSION["profile"]->getKidId()->toString() !== $kidId) {
+        if(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $kidId) {
             throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
         }
 
