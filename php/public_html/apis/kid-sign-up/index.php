@@ -83,7 +83,7 @@ try {
 			$requestObject->kidAvatarUrl = null;
 		}
 
-		$kid = new Kid(generateUuidV4(), getKidAdultId(), $requestObject->kidAvatarUrl, $requestObject->kidCloudinaryToken, $hash, $requestObject->kidName, $requestObject->kidUsername);
+		$kid = new Kid(generateUuidV4(), $_SESSION["adult"]->getAdultId(), $requestObject->kidAvatarUrl, $requestObject->kidCloudinaryToken, $hash, $requestObject->kidName, $requestObject->kidUsername);
 		$kid->insert($pdo);
 
 		// insert reply
