@@ -31,7 +31,7 @@ try {
 
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/kidtask.ini");
 	$pdo = $secrets->getPdoObject();
-	$cloudinary = $secrets->getSecret("cloudinary");
+	//$cloudinary = $secrets->getSecret("cloudinary");
 
 
 	//determine which HTTP method was used
@@ -39,11 +39,13 @@ try {
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$adultEmail = filter_input(INPUT_GET, "adultCloudinaryToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$adultAvatarUrl = filter_input(INPUT_GET, "adultAvatarUrl", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+	//$adultCloudinaryToken = filter_input(INPUT_GET, "adultCloudinaryToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$adultEmail = filter_input(INPUT_GET, "adultEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$adultUsername = filter_input(INPUT_GET, "adultName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-	\Cloudinary::config(["cloud_name" => $cloudinary->cloudName, "api_key" => $cloudinary->apiKey, "api_secret" => $cloudinary->apiSecret]);
+	//\Cloudinary::config(["cloud_name" => $cloudinary->cloudName, "api_key" => $cloudinary->apiKey, "api_secret" => $cloudinary->apiSecret]);
 
 
 	// make sure the id is valid for methods that require it
@@ -93,13 +95,17 @@ try {
 
 		//adult email is a required field
 		if(empty($requestObject->adultEmail) === true) {
-			throw(new \InvalidArgumentException ("No adult email present", 405));
+			$requestObject->adultAvatarUrl = null;
+		}
+		//make sure avatar url is valid (optional field)
+		if (empty($requestObject->adultAvatarUrl) === true) {
+			$requestObject->adultAvatarUrl = null;
 		}
 
-//make sure cloudinary token is valid (optional field)
-		if (empty($requestObject->adultCloudinaryToken) === true) {
-			$requestObject->adultCloudinaryToken = null;
-		}
+////make sure cloudinary token is valid (optional field)
+//		if (empty($requestObject->adultCloudinaryToken) === true) {
+//			$requestObject->adultCloudinaryToken = null;
+//		}
 
 		//make sure name is valid (optional field)
 		if (empty($requestObject->adultName) === true) {
@@ -107,7 +113,8 @@ try {
 		}
 
 
-		$adult->setAdultCloudinaryToken($requestObject->adultCloudinaryToken);
+		$adult->setAdultAvatarUrl($requestObject->adultAvatarUrl);
+//		$adult->setAdultCloudinaryToken($requestObject->adultCloudinaryToken);
 		$adult->setAdultEmail($requestObject->adultEmail);
 		$adult->setAdultName($requestObject->adultName);
 		$adult->update($pdo);
