@@ -41,18 +41,12 @@ try {
     $kidId = filter_input(INPUT_GET, "kidId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $kidAdultId = filter_input(INPUT_GET, "kidAdultId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $kidAvatarUrl= filter_input(INPUT_GET, "kidAvatarUrl", FILTER_SANITIZE_URL);
-    $kidCloudinaryToken= filter_input(INPUT_GET, "kidCloudinaryToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $kidName = filter_input(INPUT_GET, "kidName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $kidUsername = filter_input(INPUT_GET, "kidUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     //make sure avatar url is valid (optional field)
         if (empty($requestObject->kidAvatarUrl) === true) {
             $requestObject->kidAvatarUrl = null;
-        }
-
-        //make sure cloudinary token is valid (optional field)
-        if (empty($requestObject->kidCloudinaryToken) === true) {
-            $requestObject->kidCloudinaryToken = null;
         }
 
         //make sure name is valid (optional field)
@@ -116,11 +110,6 @@ try {
             throw(new \InvalidArgumentException("No Kid Avatar Url is present.", 405));
         }
 
-        //kid's cloudinary token
-        if(empty($requestObject->kidCloudinaryToken) === true) {
-            throw(new \InvalidArgumentException("No Cloudinary Token for Kid.", 405));
-        }
-
         //Kid Name
         if(empty($requestObject->kidName) === true) {
             throw(new \InvalidArgumentException("No kid name!", 405));
@@ -134,7 +123,6 @@ try {
 
         $kid->setKidAdultId($requestObject->kidAdultId);
         $kid->setKidAvatarUrl($requestObject->kidAvatarUrl);
-        $kid->setKidCloudinaryToken($requestObject->kidCloudinaryToken);
         $kid->setKidName($requestObject->kidName);
         $kid->setKidUsername($requestObject->kidUsername);
         $kid->update($pdo);
