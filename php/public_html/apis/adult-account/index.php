@@ -3,7 +3,6 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
-require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
@@ -12,7 +11,7 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
 use Club\KidTask\Adult;
 
 /**
- * API for adult adult-account
+ * API for adult-account
  *
  * @author demetria
  * @version 1.0
@@ -30,7 +29,7 @@ $reply->data = null;
 try {
 	//grab the mySQL connection
 
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/kidtask.ini");
 	$pdo = $secrets->getPdoObject();
 
 
@@ -39,8 +38,9 @@ try {
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$profileAtHandle = filter_input(INPUT_GET, "profileAtHandle", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$profileEmail = filter_input(INPUT_GET, "profileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$adultUsername = filter_input(INPUT_GET, "adultUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$adultEmail = filter_input(INPUT_GET, "adultEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
 
 
 	// make sure the id is valid for methods that require it
@@ -54,14 +54,14 @@ try {
 
 		//gets a post by content
 		if(empty($id) === false) {
-			$reply->data = Profile::getProfileByProfileId($pdo, $id);
+			$reply->data = Adult::getAdultByAdultId($pdo, $id);
 
-		} else if(empty($profileAtHandle) === false) {
-			$reply->data = Profile::getProfileByProfileAtHandle($pdo, $profileAtHandle);
+		} else if(empty($adultUsername) === false) {
+			$reply->data = Adult::getAdultByAdultUsername($pdo, $adultUsername);
 
-		} else if(empty($profileEmail) === false) {
+		} else if(empty($adultEmail) === false) {
 
-			$reply->data = Profile::getProfileByProfileEmail($pdo, $profileEmail);
+			$reply->data = Adult::getAdultbyAdultEmail($pdo, $adultEmail);
 		}
 
 	} elseif($method === "PUT") {
@@ -72,9 +72,9 @@ try {
 		//enforce the end user has a JWT token
 		//validateJwtHeader();
 
-		//enforce the user is signed in and only trying to edit their own profile
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $id) {
-			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+		//enforce the user is signed in and only trying to edit their own account
+		if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $id) {
+			throw(new \InvalidArgumentException("You are not allowed to access this adult", 403));
 		}
 
 		validateJwtHeader();
@@ -83,35 +83,32 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//retrieve the profile to be updated
-		$profile = Profile::getProfileByProfileId($pdo, $id);
-		if($profile === null) {
-			throw(new RuntimeException("Profile does not exist", 404));
+		//retrieve the adult account to be updated
+		$adult = Adult::getAdultByAdultId($pdo, $id);
+		if($adult === null) {
+			throw(new RuntimeException("Adult account does not exist", 404));
 		}
 
 
-		//profile at handle
-		if(empty($requestObject->profileAtHandle) === true) {
-			throw(new \InvalidArgumentException ("No profile at handle", 405));
+		//adult username
+		if(empty($requestObject->adultUsername) === true) {
+			throw(new \InvalidArgumentException ("No adult username", 405));
 		}
 
-		//profile email is a required field
-		if(empty($requestObject->profileEmail) === true) {
-			throw(new \InvalidArgumentException ("No profile email present", 405));
+		//adult email is a required field
+		if(empty($requestObject->adultEmail) === true) {
+			throw(new \InvalidArgumentException ("No adult email present", 405));
 		}
 
-		//profile phone # | if null use the profile phone that is in the database
-		if(empty($requestObject->profilePhone) === true) {
-			$requestObject->ProfilePhone = $profile->getProfilePhone();
-		}
 
-		$profile->setProfileAtHandle($requestObject->profileAtHandle);
-		$profile->setProfileEmail($requestObject->profileEmail);
-		$profile->setProfilePhone($requestObject->profilePhone);
-		$profile->update($pdo);
+
+
+		$adult->setAdultUsername($requestObject->adultUsername);
+		$adult->setAdultEmail($requestObject->adultEmail);
+		$adult->update($pdo);
 
 		// update reply
-		$reply->message = "Profile information updated";
+		$reply->message = "Adult account information updated";
 
 
 	} elseif($method === "DELETE") {
@@ -122,21 +119,21 @@ try {
 		//enforce the end user has a JWT token
 		//validateJwtHeader();
 
-		$profile = Profile::getProfileByProfileId($pdo, $id);
-		if($profile === null) {
+		$adult = Adult::getAdultByAdultId($pdo, $id);
+		if($adult === null) {
 			throw (new RuntimeException("Profile does not exist"));
 		}
 
-		//enforce the user is signed in and only trying to edit their own profile
-		if(empty($_SESSION["profile"]) === true || $_SESSION["profile"]->getProfileId()->toString() !== $profile->getProfileId()->toString()) {
-			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+		//enforce the user is signed in and only trying to edit their own adult
+		if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $adult->getAdultId()->toString()) {
+			throw(new \InvalidArgumentException("You are not allowed to access this adult account", 403));
 		}
 
 		validateJwtHeader();
 
 		//delete the post from the database
-		$profile->delete($pdo);
-		$reply->message = "Profile Deleted";
+		$adult->delete($pdo);
+		$reply->message = "Adult Account Deleted";
 
 	} else {
 		throw (new InvalidArgumentException("Invalid HTTP request", 400));
