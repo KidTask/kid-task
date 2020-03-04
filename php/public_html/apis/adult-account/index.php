@@ -31,6 +31,7 @@ try {
 
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/kidtask.ini");
 	$pdo = $secrets->getPdoObject();
+	$cloudinary = $secrets->getSecret("cloudinary");
 
 
 	//determine which HTTP method was used
@@ -38,9 +39,11 @@ try {
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$adultUsername = filter_input(INPUT_GET, "adultUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$adultEmail = filter_input(INPUT_GET, "adultCloudinaryToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$adultEmail = filter_input(INPUT_GET, "adultEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$adultUsername = filter_input(INPUT_GET, "adultName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
+	\Cloudinary::config(["cloud_name" => $cloudinary->cloudName, "api_key" => $cloudinary->apiKey, "api_secret" => $cloudinary->apiSecret]);
 
 
 	// make sure the id is valid for methods that require it
@@ -52,6 +55,8 @@ try {
 		//set XSRF cookie
 		setXsrfCookie();
 
+
+
 		//gets a post by content
 		if(empty($id) === false) {
 			$reply->data = Adult::getAdultByAdultId($pdo, $id);
@@ -59,9 +64,6 @@ try {
 		} else if(empty($adultUsername) === false) {
 			$reply->data = Adult::getAdultByAdultUsername($pdo, $adultUsername);
 
-		} else if(empty($adultEmail) === false) {
-
-			$reply->data = Adult::getAdultbyAdultEmail($pdo, $adultEmail);
 		}
 
 	} elseif($method === "PUT") {
@@ -89,22 +91,25 @@ try {
 			throw(new RuntimeException("Adult account does not exist", 404));
 		}
 
-
-		//adult username
-		if(empty($requestObject->adultUsername) === true) {
-			throw(new \InvalidArgumentException ("No adult username", 405));
-		}
-
 		//adult email is a required field
 		if(empty($requestObject->adultEmail) === true) {
 			throw(new \InvalidArgumentException ("No adult email present", 405));
 		}
 
+//make sure cloudinary token is valid (optional field)
+		if (empty($requestObject->adultCloudinaryToken) === true) {
+			$requestObject->adultCloudinaryToken = null;
+		}
+
+		//make sure name is valid (optional field)
+		if (empty($requestObject->adultName) === true) {
+			$requestObject->adultName = null;
+		}
 
 
-
-		$adult->setAdultUsername($requestObject->adultUsername);
+		$adult->setAdultCloudinaryToken($requestObject->adultCloudinaryToken);
 		$adult->setAdultEmail($requestObject->adultEmail);
+		$adult->setAdultName($requestObject->adultName);
 		$adult->update($pdo);
 
 		// update reply
