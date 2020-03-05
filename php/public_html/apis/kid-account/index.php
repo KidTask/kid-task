@@ -40,8 +40,10 @@ try {
     // sanitize input
     $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $kidAdultId = filter_input(INPUT_GET, "kidAdultId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $kidUsername = filter_input(INPUT_GET, "kidUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        // make sure the id is valid for methods that require it
+
+    // make sure the id is valid for methods that require it
         if(($method === "DELETE" || $method === "PUT") && (empty($kidId) === true)) {
             throw(new InvalidArgumentException("Kid Id cannot be empty or negative", 405));
         }
@@ -53,6 +55,12 @@ try {
         //gets a kid by content
         if(empty($kidId) === false) {
             $reply->data = Kid::getKidByKidId($pdo, $id);
+
+        }
+
+        //gets a kid by content
+        if(empty($kidUsername) === false) {
+            $reply->data = Kid::getKidByKidUsername($pdo, $kidUsername);
 
         } else if(empty($kidAdultId) === false) {
             $reply->data = Kid::getKidByKidAdultId($pdo, $kidAdultId)->toArray();

@@ -51,6 +51,11 @@ try {
 		//set XSRF cookie
 		setXsrfCookie();
 
+        //gets a adult
+        if(empty($id) === false) {
+            $reply->data = Adult::getAdultByAdultId($pdo, $id);
+        }
+
 		//gets a adult
 		if(empty($adultUsername) === false) {
 			$reply->data = Adult::getAdultByAdultUsername($pdo, $adultUsername);
