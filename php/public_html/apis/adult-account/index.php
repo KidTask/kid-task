@@ -39,13 +39,6 @@ try {
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$adultAvatarUrl = filter_input(INPUT_GET, "adultAvatarUrl", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
-	//$adultCloudinaryToken = filter_input(INPUT_GET, "adultCloudinaryToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$adultEmail = filter_input(INPUT_GET, "adultEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$adultUsername = filter_input(INPUT_GET, "adultName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
-	//\Cloudinary::config(["cloud_name" => $cloudinary->cloudName, "api_key" => $cloudinary->apiKey, "api_secret" => $cloudinary->apiSecret]);
 
 
 	// make sure the id is valid for methods that require it
@@ -57,15 +50,9 @@ try {
 		//set XSRF cookie
 		setXsrfCookie();
 
-
-
-		//gets a post by content
+		//gets a adult
 		if(empty($id) === false) {
 			$reply->data = Adult::getAdultByAdultId($pdo, $id);
-
-		} else if(empty($adultUsername) === false) {
-			$reply->data = Adult::getAdultByAdultUsername($pdo, $adultUsername);
-
 		}
 
 	} elseif($method === "PUT") {
@@ -76,10 +63,9 @@ try {
 		//enforce the end user has a JWT token
 		//validateJwtHeader();
 
-		//enforce the user is signed in and only trying to edit their own account
-		if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $id) {
-			throw(new \InvalidArgumentException("You are not allowed to access this adult", 403));
-		}
+
+
+
 
 		validateJwtHeader();
 
@@ -93,28 +79,29 @@ try {
 			throw(new RuntimeException("Adult account does not exist", 404));
 		}
 
+		//  	//enforce the user is signed in and only trying to edit their own account
+		if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $adult->getAdultId()->toString()) {
+			throw(new \InvalidArgumentException("You are not allowed to access this account", 403));
+		}
+
 		//adult email is a required field
 		if(empty($requestObject->adultEmail) === true) {
-			$requestObject->adultAvatarUrl = null;
+			$requestObject->adultEmail = $adult->getAdultEmail();
 		}
 		//make sure avatar url is valid (optional field)
 		if (empty($requestObject->adultAvatarUrl) === true) {
-			$requestObject->adultAvatarUrl = null;
+			$requestObject->adultAvatarUrl = $adult->getAdultAvatarUrl();
 		}
 
-////make sure cloudinary token is valid (optional field)
-//		if (empty($requestObject->adultCloudinaryToken) === true) {
-//			$requestObject->adultCloudinaryToken = null;
-//		}
+
 
 		//make sure name is valid (optional field)
 		if (empty($requestObject->adultName) === true) {
-			$requestObject->adultName = null;
+			$requestObject->adultName = $adult->getAdultName();
 		}
 
 
 		$adult->setAdultAvatarUrl($requestObject->adultAvatarUrl);
-//		$adult->setAdultCloudinaryToken($requestObject->adultCloudinaryToken);
 		$adult->setAdultEmail($requestObject->adultEmail);
 		$adult->setAdultName($requestObject->adultName);
 		$adult->update($pdo);
@@ -122,30 +109,6 @@ try {
 		// update reply
 		$reply->message = "Adult account information updated";
 
-
-	} elseif($method === "DELETE") {
-
-		//verify the XSRF Token
-		verifyXsrf();
-
-		//enforce the end user has a JWT token
-		//validateJwtHeader();
-
-		$adult = Adult::getAdultByAdultId($pdo, $id);
-		if($adult === null) {
-			throw (new RuntimeException("Profile does not exist"));
-		}
-
-		//enforce the user is signed in and only trying to edit their own adult
-		if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $adult->getAdultId()->toString()) {
-			throw(new \InvalidArgumentException("You are not allowed to access this adult account", 403));
-		}
-
-		validateJwtHeader();
-
-		//delete the post from the database
-		$adult->delete($pdo);
-		$reply->message = "Adult Account Deleted";
 
 	} else {
 		throw (new InvalidArgumentException("Invalid HTTP request", 400));
