@@ -39,6 +39,7 @@ try {
 
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $adultUsername = filter_input(INPUT_GET, "adultUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
 	// make sure the id is valid for methods that require it
@@ -51,8 +52,8 @@ try {
 		setXsrfCookie();
 
 		//gets a adult
-		if(empty($id) === false) {
-			$reply->data = Adult::getAdultByAdultId($pdo, $id);
+		if(empty($adultUsername) === false) {
+			$reply->data = Adult::getAdultByAdultUsername($pdo, $adultUsername);
 		}
 
 	} elseif($method === "PUT") {
