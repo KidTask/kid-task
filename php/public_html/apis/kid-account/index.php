@@ -38,21 +38,9 @@ try {
     $method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
     // sanitize input
-    $kidId = filter_input(INPUT_GET, "kidId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $kidAdultId = filter_input(INPUT_GET, "kidAdultId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    $kidAvatarUrl= filter_input(INPUT_GET, "kidAvatarUrl", FILTER_SANITIZE_URL);
-    $kidName = filter_input(INPUT_GET, "kidName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    $kidUsername = filter_input(INPUT_GET, "kidUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    //make sure avatar url is valid (optional field)
-        if (empty($requestObject->kidAvatarUrl) === true) {
-            $requestObject->kidAvatarUrl = null;
-        }
-
-        //make sure name is valid (optional field)
-        if (empty($requestObject->kidName) === true) {
-            $requestObject->kidName = null;
-        }
         // make sure the id is valid for methods that require it
         if(($method === "DELETE" || $method === "PUT") && (empty($kidId) === true)) {
             throw(new InvalidArgumentException("Kid Id cannot be empty or negative", 405));
@@ -64,14 +52,10 @@ try {
 
         //gets a kid by content
         if(empty($kidId) === false) {
-            $reply->data = Kid::getKidByKidId($pdo, $kidId);
+            $reply->data = Kid::getKidByKidId($pdo, $id);
 
         } else if(empty($kidAdultId) === false) {
-            $reply->data = Kid::getKidByKidAdultId($pdo, $kidAdultId);
-
-        } else if(empty($kidUsername) === false) {
-
-            $reply->data = Kid::getKidByKidUsername($pdo, $kidUsername);
+            $reply->data = Kid::getKidByKidAdultId($pdo, $kidAdultId)->toArray();
         }
 
     } elseif($method === "PUT") {
@@ -83,7 +67,7 @@ try {
         validateJwtHeader();
 
         //enforce the user is signed in and only trying to edit their own profile
-        if(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $kidId) {
+        if(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $id) {
             throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
         }
 
@@ -94,13 +78,7 @@ try {
         $requestObject = json_decode($requestContent);
 
         //retrieve the kid to be updated
-        $kid = Kid::getKidByKidId($pdo, $kidId);
-        if($kid === null) {
-            throw(new RuntimeException("Profile does not exist.", 404));
-        }
-
-        //the kid's adult id
-        $kid = Kid::getKidByKidAdultId($pdo, $kidAdultId);
+        $kid = Kid::getKidByKidId($pdo, $id);
         if($kid === null) {
             throw(new RuntimeException("Profile does not exist.", 404));
         }
@@ -139,7 +117,7 @@ try {
         //enforce the end user has a JWT token
         //validateJwtHeader();
 
-        $kid = Kid::getKidByKidId($pdo, $kidId);
+        $kid = Kid::getKidByKidId($pdo, $id);
         if($kid === null) {
             throw (new RuntimeException("Profile does not exist"));
         }
