@@ -44,7 +44,7 @@ try {
 
 
     // make sure the id is valid for methods that require it
-        if(($method === "DELETE" || $method === "PUT") && (empty($kidId) === true)) {
+        if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {
             throw(new InvalidArgumentException("Kid Id cannot be empty or negative", 405));
         }
 
@@ -53,7 +53,7 @@ try {
         setXsrfCookie();
 
         //gets a kid by content
-        if(empty($kidId) === false) {
+        if(empty($id) === false) {
             $reply->data = Kid::getKidByKidId($pdo, $id);
 
         }
@@ -93,17 +93,17 @@ try {
 
         //kid's avatar url
         if(empty($requestObject->kidAvatarUrl) === true) {
-            throw(new \InvalidArgumentException("No Kid Avatar Url is present.", 405));
+            $requestObject->kidAvatarUrl = $kid->getKidAvatarUrl();
         }
 
         //Kid Name
         if(empty($requestObject->kidName) === true) {
-            throw(new \InvalidArgumentException("No kid name!", 405));
+            $requestObject->kidName = $kid->getKidName();
         }
 
         //Kid Username
         if(empty($requestObject->kidUsername) === true) {
-            throw(new \InvalidArgumentException ("No Kid Username present.", 405));
+            $requestObject->kidUsername = $kid->getKidUsername();
         }
 
 
