@@ -71,8 +71,6 @@ try {
         //enforce that the XSRF token is present in the header
         verifyXsrf();
 
-        //enforce the end user has a JWT token
-        validateJwtHeader();
 
         //enforce the user is signed in and only trying to edit their own profile
         if(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $id) {
@@ -107,7 +105,6 @@ try {
         }
 
 
-        $kid->setKidAdultId($requestObject->kidAdultId);
         $kid->setKidAvatarUrl($requestObject->kidAvatarUrl);
         $kid->setKidName($requestObject->kidName);
         $kid->setKidUsername($requestObject->kidUsername);
