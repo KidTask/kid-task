@@ -52,28 +52,32 @@ try {
         //set XSRF cookie
         setXsrfCookie();
 
+        if(empty($_SESSION["adult"])===true) {
+        	throw new InvalidArgumentException("Must be logged in", 403);
+		  }
+
         //gets a kid by content
         if(empty($id) === false) {
-            $reply->data = Kid::getKidByKidId($pdo, $id);
-
-        }
-
-        //gets a kid by content
-        if(empty($kidUsername) === false) {
-            $reply->data = Kid::getKidByKidUsername($pdo, $kidUsername);
-
-        } else if(empty($kidAdultId) === false) {
-            $reply->data = Kid::getKidByKidAdultId($pdo, $kidAdultId)->toArray();
+            $kid = Kid::getKidByKidId($pdo, $id);
+            if($_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()){
+					throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+				}
+            $reply->data = $kid;
+        } else {
+            $reply->data = Kid::getKidByKidAdultId($pdo, $_SESSION["adult"]->getAdultId()->toString())->toArray();
         }
 
     } elseif($method === "PUT") {
 
         //enforce that the XSRF token is present in the header
         verifyXsrf();
-
+        $kid = Kid::getKidByKidId($pdo, $id);
+        if(empty($kid)===true){
+        	throw new InvalidArgumentException("kid does not exist", 405);
+		  }
 
         //enforce the user is signed in and only trying to edit their own profile
-        if(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $id) {
+        if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()) {
             throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
         }
 
