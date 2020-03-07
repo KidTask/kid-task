@@ -95,11 +95,6 @@ try {
             throw(new \InvalidArgumentException("you must be logged in to post tasks", 401));
         }
 
-        // enforce the user is signed in
-        if(empty($_SESSION["kid"]) === true) {
-            throw(new \InvalidArgumentException("you must be logged in to post tasks", 401));
-        }
-
         $requestContent = file_get_contents("php://input");
 
 
