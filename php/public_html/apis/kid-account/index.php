@@ -40,9 +40,11 @@ try {
     // sanitize input
     $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $kidAdultId = filter_input(INPUT_GET, "kidAdultId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $kidUsername = filter_input(INPUT_GET, "kidUsername", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        // make sure the id is valid for methods that require it
-        if(($method === "DELETE" || $method === "PUT") && (empty($kidId) === true)) {
+
+    // make sure the id is valid for methods that require it
+        if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {
             throw(new InvalidArgumentException("Kid Id cannot be empty or negative", 405));
         }
 
@@ -51,8 +53,14 @@ try {
         setXsrfCookie();
 
         //gets a kid by content
-        if(empty($kidId) === false) {
+        if(empty($id) === false) {
             $reply->data = Kid::getKidByKidId($pdo, $id);
+
+        }
+
+        //gets a kid by content
+        if(empty($kidUsername) === false) {
+            $reply->data = Kid::getKidByKidUsername($pdo, $kidUsername);
 
         } else if(empty($kidAdultId) === false) {
             $reply->data = Kid::getKidByKidAdultId($pdo, $kidAdultId)->toArray();
@@ -63,8 +71,6 @@ try {
         //enforce that the XSRF token is present in the header
         verifyXsrf();
 
-        //enforce the end user has a JWT token
-        validateJwtHeader();
 
         //enforce the user is signed in and only trying to edit their own profile
         if(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $id) {
@@ -85,21 +91,20 @@ try {
 
         //kid's avatar url
         if(empty($requestObject->kidAvatarUrl) === true) {
-            throw(new \InvalidArgumentException("No Kid Avatar Url is present.", 405));
+            $requestObject->kidAvatarUrl = $kid->getKidAvatarUrl();
         }
 
         //Kid Name
         if(empty($requestObject->kidName) === true) {
-            throw(new \InvalidArgumentException("No kid name!", 405));
+            $requestObject->kidName = $kid->getKidName();
         }
 
         //Kid Username
         if(empty($requestObject->kidUsername) === true) {
-            throw(new \InvalidArgumentException ("No Kid Username present.", 405));
+            $requestObject->kidUsername = $kid->getKidUsername();
         }
 
 
-        $kid->setKidAdultId($requestObject->kidAdultId);
         $kid->setKidAvatarUrl($requestObject->kidAvatarUrl);
         $kid->setKidName($requestObject->kidName);
         $kid->setKidUsername($requestObject->kidUsername);
