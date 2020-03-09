@@ -59,7 +59,7 @@ try {
         //gets a kid by content
         if(empty($id) === false) {
             $kid = Kid::getKidByKidId($pdo, $id);
-            if($_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()){
+            if($_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()){
 					throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 				}
             $reply->data = $kid;
@@ -77,8 +77,8 @@ try {
 		  }
 
         //enforce the user is signed in and only trying to edit their own profile
-        if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()) {
-            throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+        if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()) {
+            throw(new \InvalidArgumentException("You are not allowed to access this profile son", 403));
         }
 
         validateJwtHeader();
