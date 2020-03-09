@@ -1,6 +1,7 @@
 import React from "react"
 import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
+import {LoginFormContent} from "../shared/components/login/LoginFormContent";
 
 
 export const Home = () => {
@@ -11,8 +12,19 @@ export const Home = () => {
 					<Header/>
 				</div>
 				<div className="row">
-					<div className="col-lg-8">
-						<h1>Home</h1>
+					<div className="col-lg-6">
+						<div className="card" style={{ width: "18rem" }}>
+							<div className="card-body">
+								<h5 className="card-title">Kid Task</h5>
+								<p className="card-text">
+									Sign In
+								</p>
+								<LoginFormContent/>
+								<a href="#" className="btn btn-primary">
+									Go somewhere
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div className="row">
