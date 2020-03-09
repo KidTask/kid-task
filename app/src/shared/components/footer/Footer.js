@@ -20,37 +20,39 @@ library.add(faInfoCircle, faGithub, faEnvelope, faUserFriends);
 
 export const Footer = () => (
 	<>
-		<footer className="page-footer bg-dark fixed-bottom py-2">
+		<footer className="page-footer bg-light fixed-bottom py-2">
 			<Container className="container">
 				<div className="d-flex justify-content-center">
 					<Row id="icons">
 						<Col>
 							<Link to='/about'>
-								<i><FontAwesomeIcon icon={faInfoCircle} size="2x" alt="Kid Task Project Information"/></i>
+								<i><FontAwesomeIcon icon={faInfoCircle} size="sm" alt="Kid Task Project Information"/></i>
 							</Link>
 						</Col>
 						<Col>
 							<a href="https://github.com/KidTask/kid-task"
 								title="KidTask' repository on GitHub">
-								<i><FontAwesomeIcon icon={faGithub} size="2x"/></i>
+								<i><FontAwesomeIcon icon={faGithub} size="sm"/></i>
 							</a>
 						</Col>
 						<Col>
 							<a href="mailto:kidtask@gmail.com"
 								title="Kid Task's email">
-								<i><FontAwesomeIcon icon={faEnvelope} size="2x"/></i>
+								<i><FontAwesomeIcon icon={faEnvelope} size="sm"/></i>
 							</a>
 						</Col>
 						<Col>
 							<Link to='/team'>
-								<i><FontAwesomeIcon icon={faUserFriends} size="2x" alt="Kid Task Team"/></i>
+								<i><FontAwesomeIcon icon={faUserFriends} size="sm" alt="Kid Task Team"/></i>
 							</Link>
 						</Col>
 					</Row>
 				</div>
-				<Row>
-					<Col id="group-name">By Kid Task – CNM Ingenuity Deep Dive Bootcamp Group</Col>
-				</Row>
+				<div className="d-flex justify-content-center">
+					<Row>
+						<Col id="group-name">&reg; 2020 By Kid Task – CNM Ingenuity Deep Dive Bootcamp Group</Col>
+					</Row>
+				</div>
 			</Container>
 		</footer>
 	</>

@@ -7,6 +7,11 @@ body {
 	clear: both;
 }
 
+footer i {
+	color: darkslategrey;
+
+}
+
 /*FOOTER STYLES*/
 #icons {
 	padding: 10px;
