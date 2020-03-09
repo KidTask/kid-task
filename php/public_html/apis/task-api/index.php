@@ -39,8 +39,8 @@ try {
     //sanitize input
 
     $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-    $taskAdultId = filter_input(INPUT_GET, "task adult id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-    $taskKidId = filter_input(INPUT_GET, "task kid id", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+    $taskAdultId = filter_input(INPUT_GET, "taskAdultId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+    $taskKidId = filter_input(INPUT_GET, "taskKidId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
     $taskContent = filter_input(INPUT_GET, "taskContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     //make sure the id is valid for methods that require it
@@ -54,60 +54,30 @@ try {
         //set XSRF cookie
         setXsrfCookie();
 
-        //gets a kid by kidId
-        if(empty($id) === false) {
-            $kid = Kid::getKidByKidId($pdo, $id);
-            if($_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()){
-                throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
-            }
-            $reply->data = $kid;
-        } else {
-            $reply->data = Kid::getKidByKidAdultId($pdo, $_SESSION["adult"]->getAdultId()->toString())->toArray();
-        }
-
         //get a specific task or all tasks and update reply
         if(empty($id) === false) {
             $reply->data = Task::getTaskByTaskId($pdo, $id);
 
         } else if(empty($taskAdultId) === false) {
-            // if the user is logged in grab all the tasks by that user based  on who is logged in
+            // if the user is logged in grab all the tasks by that user based on who is logged in
             $reply->data = Task::getTaskByTaskAdultId($pdo, $taskAdultId)->toArray();
 
         } else if(empty($taskKidId) === false) {
-            // if the user is logged in grab all the tasks by that user based  on who is logged in
+            // if the user is logged in grab all the tasks by that user based on who is logged in
             $reply->data = Task::getTaskByTaskKidId($pdo, $taskKidId)->toArray();
 
         } else if(empty($taskContent) === false) {
             $reply->data = Task::getTaskByTaskContent($pdo, $taskContent)->toArray();
 
-        } else {
-            $tasks = Task::getAllTasks($pdo)->toArray();
-            $taskProfiles = [];
-            foreach($tasks as $task){
-                $adult = 	Adult::getAdultByAdultId($pdo, $task->getTaskAdultId());
-                $kid =      Kid::getKidByKidId($pdo, $task->getTaskKidId());
-                $taskProfiles[] = (object)[
-                    "taskId"=>$task->getTaskId(),
-                    "taskAdultId"=>$task->getTaskAdultId(),
-                    "taskContent"=>$task->getTaskContent(),
-                    "taskDate"=>$task->getTaskDate()->format("U.u") * 1000,
-                    "adultAvatarUrl"=>$adult->getAdultAvatarUrl(),
-                    "kidAvatarUrl"=>$kid->getKidAvatarUrl(),
-                ];
-            }
-            $reply->data = $taskProfiles;
         }
     } else if($method === "PUT" || $method === "POST") {
         //enforce that the XSRF token is present in the header
         verifyXsrf();
-        $kid = Kid::getKidByKidId($pdo, $id);
-        if(empty($kid)===true){
-            throw new InvalidArgumentException("kid does not exist", 405);
-        }
+
         //enforce the user is signed in and only trying to edit their own profile
-        if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()) {
+       /* if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()) {
             throw(new \InvalidArgumentException("You are not allowed to access this profile son", 403));
-        }
+        }*/
 
         $requestContent = file_get_contents("php://input");
 
@@ -120,10 +90,25 @@ try {
         if(empty($requestObject->taskContent) === true) {
             throw(new \InvalidArgumentException ("No content for Task.", 405));
         }
-        $requestObject->foo; //value:bar
-        // make sure ask date is accurate (optional field)
-        if(empty($requestObject->taskDate) === true) {
-            $requestObject->taskDate = null;
+
+        if(empty($requestObject->taskKidId) === true) {
+            throw(new \InvalidArgumentException ("Select a Kid.", 405));
+        }
+
+        if(empty($requestObject->taskAvatarUrl) === true) {
+            $requestObject->taskAvatarUrl = null;
+        }
+
+        if(empty($requestObject->taskCloudinaryToken) === true) {
+            $requestObject->taskCloudinaryToken = null;
+        }
+
+        if(empty($requestObject->taskDueDate) === true) {
+            $requestObject->taskDueDate = null;
+        }
+
+        if(empty($requestObject->taskReward) === true) {
+            $requestObject->taskReward = null;
         }
 
         //perform the actual put or post
@@ -164,7 +149,7 @@ try {
             validateJwtHeader();
 
             // create new task and insert into the database
-            $task = new Task(generateUuidV4(), $_SESSION["adult"]->getAdultId(), $kid->getKidId(), $requestObject->taskAdultAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, $requestObject->taskIsComplete, $requestObject->taskReward);
+            $task = new Task(generateUuidV4(), $_SESSION["adult"]->getAdultId(), $requestObject->taskKidId, $requestObject->taskAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, 0, $requestObject->taskReward);
             $task->insert($pdo);
 
             // update reply

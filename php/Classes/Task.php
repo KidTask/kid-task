@@ -230,7 +230,7 @@ class Task implements \JsonSerializable {
 		$newTaskAvatarUrl = trim($newTaskAvatarUrl);
 		$newTaskAvatarUrl = filter_var($newTaskAvatarUrl, FILTER_VALIDATE_URL);
 		if(empty($newTaskAvatarUrl)===true) {
-			throw(new \InvalidArgumentException("url is empty or insecure"));
+			$newTaskAvatarUrl=null;
 		}
 		//verify url will fit database
 		if(strlen($newTaskAvatarUrl) > 255) {
