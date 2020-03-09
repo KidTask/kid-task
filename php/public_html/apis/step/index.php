@@ -61,8 +61,8 @@ try {
 		} else if(empty($stepTaskId) === false) {
 			// if the user is logged in grab all the steps by that user based  on who is logged in
 			$reply->data = Step::getStepByStepTaskId($pdo, $stepTaskId)->toArray();
-
 		}
+
 
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token
@@ -78,6 +78,7 @@ try {
 
 		// Retrieves the JSON package that the front end sent, and stores it in $requestContent. Here we are using file_get_contents("php://input") to get the request from the front end. file_get_contents() is a PHP function that reads a file into a string. The argument for the function, here, is "php://input". This is a read only stream that allows raw data to be read from the front end request which is, in this case, a JSON package.
 		$requestObject = json_decode($requestContent);
+
 
 		// This Line Then decodes the JSON package and stores that result in $requestObject
 		//make sure step content is available (required field)
@@ -124,7 +125,7 @@ try {
 			validateJwtHeader();
 
 			// create new step and insert into the database
-			$step = new Step(generateUuidV4(), $_SESSION["adult"]->getAdultId(), $requestObject->stepContent, null);
+			$step = new Step(generateUuidV4(), $requestObject->stepTaskId, $requestObject->stepContent, null);
 			$step->insert($pdo);
 
 			// update reply
