@@ -70,7 +70,7 @@ $step5->insert($pdo);
 $step6 = new Step(generateUuidV4(), $task4->getTaskId(), "Pick up toys", 2);
 $step6->insert($pdo);
 
-$step7 = new Step(generateUuidV4(), $task4->getTaskId(), "Pick up clothes", 1);
+$step7 = new Step(generateUuidV4(), $task4->getTaskId(), "Pick up clothes", 3);
 $step7->insert($pdo);
 
 
