@@ -1,5 +1,5 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {FormDebugger} from "../FormDebugger";
+import {FormDebugger} from "../../FormDebugger";
 import React from "react";
 
 
@@ -21,7 +21,7 @@ export const LoginFormContent = (props) => {
             <form onSubmit={handleSubmit}>
                 {/*controlId must match what is passed to the initialValues prop*/}
                 <div className="form-group">
-                    <label htmlFor="adultEmail">Email Address</label>
+                    <label htmlFor="adultUsername">Username</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
@@ -31,9 +31,9 @@ export const LoginFormContent = (props) => {
 
                         <input
                             className="form-control"
-                            id="adultEmail"
+                            id="adultUsername"
                             type="email"
-                            value={values.adultEmail}
+                            value={values.adultUsername}
                             placeholder="Enter email"
                             onChange={handleChange}
                             onBlur={handleBlur}

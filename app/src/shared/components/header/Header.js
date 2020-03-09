@@ -3,7 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import {SignUpModal} from "./sign-up/SignUpModal";
-import {LoginModal} from "../login/LoginModal";
+import {LoginModal} from "./login/LoginModal";
 import "../../../style.css";
 export const Header = (props) => {
     return(
