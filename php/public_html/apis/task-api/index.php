@@ -54,6 +54,17 @@ try {
         //set XSRF cookie
         setXsrfCookie();
 
+        //gets a kid by kidId
+        if(empty($id) === false) {
+            $kid = Kid::getKidByKidId($pdo, $id);
+            if($_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()){
+                throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+            }
+            $reply->data = $kid;
+        } else {
+            $reply->data = Kid::getKidByKidAdultId($pdo, $_SESSION["adult"]->getAdultId()->toString())->toArray();
+        }
+
         //get a specific task or all tasks and update reply
         if(empty($id) === false) {
             $reply->data = Task::getTaskByTaskId($pdo, $id);
@@ -87,12 +98,15 @@ try {
             $reply->data = $taskProfiles;
         }
     } else if($method === "PUT" || $method === "POST") {
-        // enforce the user has a XSRF token
+        //enforce that the XSRF token is present in the header
         verifyXsrf();
-
-        // enforce the user is signed in
-        if(empty($_SESSION["adult"]) === true) {
-            throw(new \InvalidArgumentException("you must be logged in to post tasks", 401));
+        $kid = Kid::getKidByKidId($pdo, $id);
+        if(empty($kid)===true){
+            throw new InvalidArgumentException("kid does not exist", 405);
+        }
+        //enforce the user is signed in and only trying to edit their own profile
+        if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()) {
+            throw(new \InvalidArgumentException("You are not allowed to access this profile son", 403));
         }
 
         $requestContent = file_get_contents("php://input");
@@ -150,7 +164,7 @@ try {
             validateJwtHeader();
 
             // create new task and insert into the database
-            $task = new Task(generateUuidV4(), $_SESSION["adult"]->getAdultId(), $requestObject->taskContent, $requestObject->taskAdultAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, $requestObject->taskIsComplete, $requestObject->taskReward);
+            $task = new Task(generateUuidV4(), $_SESSION["adult"]->getAdultId(), $kid->getKidId(), $requestObject->taskAdultAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, $requestObject->taskIsComplete, $requestObject->taskReward);
             $task->insert($pdo);
 
             // update reply
