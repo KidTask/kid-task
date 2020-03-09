@@ -37,8 +37,8 @@ class Step implements \JsonSerializable {
 	 *
 	 * @param string|Uuid $newStepId id of this Step or null if a new Step
 	 * @param string|Uuid $newStepTaskId id of this stepTask or null if a new stepTask
-	 * @param $newStepContent description of the step
-	 * @param $newStepOrder order of the step
+	 * @param string $newStepContent description of the step
+	 * @param int $newStepOrder order of the step
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
@@ -150,7 +150,7 @@ class Step implements \JsonSerializable {
 	 *
 	 * @return int value of stepOrder
 	 **/
-	public function getStepOrder() : int {
+	public function getStepOrder() : ?int {
 		return $this->stepOrder;
 	}//end of getStepOrder
 
@@ -160,7 +160,7 @@ class Step implements \JsonSerializable {
 	 * @param int $newStepOrder new value of step order
 	 * @throws \RangeException if 0 < $newStepOrder > 15
 	 **/
-	public function setStepOrder(int $newStepOrder) : void {
+	public function setStepOrder(?int $newStepOrder) : void {
 		if(!($newStepOrder >= 0 || $newStepOrder < 16)){
 			throw(new \RangeException("too many steps added"));
 		}
