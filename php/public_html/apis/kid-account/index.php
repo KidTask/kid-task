@@ -56,7 +56,7 @@ try {
         	throw new InvalidArgumentException("Must be logged in", 403);
 		  }
 
-        //gets a kid by content
+        //gets a kid by kid id
         if(empty($id) === false) {
             $kid = Kid::getKidByKidId($pdo, $id);
             if($_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()){
@@ -90,7 +90,7 @@ try {
         //retrieve the kid to be updated
         $kid = Kid::getKidByKidId($pdo, $id);
         if($kid === null) {
-            throw(new RuntimeException("Profile does not exist.", 404));
+            throw(new RuntimeException("kid does not exist.", 404));
         }
 
         //kid's avatar url
