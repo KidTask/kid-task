@@ -16,3 +16,8 @@ footer i {
 #icons {
 	padding: 10px;
 }
+
+header {
+	width: fit-content;
+
+}
