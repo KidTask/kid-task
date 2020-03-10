@@ -1,14 +1,13 @@
 import React from 'react';
-import {httpConfig} from "../../../utils/http-config";
+import {httpConfig} from "../../utils/http-config";
 import {Formik} from "formik/dist/index";
 import * as Yup from "yup";
 import {LoginFormContent} from "./LoginFormContent";
 
 export const LoginForm = () => {
     const validator = Yup.object().shape({
-        adultEmail: Yup.string()
-            .email("email must be a valid email")
-            .required('email is required'),
+        adultUsername: Yup.string()
+            .required('Username is required'),
         adultHash: Yup.string()
             .required("Password is required")
             .min(8, "Password must be at least 8 characters")
@@ -17,12 +16,12 @@ export const LoginForm = () => {
 
     //the initial values object defines what the request payload is.
     const login = {
-        adultEmail: "",
+        adultUsername: "",
         adultHash: ""
     };
 
     const submitLogin = (values, {resetForm, setStatus}) => {
-        httpConfig.post("/apis/login/", values)
+        httpConfig.post("/apis/adult-sign-in/", values)
             .then(reply => {
                 let {message, type} = reply;
                 setStatus({message, type});
