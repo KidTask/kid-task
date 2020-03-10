@@ -31,4 +31,4 @@ export const Home = () => {
 			</div>
 		</>
 	)
-}
+};
