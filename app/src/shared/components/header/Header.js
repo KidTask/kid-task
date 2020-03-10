@@ -1,19 +1,23 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import {LinkContainer} from "react-router-bootstrap";
 import {SignUpModal} from "./sign-up/SignUpModal";
 import {LoginModal} from "./login/LoginModal";
 import "../../../style.css";
-import "./header.css";
-export const Header = () => {
+export const Header = (props) => {
     return(
         <Navbar bg="primary" variant="dark">
-        <Navbar.Brand id={"navbar.brand"}>Kid Task</Navbar.Brand>
-        <Nav className="mr-auto">
-        <Nav.Link>User</Nav.Link>
-        <SignUpModal/>
-        <LoginModal/>
-        </Nav>
+            <LinkContainer exact to="/" >
+                <Navbar.Brand id={"navbar.brand"}>Kid Task</Navbar.Brand>
+            </LinkContainer>
+            <Nav className="mr-auto">
+                <LinkContainer exact to="/user">
+                    <Nav.Link>User</Nav.Link>
+                </LinkContainer>
+                <SignUpModal/>
+                <LoginModal/>
+            </Nav>
         </Navbar>
-)
+    )
 };
