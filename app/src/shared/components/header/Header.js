@@ -9,7 +9,7 @@ export const Header = (props) => {
     return(
         <Navbar bg="primary" variant="dark">
         <LinkContainer exact to="/" >
-        <Navbar.Brand id={"navbar.brand"}>APCIMAP</Navbar.Brand>
+        <Navbar.Brand id={"navbar.brand"}>Kid Task</Navbar.Brand>
         </LinkContainer>
         <Nav className="mr-auto">
         <LinkContainer exact to="/user">
