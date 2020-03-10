@@ -5,7 +5,7 @@ import React from "react";
 export const LoginFormContent = () => {
     return (
         <>
-            <form>
+            <form className="sign-in">
                 {/*controlId must match what is passed to the initialValues prop*/}
                 <div className="form-group">
                     <label htmlFor="adultUsername">Username</label>
