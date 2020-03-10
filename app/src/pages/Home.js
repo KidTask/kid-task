@@ -3,6 +3,8 @@ import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
 import {LoginFormContent} from "../shared/components/login/LoginFormContent";
 
+//REACT BOOTSTRAP CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const Home = () => {
 	return (
@@ -16,13 +18,9 @@ export const Home = () => {
 						<div className="card" style={{ width: "18rem" }}>
 							<div className="card-body">
 								<h5 className="card-title">Kid Task</h5>
-								<p className="card-text">
-									Sign In
-								</p>
+
 								<LoginFormContent/>
-								<a href="#" className="btn btn-primary">
-									Go somewhere
-								</a>
+
 							</div>
 						</div>
 					</div>
