@@ -5,6 +5,7 @@ import {LinkContainer} from "react-router-bootstrap";
 import {SignUpModal} from "./sign-up/SignUpModal";
 import {LoginModal} from "../login/LoginModal";
 import "../../../style.css";
+import "./header.css";
 export const Header = (props) => {
     return(
         <Navbar bg="primary" variant="dark">
@@ -13,7 +14,7 @@ export const Header = (props) => {
         </LinkContainer>
         <Nav className="mr-auto">
         <LinkContainer exact to="/user">
-        <Nav.Link>user</Nav.Link>
+        <Nav.Link>User</Nav.Link>
         </LinkContainer>
         <SignUpModal/>
         <LoginModal/>
