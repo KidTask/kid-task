@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import {SignUpModal} from "./sign-up/SignUpModal";
+import {KidSignUpModal} from "./sign-up/KidSignUpModal";
 import "../../../style.css";
 export const Header = (props) => {
     return(
@@ -10,6 +11,7 @@ export const Header = (props) => {
                 <Navbar.Brand href="#">Kid Task</Navbar.Brand>
             </Container>
             <SignUpModal/>
+            <KidSignUpModal/>
         </Navbar>
     )
 };
