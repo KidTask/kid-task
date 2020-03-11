@@ -107,7 +107,6 @@ export const KidSignUpFormContent = (props) => {
                 </div>
 
 
-                <FormDebugger {...props} />
             </form>
             {console.log(
                 submitStatus
