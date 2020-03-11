@@ -8,10 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const Home = () => {
 	return (
-		<>
 			<div className="container">
 				<div className="row">
-					<Header/>
 				</div>
 				<div className="row">
 					<div className="col-lg-6">

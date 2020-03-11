@@ -4,13 +4,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter} from "react-router-dom";
 import {Route, Switch} from "react-router";
 import {FourOhFour} from "./pages/FourOhFour";
-import {Home} from "./pages/Home";
+import {AdultDashboard} from "./pages/AdultDashboard";
+
 
 const Routing = () => (
 	<>
 	<BrowserRouter>
 	<Switch>
-	<Route exact path="/" component={Home}/>
+	<Route exact path="/" component={AdultDashboard}/>
 <Route component={FourOhFour}/>
 </Switch>
 </BrowserRouter>
