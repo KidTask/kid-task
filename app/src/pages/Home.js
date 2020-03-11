@@ -10,9 +10,9 @@ export const Home = () => {
 	return (
 		<>
 			<Header/>
-			<div className="container ">
+			<div className="container">
 				<div className="row">
-					<div className="col-lg-6  mx-auto mt-5">
+					<div className="col-lg-5  mx-auto mt-5">
 						<div className="card w-lg-50">
 							<div className="card-body">
 								<h5 className="card-title">Sign in!</h5>
@@ -22,11 +22,11 @@ export const Home = () => {
 					</div>
 				</div>
 				<div className="row">
-					<div className="col-lg-6  mx-auto mt-5">
+					<div className="col-lg-5  mx-auto mt-5">
 						<div className="card w-lg-50">
 							<div className="card-body">
-								<h5 className="card-title">Sign up!</h5>
-								<p>Are you not yet part of the club? <a>Sign up for Kid Task</a></p>
+								<h5 className="card-title">Not yet part of the Club?</h5>
+								<p><a>Sign up for Kid Task</a></p>
 							</div>
 						</div>
 					</div>
