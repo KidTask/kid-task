@@ -17,7 +17,8 @@ export const AdultDashboard = () => {
 		<>
 		<Header/>
 		<br/>
-		<div className="container">
+
+		<div className="container parent-cards">
 				<CardDeck>
 					<Card border={variable} text="primary">
 						<Card.Img variant="top" src="http://www.fillmurray.com/284/196" />
@@ -43,8 +44,11 @@ export const AdultDashboard = () => {
 						</Card.Body>
 					</Card>
 				</CardDeck>
+
+			<div className="row mt-3">
+				<Footer/>
+			</div>
 		</div>
-		<Footer/>
 		</>
 		)
 };
