@@ -7,6 +7,7 @@ import {KidSignUpFormContent} from "./KidSignUpFormContent";
 
 export const KidSignUpForm = () => {
     const signUp = {
+        kidName: "",
         kidUsername: "",
         kidPassword: "",
         kidPasswordConfirm: "",
@@ -14,6 +15,9 @@ export const KidSignUpForm = () => {
 
     const [status, setStatus] = useState(null);
     const validator = Yup.object().shape({
+        kidName: Yup.string()
+            .required("Name is required")
+            .min(3, "Name must be at least three characters long."),
         kidUsername: Yup.string()
             .required("Username is required")
             .min(4, "Username must be at least four characters"),

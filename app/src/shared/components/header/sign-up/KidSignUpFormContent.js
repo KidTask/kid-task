@@ -2,6 +2,11 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../../FormDebugger";
 import React from "react";
 
+
+    function saySubmit() {
+        alert('Thank you for signing up with Kid Task!');
+    }
+
 export const KidSignUpFormContent = (props) => {
     const {
         submitStatus,
@@ -19,8 +24,41 @@ export const KidSignUpFormContent = (props) => {
         <>
             <form onSubmit={handleSubmit}>
                 {/*controlId must match what is passed to the initialValues prop*/}
+
+                <div className="form-group">
+                    <label htmlFor="kidName">Kid Name</label>
+                    <label className="required">*</label>
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <div className="input-group-text">
+                                <FontAwesomeIcon icon="profile"/>
+                            </div>
+                        </div>
+                        <input
+                            className="form-control"
+                            id="kidName"
+                            type="name"
+                            value={values.kidName}
+                            placeholder="Enter name"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+
+                        />
+                    </div>
+                    {
+                        errors.kidName && touched.kidName && (
+                            <div className="alert alert-danger">
+                                {errors.kidName}
+                            </div>
+                        )
+
+                    }
+                </div>
+
+
                 <div className="form-group">
                     <label htmlFor="kidUsername">Kid Username</label>
+                    <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
@@ -50,6 +88,7 @@ export const KidSignUpFormContent = (props) => {
                 {/*controlId must match what is defined by the initialValues object*/}
                 <div className="form-group">
                     <label htmlFor="kidPassword">Password</label>
+                    <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
@@ -72,6 +111,7 @@ export const KidSignUpFormContent = (props) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="kidPasswordConfirm">Confirm Your Password</label>
+                    <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
@@ -97,7 +137,12 @@ export const KidSignUpFormContent = (props) => {
 
 
                 <div className="form-group">
-                    <button className="btn btn-primary mb-2" type="submit">Submit</button>
+                    <button
+                        className="btn btn-primary mb-2"
+                        type="submit"
+                        onClick={saySubmit}
+                    >Submit
+                    </button>
                     <button
                         className="btn btn-danger mb-2"
                         onClick={handleReset}
@@ -114,6 +159,7 @@ export const KidSignUpFormContent = (props) => {
             {
                 submitStatus && (<div className={submitStatus.type}>{submitStatus.message}</div>)
             }
+
         </>
 
 

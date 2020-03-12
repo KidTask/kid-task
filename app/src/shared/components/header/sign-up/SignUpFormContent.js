@@ -21,6 +21,7 @@ export const SignUpFormContent = (props) => {
                 {/*controlId must match what is passed to the initialValues prop*/}
                 <div className="form-group">
                     <label htmlFor="adultEmail">Email Address</label>
+                    <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
@@ -50,6 +51,7 @@ export const SignUpFormContent = (props) => {
                 {/*controlId must match what is defined by the initialValues object*/}
                 <div className="form-group">
                     <label htmlFor="adultPassword">Password</label>
+                    <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
@@ -72,6 +74,7 @@ export const SignUpFormContent = (props) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="adultPasswordConfirm">Confirm Your Password</label>
+                    <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
@@ -97,6 +100,7 @@ export const SignUpFormContent = (props) => {
 
                 <div className="form-group">
                     <label htmlFor="adultUsername">Username</label>
+                    <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">

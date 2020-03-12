@@ -21,3 +21,7 @@ header {
 
 
 }
+
+.required {
+	color: red;
+}

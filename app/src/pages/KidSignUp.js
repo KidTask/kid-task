@@ -12,9 +12,9 @@ export const KidSignUp = () => {
             <Header/>
             <div className="container">
                 <div className="row">
-                    <h5 className="card-title">Kid Task</h5>
-                    <KidSignUpForm/>
+                    <h5 className="card-title">Kid Sign Up Page</h5>
                 </div>
+                <KidSignUpForm/>
             </div>
             <Footer/>
         </>
