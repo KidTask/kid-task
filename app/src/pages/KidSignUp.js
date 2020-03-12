@@ -10,11 +10,13 @@ export const KidSignUp = () => {
     return (
         <>
             <Header/>
+            <div content="Spacing">
             <div className="container">
-                <div className="row">
+                <div className="row my-4">
                     <h5 className="card-title">Kid Sign Up Page</h5>
                 </div>
                 <KidSignUpForm/>
+            </div>
             </div>
             <Footer/>
         </>

@@ -1,11 +1,11 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../../FormDebugger";
 import React from "react";
+import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {faChild, faUser, faLock, faCheck} from "@fortawesome/free-solid-svg-icons";
 
-
-    function saySubmit() {
-        alert('Thank you for signing up with Kid Task!');
-    }
+library.add(faChild, faEnvelope, faUser, faLock, faCheck);
 
 export const KidSignUpFormContent = (props) => {
     const {
@@ -31,7 +31,7 @@ export const KidSignUpFormContent = (props) => {
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <FontAwesomeIcon icon="profile"/>
+                                <i><FontAwesomeIcon icon={faChild} size="sm"/></i>
                             </div>
                         </div>
                         <input
@@ -57,12 +57,12 @@ export const KidSignUpFormContent = (props) => {
 
 
                 <div className="form-group">
-                    <label htmlFor="kidUsername">Kid Username</label>
+                    <label htmlFor="kidUsername">Kid Login Username</label>
                     <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <FontAwesomeIcon icon="envelope"/>
+                                <i><FontAwesomeIcon icon={faUser} size="sm"/></i>
                             </div>
                         </div>
                         <input
@@ -92,7 +92,7 @@ export const KidSignUpFormContent = (props) => {
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <FontAwesomeIcon icon="key"/>
+                                <i><FontAwesomeIcon icon={faLock} size="sm"/></i>
                             </div>
                         </div>
                         <input
@@ -110,12 +110,12 @@ export const KidSignUpFormContent = (props) => {
                     )}
                 </div>
                 <div className="form-group">
-                    <label htmlFor="kidPasswordConfirm">Confirm Your Password</label>
+                    <label htmlFor="kidPasswordConfirm">Confirm Password</label>
                     <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <FontAwesomeIcon icon="key"/>
+                                <i><FontAwesomeIcon icon={faCheck} size="sm"/></i>
                             </div>
                         </div>
                         <input
@@ -137,18 +137,8 @@ export const KidSignUpFormContent = (props) => {
 
 
                 <div className="form-group">
-                    <button
-                        className="btn btn-primary mb-2"
-                        type="submit"
-                        onClick={saySubmit}
-                    >Submit
-                    </button>
-                    <button
-                        className="btn btn-danger mb-2"
-                        onClick={handleReset}
-                        disabled={!dirty || isSubmitting}
-                    >Reset
-                    </button>
+                    <button className="btn btn-primary mb-2" type="submit">Submit</button>
+                    <button className="btn btn-danger mb-2" onClick={handleReset} disabled={!dirty || isSubmitting}>Reset</button>
                 </div>
 
 
