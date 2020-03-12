@@ -12,6 +12,22 @@ footer i {
 
 }
 
+.avatar{
+	object-fit: cover;
+	width: 40px;
+	height: 40px;
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+.taskAvatar{
+	object-fit: cover;
+	width: 68px;
+	height: 68px;
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
 /*FORMS*/
 button{
 	width: 95%;
