@@ -7,16 +7,48 @@ body {
 	clear: both;
 }
 
+h3.title{
+text-decoration: #17a2b8;
+	font-weight: bold;
+	font-variant: small-caps;
+	font-size: 1em;
+	color: dimgray;
+}
+
 footer i {
 	color: darkslategrey;
-
 }
+
+.avatar{
+	object-fit: cover;
+	width: 40px;
+	height: 40px;
+	margin-bottom: 1rem;
+	text-align: center;
+}
+
+.kidCardTitle{
+	color: #17a2b8;
+}
+
+/*FORMS*/
+button{
+	width: 95%;
+}
+
+
+
 
 /*FOOTER STYLES*/
 #icons {
 	padding: 10px;
 }
 
+
 .required {
 	color: red;
 }
+
+header {
+}
+

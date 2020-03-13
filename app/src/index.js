@@ -4,9 +4,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter} from "react-router-dom";
 import {Route, Switch} from "react-router";
 import {FourOhFour} from "./pages/FourOhFour";
-import {Home} from "./pages/Home";
+import {TaskForm} from "./pages/TaskForm";
+
+
 import {KidSignUp} from "./pages/KidSignUp";
 import {SignUp} from "./pages/SignUp";
+
+import {Kid} from "./pages/Kid";
+
 
 const Routing = () => (
 	<>
@@ -14,6 +19,10 @@ const Routing = () => (
 	<Switch>
 	<Route exact path="/" component={Home}/>
 	<Route exact path="/Ad"
+
+
+
+		<Route exact path="/" component={Home}/>
 <Route component={FourOhFour}/>
 </Switch>
 </BrowserRouter>

@@ -12,13 +12,21 @@ export const Home = () => {
 			<Header/>
 			<div className="container">
 				<div className="row">
-					<div className="col-lg-6">
-						<div className="card" style={{ width: "18rem" }}>
+					<div className="col-lg-5  mx-auto mt-5">
+						<div className="card w-lg-50">
 							<div className="card-body">
-								<h5 className="card-title">Kid Task</h5>
-
+								<h5 className="card-title">Sign in!</h5>
 								<LoginFormContent/>
-
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-lg-5  mx-auto mt-5">
+						<div className="card w-lg-50">
+							<div className="card-body">
+								<h5 className="card-title">Not yet part of the Club?</h5>
+								<p><a>Register your family or team for Kid Task.</a></p>
 							</div>
 						</div>
 					</div>
