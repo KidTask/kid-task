@@ -15,6 +15,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faInfoCircle, faUserFriends} from "@fortawesome/free-solid-svg-icons";
+import {faGithub} from "@fortawesome/free-brands-svg-icons";
 
 library.add(faInfoCircle, faEnvelope, faUserFriends);
 
@@ -32,7 +33,7 @@ export const Footer = () => (
 						<Col>
 							<a href="https://github.com/KidTask/kid-task"
 								title="KidTask' repository on GitHub">
-								{/*<i><FontAwesomeIcon icon={faGithub} size="sm"/></i>*/}
+								<i><FontAwesomeIcon icon={faGithub} size="sm"/></i>
 							</a>
 						</Col>
 						<Col>

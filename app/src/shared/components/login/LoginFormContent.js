@@ -2,16 +2,40 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React from "react";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import {FormDebugger} from "../FormDebugger";
 
 
-export const LoginFormContent = () => {
+export const LoginFormContent =
+	(props) => {
+		const {
+			submitStatus,
+			values,
+			errors,
+			touched,
+			dirty,
+			isSubmitting,
+			handleChange,
+			handleBlur,
+			handleSubmit,
+			handleReset
+		} = props;
+
 	return (
 		<>
-			<form className="sign-in">
+			<form onSubmit={handleSubmit}>
 				{/*controlId must match what is passed to the initialValues prop*/}
-				<Form.Group controlId="username">
+				<Form.Group controlId="adultUsername">
 					<Form.Label>Username</Form.Label>
 					<Form.Control type="text" size="sm" placeholder="Enter Username"/>
+					<input
+						className="form-control"
+						type="username"
+						id="adultUsername"
+						placeholder="Enter Username"
+						value={values.adultUsername}
+						onChange={handleChange}
+						onBlur={handleBlur}
+					/>
 				</Form.Group>
 
 
@@ -33,6 +57,7 @@ export const LoginFormContent = () => {
 					</div>
 				</div>
 
+				<FormDebugger {...props} />
 			</form>
 		</>
 	)
