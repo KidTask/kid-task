@@ -1,13 +1,13 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../../FormDebugger";
 import React from "react";
-import {faChild, faEnvelope} from "@fortawesome/free-solid-svg-icons";
+import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faLock, faUser, faCheck} from "@fortawesome/free-solid-svg-icons";
+import {faChild, faUser, faLock, faCheck} from "@fortawesome/free-solid-svg-icons";
 
-library.add(faEnvelope, faUser, faLock, faCheck);
+library.add(faChild, faEnvelope, faUser, faLock, faCheck);
 
-export const SignUpFormContent = (props) => {
+export const KidSignUpFormContent = (props) => {
     const {
         submitStatus,
         values,
@@ -24,38 +24,40 @@ export const SignUpFormContent = (props) => {
         <>
             <form onSubmit={handleSubmit}>
                 {/*controlId must match what is passed to the initialValues prop*/}
+
                 <div className="form-group">
-                    <label htmlFor="adultEmail">Email Address</label>
+                    <label htmlFor="kidName">Kid Name</label>
                     <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faEnvelope} size="sm"/></i>
+                                <i><FontAwesomeIcon icon={faChild} size="sm"/></i>
                             </div>
                         </div>
                         <input
                             className="form-control"
-                            id="adultEmail"
-                            type="email"
-                            value={values.adultEmail}
-                            placeholder="Enter email"
+                            id="kidName"
+                            type="name"
+                            value={values.kidName}
+                            placeholder="Enter name"
                             onChange={handleChange}
                             onBlur={handleBlur}
 
                         />
                     </div>
                     {
-                        errors.adultEmail && touched.adultEmail && (
+                        errors.kidName && touched.kidName && (
                             <div className="alert alert-danger">
-                                {errors.adultEmail}
+                                {errors.kidName}
                             </div>
                         )
 
                     }
                 </div>
 
+
                 <div className="form-group">
-                    <label htmlFor="adultUsername">Username</label>
+                    <label htmlFor="kidUsername">Kid Login Username</label>
                     <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
@@ -63,29 +65,29 @@ export const SignUpFormContent = (props) => {
                                 <i><FontAwesomeIcon icon={faUser} size="sm"/></i>
                             </div>
                         </div>
-
                         <input
                             className="form-control"
-                            type="text"
-                            id="adultUsername"
-                            placeholder="Username"
-                            value={values.adultUsername}
+                            id="kidUsername"
+                            type="username"
+                            value={values.kidUsername}
+                            placeholder="Enter username"
                             onChange={handleChange}
                             onBlur={handleBlur}
+
                         />
                     </div>
                     {
-                        errors.adultUsername && touched.adultUsername && (
+                        errors.kidUsername && touched.kidUsername && (
                             <div className="alert alert-danger">
-                                {errors.adultUsername}
+                                {errors.kidUsername}
                             </div>
                         )
+
                     }
                 </div>
-
                 {/*controlId must match what is defined by the initialValues object*/}
                 <div className="form-group">
-                    <label htmlFor="adultPassword">Password</label>
+                    <label htmlFor="kidPassword">Password</label>
                     <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
@@ -94,21 +96,21 @@ export const SignUpFormContent = (props) => {
                             </div>
                         </div>
                         <input
-                            id="adultPassword"
+                            id="kidPassword"
                             className="form-control"
                             type="password"
                             placeholder="Password"
-                            value={values.adultPassword}
+                            value={values.kidPassword}
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
                     </div>
-                    {errors.adultPassword && touched.adultPassword && (
-                        <div className="alert alert-danger">{errors.adultPassword}</div>
+                    {errors.kidPassword && touched.kidPassword && (
+                        <div className="alert alert-danger">{errors.kidPassword}</div>
                     )}
                 </div>
                 <div className="form-group">
-                    <label htmlFor="adultPasswordConfirm">Confirm Your Password</label>
+                    <label htmlFor="kidPasswordConfirm">Confirm Password</label>
                     <label className="required">*</label>
                     <div className="input-group">
                         <div className="input-group-prepend">
@@ -120,22 +122,24 @@ export const SignUpFormContent = (props) => {
 
                             className="form-control"
                             type="password"
-                            id="adultPasswordConfirm"
+                            id="kidPasswordConfirm"
                             placeholder="Password Confirm"
-                            value={values.adultPasswordConfirm}
+                            value={values.kidPasswordConfirm}
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
                     </div>
-                    {errors.adultPasswordConfirm && touched.adultPasswordConfirm && (
-                        <div className="alert alert-danger">{errors.adultPasswordConfirm}</div>
+                    {errors.kidPasswordConfirm && touched.kidPasswordConfirm && (
+                        <div className="alert alert-danger">{errors.kidPasswordConfirm}</div>
                     )}
                 </div>
+
 
 
                 <div className="form-group">
                     <button className="btn btn-primary mb-2" type="submit">Submit</button>
                 </div>
+
 
             </form>
             {console.log(
@@ -144,6 +148,7 @@ export const SignUpFormContent = (props) => {
             {
                 submitStatus && (<div className={submitStatus.type}>{submitStatus.message}</div>)
             }
+
         </>
 
 

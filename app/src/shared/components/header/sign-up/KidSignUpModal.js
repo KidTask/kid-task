@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {Button} from "react-bootstrap";
 import {Modal} from "react-bootstrap";
-import {SignUpForm} from "./SignUpForm";
+import {KidSignUpForm} from "./KidSignUpForm";
 
 
-export const SignUpModal = () => {
+export const KidSignUpModal = () => {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -13,15 +13,15 @@ export const SignUpModal = () => {
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                Sign Up
+                Kid Sign Up
             </Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Sign Up</Modal.Title>
+                    <Modal.Title>Kid Sign Up</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <SignUpForm/>
+                    <KidSignUpForm/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

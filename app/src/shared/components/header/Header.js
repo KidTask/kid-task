@@ -9,5 +9,5 @@ export const Header = (props) => {
                 <Navbar.Brand href="#">Kid Task</Navbar.Brand>
             </Container>
         </Navbar>
-)
+    )
 };
