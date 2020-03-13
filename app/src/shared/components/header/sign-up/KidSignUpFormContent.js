@@ -140,7 +140,7 @@ export const KidSignUpFormContent = (props) => {
                     <button className="btn btn-primary mb-2" type="submit">Submit</button>
                 </div>
 
-
+                <FormDebugger {...props} />
             </form>
             {console.log(
                 submitStatus

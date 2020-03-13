@@ -12,7 +12,8 @@ const Routing = () => (
 	<>
 	<BrowserRouter>
 	<Switch>
-	<Route exact path="/" component={SignUp}/>
+	<Route exact path="/" component={Home}/>
+	<Route exact path="/Ad"
 <Route component={FourOhFour}/>
 </Switch>
 </BrowserRouter>
