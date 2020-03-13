@@ -27,7 +27,7 @@ export const Footer = () => (
 					<Row id="icons">
 						<Col>
 							<Link to='/about'>
-								<i><FontAwesomeIcon icon={faInfoCircle} size="sm" alt="KidDashboard Task Project Information"/></i>
+								<i><FontAwesomeIcon icon={faInfoCircle} size="sm" alt="Kid Task Project Information"/></i>
 							</Link>
 						</Col>
 						<Col>
@@ -38,20 +38,20 @@ export const Footer = () => (
 						</Col>
 						<Col>
 							<a href="mailto:kidtask@gmail.com"
-								title="KidDashboard Task's email">
+								title="Kid Task's email">
 								<i><FontAwesomeIcon icon={faEnvelope} size="sm"/></i>
 							</a>
 						</Col>
 						<Col>
 							<Link to='/team'>
-								<i><FontAwesomeIcon icon={faUserFriends} size="sm" alt="KidDashboard Task Team"/></i>
+								<i><FontAwesomeIcon icon={faUserFriends} size="sm" alt="Kid Task Team"/></i>
 							</Link>
 						</Col>
 					</Row>
 				</div>
 				<div className="d-flex justify-content-center">
 					<Row>
-						<Col id="group-name">&reg; 2020 By KidDashboard Task – CNM Ingenuity Deep Dive Bootcamp Group</Col>
+						<Col id="group-name">&reg; 2020 By Kid Task – CNM Ingenuity Deep Dive Bootcamp Group</Col>
 					</Row>
 				</div>
 			</Container>

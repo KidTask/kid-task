@@ -87,7 +87,7 @@ try {
 		$kid->insert($pdo);
 
 		// insert reply
-		$reply->message = "KidDashboard created OK";
+		$reply->message = "Kid created OK";
 
 	} else {
 		throw (new InvalidArgumentException("Invalid HTTP method request", 418));

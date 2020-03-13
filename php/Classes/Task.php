@@ -87,7 +87,7 @@ class Task implements \JsonSerializable {
 	 *
 	 * @param string|Uuid $newTaskId id of this Task
 	 * @param string|Uuid $newTaskAdultId id of the Adult making task
-	 * @param string|Uuid $newTaskKidId id if the KidDashboard that has task
+	 * @param string|Uuid $newTaskKidId id if the Kid that has task
 	 * @param string|null $newTaskAvatarUrl avatar URL of task
 	 * @param string|null $newTaskCloudinaryToken id of avatar image for task
 	 * @param string $newTaskContent string containing task content

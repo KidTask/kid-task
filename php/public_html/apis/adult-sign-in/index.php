@@ -10,7 +10,7 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
 use Club\KidTask\Adult;
 
 /**
- * api for signing in to KidDashboard Task as an Adult
+ * api for signing in to Kid Task as an Adult
  *
  * @author Jacob Lott jlott3@cnm.edu
  */
