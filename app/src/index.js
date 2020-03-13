@@ -10,7 +10,7 @@ import {TaskForm} from "./pages/TaskForm";
 import {KidSignUp} from "./pages/KidSignUp";
 import {SignUp} from "./pages/SignUp";
 
-import {Kid} from "./pages/Kid";
+import {KidDashboard} from "./pages/KidDashboard";
 import {AdultDashboard} from "./pages/AdultDashboard";
 import {Home} from "./pages/Home";
 
@@ -21,7 +21,7 @@ const Routing = () => (
 	<Switch>
 	<Route exact path="/" component={Home}/>
 	<Route exact path="/adult-dashboard" component={AdultDashboard}/>
-	<Route exact path="/kid-dashboard" component={Kid}/>
+	<Route exact path="/kid-dashboard" component={KidDashboard}/>
 	<Route exact path="/kid-sign-up" component={KidSignUp}/>
 	<Route exact path="/adult-sign-up" component={SignUp}/>
 	<Route exact path="/task-form" component={TaskForm}/>

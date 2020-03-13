@@ -4,7 +4,7 @@ import {faChild, faUser, faLock, faEnvelope} from "@fortawesome/free-solid-svg-i
 library.add(faChild, faEnvelope, faUser, faLock);
 
 function saySubmit() {
-	alert('Thank you for signing up with Kid Task!');
+	alert('Thank you for signing up with KidDashboard Task!');
 }
 export const KidSignUpFormContent = (props) => {
 	const {

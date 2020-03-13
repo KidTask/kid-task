@@ -92,7 +92,7 @@ try {
         }
 
         if(empty($requestObject->taskKidId) === true) {
-            throw(new \InvalidArgumentException ("Select a Kid.", 405));
+            throw(new \InvalidArgumentException ("Select a KidDashboard.", 405));
         }
 
         if(empty($requestObject->taskAvatarUrl) === true) {

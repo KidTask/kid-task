@@ -45,7 +45,7 @@ try {
 
     // make sure the id is valid for methods that require it
         if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {
-            throw(new InvalidArgumentException("Kid Id cannot be empty or negative", 405));
+            throw(new InvalidArgumentException("KidDashboard Id cannot be empty or negative", 405));
         }
 
     if($method === "GET") {
@@ -98,12 +98,12 @@ try {
             $requestObject->kidAvatarUrl = $kid->getKidAvatarUrl();
         }
 
-        //Kid Name
+        //KidDashboard Name
         if(empty($requestObject->kidName) === true) {
             $requestObject->kidName = $kid->getKidName();
         }
 
-        //Kid Username
+        //KidDashboard Username
         if(empty($requestObject->kidUsername) === true) {
             $requestObject->kidUsername = $kid->getKidUsername();
         }

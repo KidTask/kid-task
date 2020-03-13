@@ -11,7 +11,7 @@ class Kid implements \JsonSerializable {
     use ValidateDate;
     use ValidateUuid;
     /*
-     * id for this Kid; this is the primary key
+     * id for this KidDashboard; this is the primary key
      * @var Uuid $kidId
      */
     private $kidId;
@@ -32,28 +32,28 @@ class Kid implements \JsonSerializable {
 
     private $kidCloudinaryToken;
     /*
-     * Cloudinary Token for Kid
+     * Cloudinary Token for KidDashboard
      * @var string $kidCloudinaryToken
      */
 
     private $kidHash;
     /*
-     * name of the Kid
+     * name of the KidDashboard
      * @var $kidName
      */
     private $kidName;
     /*
-     * The Kid's Username
+     * The KidDashboard's Username
      * Unique
      * @var $kidUsername
      */
     private $kidUsername;
 
     /**
-     * constructor for this Kid
+     * constructor for this KidDashboard
      *
-     * @param string|Uuid $newKidId The Kid's Id, primary id
-     * @param string|Uuid $newKidAdultId The Kid's Adult Id, foreign key
+     * @param string|Uuid $newKidId The KidDashboard's Id, primary id
+     * @param string|Uuid $newKidAdultId The KidDashboard's Adult Id, foreign key
      * @param string|$newKidAvatarUrl avatar url for kid, can be null
      * @param string|$newKidCloudinaryToken cloudinary token for kid, can be null
      * @param string|$newKidHash password hash for kid
@@ -83,16 +83,16 @@ class Kid implements \JsonSerializable {
     } //end of construct function
 
     /**
-     * accessor method for Kid id
+     * accessor method for KidDashboard id
      *
-     * @return Uuid value of Kid id (or null if new Profile)
+     * @return Uuid value of KidDashboard id (or null if new Profile)
      **/
     public function getKidId() : Uuid {
         return($this->kidId);
     } //end of getKidId function
 
     /**
-     * mutator method for Kid id
+     * mutator method for KidDashboard id
      *
      * @param Uuid|string $newKidId new value of Adult id
      * @throws \RangeException if $newAuthorId is not positive
@@ -106,21 +106,21 @@ class Kid implements \JsonSerializable {
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
 
-        // convert and store the Kid id
+        // convert and store the KidDashboard id
         $this->kidId = $uuid;
     } //end of setKidId function
 
     /**
-     * accessor method for Kid Adult id
+     * accessor method for KidDashboard Adult id
      *
-     * @return Uuid value of Kid Adult id (or null if new Profile)
+     * @return Uuid value of KidDashboard Adult id (or null if new Profile)
      **/
     public function getKidAdultId() : Uuid {
         return($this->kidAdultId);
     } //end of getKidAdultId function
 
     /**
-     * mutator method for Kid Adult id
+     * mutator method for KidDashboard Adult id
      * @param Uuid|string $newKidAdultId new value of Adult id
      * @throws \RangeException if $newAuthorId is not positive
      * @throws \TypeError if $newKidAdultId is not a uuid or string
@@ -133,14 +133,14 @@ class Kid implements \JsonSerializable {
             throw(new $exceptionType($exception->getMessage(), 0, $exception));
         }
 
-        // convert and store the Kid Adult id
+        // convert and store the KidDashboard Adult id
 
         $this->kidAdultId = $uuid;
     } //end of setKidAdultId function
     /**
-     * accessor method for Kid avatar url
+     * accessor method for KidDashboard avatar url
      *
-     * @return string value of Kid avatar url
+     * @return string value of KidDashboard avatar url
      **/
     public function getKidAvatarUrl(): ?string {
         return $this->kidAvatarUrl;
@@ -180,7 +180,7 @@ class Kid implements \JsonSerializable {
     } //end of getKidHash function
 
     /**
-     * mutator method for Kid hash password
+     * mutator method for KidDashboard hash password
      *
      * @param string $newKidHash
      * @throws \InvalidArgumentException if the hash is not secure
@@ -191,16 +191,16 @@ class Kid implements \JsonSerializable {
         //enforce that the hash is properly formatted
         $newKidHash = trim($newKidHash);
         if(empty($newKidHash) === true) {
-            throw(new \InvalidArgumentException("Kid password hash empty or insecure"));
+            throw(new \InvalidArgumentException("KidDashboard password hash empty or insecure"));
         }
         //enforce the hash is really an Argon hash
         $kidHashInfo = password_get_info($newKidHash);
         if($kidHashInfo["algoName"] !== "argon2i") {
-            throw(new \InvalidArgumentException("Kid hash is not a valid hash"));
+            throw(new \InvalidArgumentException("KidDashboard hash is not a valid hash"));
         }
         //enforce that the hash is exactly 97 characters.
         if(strlen($newKidHash) > 97 || strlen($newKidHash) < 89) {
-            throw(new \RangeException("Kid hash must be 97 characters"));
+            throw(new \RangeException("KidDashboard hash must be 97 characters"));
         }
         //store the hash
         $this->kidHash = $newKidHash;
@@ -209,7 +209,7 @@ class Kid implements \JsonSerializable {
     /**
      * accessor method for kid cloudinary token
      *
-     * @return string value of Kid Cloudinary Token
+     * @return string value of KidDashboard Cloudinary Token
      **/
     public function getKidCloudinaryToken(): ?string {
         return $this->kidCloudinaryToken;
@@ -267,7 +267,7 @@ class Kid implements \JsonSerializable {
         if(strlen($newKidName) > 255) {
             throw(new \RangeException("Name is too large"));
         }
-        //store Kid name
+        //store KidDashboard name
         $this->kidName = $newKidName;
     }
 
@@ -302,7 +302,7 @@ class Kid implements \JsonSerializable {
     } // end of setKidUsername function
 
     /**
-     * inserts this Kid into mySQL
+     * inserts this KidDashboard into mySQL
      *
      * @param \PDO $pdo PDO connection object
      * @throws \PDOException when mySQL related errors occur
@@ -320,7 +320,7 @@ class Kid implements \JsonSerializable {
     }//end of pdo insert function
 
     /**
-     * updates this Kid in mySQL
+     * updates this KidDashboard in mySQL
      *
      * @param \PDO $pdo PDO connection object
      * @throws \PDOException when mySQL related errors occur
@@ -337,7 +337,7 @@ class Kid implements \JsonSerializable {
     }//end of update pdo method
 
     /**
-     * deletes this Kid from mySQL
+     * deletes this KidDashboard from mySQL
      *
      * @param \PDO $pdo PDO connection object
      * @throws \PDOException when mySQL related errors occur
@@ -356,7 +356,7 @@ class Kid implements \JsonSerializable {
 
 
     /**
-     * gets the Kid by kidId
+     * gets the KidDashboard by kidId
      *
      * @param \PDO $pdo PDO connection object
      * @param Uuid|string $kidId kid id to search for
@@ -396,7 +396,7 @@ class Kid implements \JsonSerializable {
     } // end of getKidByKidId
 
     /**
-     * gets the Kid by kidAdultId
+     * gets the KidDashboard by kidAdultId
      *
      * @param \PDO $pdo PDO connection object
      * @param Uuid|string $kidAdultId kid id to search for
@@ -441,7 +441,7 @@ class Kid implements \JsonSerializable {
 
 
     /**
-     * gets the Kid by kidUsername
+     * gets the KidDashboard by kidUsername
      *
      * @param \PDO $pdo PDO connection object
      * @param string $kidUsername kid username to search for
@@ -489,4 +489,4 @@ class Kid implements \JsonSerializable {
 		 return($fields);
     }
 
-} //end of Kid class
+} //end of KidDashboard class

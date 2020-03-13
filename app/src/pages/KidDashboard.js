@@ -6,7 +6,7 @@ import {Image} from "react-bootstrap";
 import {TaskPreview} from "../shared/components/task/TaskPreview";
 
 
-export const Kid = () => {
+export const KidDashboard = () => {
 	return (
 		<>
 			<Header/>

@@ -31,8 +31,8 @@ class TaskTest extends KidTaskTest {
 
 
 	/**
-	 * Kid that is assigned the Task; this is for foreign key relations
-	 * @var string Kid
+	 * KidDashboard that is assigned the Task; this is for foreign key relations
+	 * @var string KidDashboard
 	 **/
 	protected $kid = null;
 
@@ -117,7 +117,7 @@ class TaskTest extends KidTaskTest {
 		$this->adult = new Adult(generateUuidV4(), null, "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "null", "test@phpunit.co", $this->VALID_HASH, "Mom", "Mother");
 		$this->adult->insert($this->getPDO());
 
-		// create and insert a Kid to own the test Task
+		// create and insert a KidDashboard to own the test Task
 		$this->kid = new Kid(generateUuidV4(), $this->adult->getAdultId(), "https://images.unsplash.com/photo-1539213690067-dab68d432167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80", "null", $this->VALID_HASH, "Timothy", "Ocho");
 		$this->kid->insert($this->getPDO());
 
@@ -263,7 +263,7 @@ class TaskTest extends KidTaskTest {
 	 * test grabbing a Task that does not exist
 	 **/
 	public function testGetInvalidTaskByTaskId(): void {
-		// grab a Kid id that exceeds the maximum allowable Kid id
+		// grab a KidDashboard id that exceeds the maximum allowable KidDashboard id
 		$fakeTaskId = generateUuidV4();
 		$task = Task::getTaskByTaskId($this->getPDO(), $fakeTaskId);
 		$this->assertNull($task);
@@ -305,7 +305,7 @@ class TaskTest extends KidTaskTest {
 	}
 
 	/**
-	 * test grabbing a Task by Task Kid Id
+	 * test grabbing a Task by Task KidDashboard Id
 	 */
 	public function testGetValidTaskByTaskKidId(): void {
 		// count the number of rows and save it for later

@@ -8,28 +8,28 @@ require_once(dirname(__DIR__) . "/autoload.php");
 require_once(dirname(__DIR__,2) . "/lib/uuid.php");
 
 /**
- * unit test for the Kid Class
- * PDO methods are located in the Kid Class
- * @ see php/Classes/Kid.php
+ * unit test for the KidDashboard Class
+ * PDO methods are located in the KidDashboard Class
+ * @ see php/Classes/KidDashboard.php
  * @author Jacob Lott
  */
 
 class KidTest extends KidTaskTest {
 
     /**
-     * Kid's Adult Id
+     * KidDashboard's Adult Id
      * @var string Adult
      */
     protected $adult = null;
 
     /**
-     * Avatar Url for Kid
+     * Avatar Url for KidDashboard
      * @var string $VALID_AVATAR_URL
      */
     protected $VALID_AVATAR_URL = "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_weight_other/1800x1200_cat_weight_other.jpg?resize=600px:*";
 
     /**
-     * Cloudinary Token for Kid
+     * Cloudinary Token for KidDashboard
      * @var $VALID_CLOUDINARY_TOKEN
      **/
     protected $VALID_CLOUDINARY_TOKEN = "@passingtests";
@@ -67,13 +67,13 @@ class KidTest extends KidTaskTest {
         parent::setUp();
         $password = "abc123";
         $this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 7]);
-        //create and insert a Adult to own the test Kid
+        //create and insert a Adult to own the test KidDashboard
         $this->adult = new Adult(generateUuidV4(),null ,"https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif","null" , "test@phpunit.de","$this->VALID_HASH", "Name", "null");
         $this->adult->insert($this->getPDO());
     }
 
     /**
-     * test inserting a valid Kid and verify that the actual mySQL data matches
+     * test inserting a valid KidDashboard and verify that the actual mySQL data matches
      *
      * @throws \Exception
      */
@@ -103,7 +103,7 @@ class KidTest extends KidTaskTest {
 
 
     /**
-     * test inserting a Kid, editing it, and then updating it
+     * test inserting a KidDashboard, editing it, and then updating it
      *
      * @throws \Exception
      */
@@ -112,13 +112,13 @@ class KidTest extends KidTaskTest {
         // count the number of rows and save it for later
         $numRows = $this->getConnection()->getRowCount("kid");
 
-        // create a new Kid and insert to into mySQL
+        // create a new KidDashboard and insert to into mySQL
         $kidId = generateUuidV4();
         $kid = new Kid($kidId, $this->adult->getAdultId(), $this->VALID_AVATAR_URL, $this->VALID_CLOUDINARY_TOKEN, $this->VALID_HASH, $this->VALID_NAME, $this->VALID_USERNAME);
         $kid->insert($this->getPDO());
 
 
-        // edit the Kid and update it in mySQL
+        // edit the KidDashboard and update it in mySQL
         $kid->setKidName($this->VALID_NAME2);
         $kid->update($this->getPDO());
 
@@ -138,7 +138,7 @@ class KidTest extends KidTaskTest {
 
 
     /**
-     * test creating a Kid and then deleting it
+     * test creating a KidDashboard and then deleting it
      *
      * @throws \Exception
      */
@@ -152,18 +152,18 @@ class KidTest extends KidTaskTest {
         $kid->insert($this->getPDO());
 
 
-        // delete the Kid from mySQL
+        // delete the KidDashboard from mySQL
         $this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("kid"));
         $kid->delete($this->getPDO());
 
-        // grab the data from mySQL and enforce the Kid does not exist
+        // grab the data from mySQL and enforce the KidDashboard does not exist
         $pdoKid = Kid::getKidByKidId($this->getPDO(), $kid->getKidId());
         $this->assertNull($pdoKid);
         $this->assertEquals($numRows, $this->getConnection()->getRowCount("kid"));
     }
 
     /**
-     * test inserting a Kid and regrabbing it from mySQL
+     * test inserting a KidDashboard and regrabbing it from mySQL
      *
      * @throws \Exception
      */
@@ -189,18 +189,18 @@ class KidTest extends KidTaskTest {
     }
 
     /**
-     * test grabbing a Kid that does not exist
+     * test grabbing a KidDashboard that does not exist
      **/
     public function testGetInvalidKidByKidId(): void
     {
-        // grab a Kid id that exceeds the maximum allowable Kid id
+        // grab a KidDashboard id that exceeds the maximum allowable KidDashboard id
         $fakeKidId = generateUuidV4();
         $Kid = Kid::getKidByKidId($this->getPDO(), $fakeKidId);
         $this->assertNull($Kid);
     }
 
     /**
-     * test grabbing a Kid by Username
+     * test grabbing a KidDashboard by Username
      **/
     public function testGetValidKidByUsername(): void
     {
@@ -224,7 +224,7 @@ class KidTest extends KidTaskTest {
     }
 
     /**
-     * test grabbing a Kid by Kid Adult Id
+     * test grabbing a KidDashboard by KidDashboard Adult Id
      */
     public function testGetValidKidByKidAdultId() : void
     {
@@ -241,7 +241,7 @@ class KidTest extends KidTaskTest {
         $this->assertCount(1, $results);
 
         // enforce no other objects are bleeding into the test
-        $this->assertContainsOnlyInstancesOf("Club\\KidTask\\Kid", $results);
+        $this->assertContainsOnlyInstancesOf("Club\\KidTask\\KidDashboard", $results);
 
 
         // grab the results from the array and validate it

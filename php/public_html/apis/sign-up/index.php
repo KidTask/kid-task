@@ -10,7 +10,7 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
 use Club\KidTask\Adult;
 
 /**
- * api for signing up to Kid Task
+ * api for signing up to KidDashboard Task
  *
  * @author Gabriel Town gtown@cnm.edu>
  **/
@@ -85,7 +85,7 @@ try {
 		$adult->insert($pdo);
 
 		//compose the email message to send with th activation token
-		$messageSubject = "Kid Task -- Activate Your Account";
+		$messageSubject = "KidDashboard Task -- Activate Your Account";
 
 		//building the activation link that can travel to another server and still work. This is the link that will be clicked to confirm the adult-account.
 		//make sure URL is /public_html/api/activation/$activation
@@ -99,7 +99,7 @@ try {
 
 		//compose message to send with email
 		$message = <<< EOF
-		<h2>Welcome to Kid Task.</h2>
+		<h2>Welcome to KidDashboard Task.</h2>
 		<p>In order to start assigning tasks to your kid(s) confirm your adult-account </p>
 		<p><a href="$confirmLink">$confirmLink</a></p>
 		EOF;
@@ -161,7 +161,7 @@ try {
 		}
 
 		// update reply
-		$reply->message = "Thank you for creating an adult-account with Kid Task";
+		$reply->message = "Thank you for creating an adult-account with KidDashboard Task";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}
