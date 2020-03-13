@@ -10,9 +10,11 @@ export const SignUp = () => {
     return (
         <>
             <Header/>
-            <div className="container">
-                <div className="row">
-                    <h5 className="card-title">Kid Task</h5>
+            <div content="Spacing">
+                <div className="container">
+                    <div className="row my-4">
+                        <h5 className="card-title">Register For An Account</h5>
+                    </div>
                     <SignUpForm/>
                 </div>
             </div>

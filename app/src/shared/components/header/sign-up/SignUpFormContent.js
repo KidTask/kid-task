@@ -1,6 +1,11 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../../FormDebugger";
 import React from "react";
+import {faChild, faEnvelope} from "@fortawesome/free-solid-svg-icons";
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {faLock, faUser, faCheck} from "@fortawesome/free-solid-svg-icons";
+
+library.add(faEnvelope, faUser, faLock, faCheck);
 
 export const SignUpFormContent = (props) => {
     const {
@@ -25,7 +30,7 @@ export const SignUpFormContent = (props) => {
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <FontAwesomeIcon icon="envelope"/>
+                                <i><FontAwesomeIcon icon={faEnvelope} size="sm"/></i>
                             </div>
                         </div>
                         <input
@@ -48,6 +53,36 @@ export const SignUpFormContent = (props) => {
 
                     }
                 </div>
+
+                <div className="form-group">
+                    <label htmlFor="adultUsername">Username</label>
+                    <label className="required">*</label>
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <div className="input-group-text">
+                                <i><FontAwesomeIcon icon={faUser} size="sm"/></i>
+                            </div>
+                        </div>
+
+                        <input
+                            className="form-control"
+                            type="text"
+                            id="adultUsername"
+                            placeholder="Username"
+                            value={values.adultUsername}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                    </div>
+                    {
+                        errors.adultUsername && touched.adultUsername && (
+                            <div className="alert alert-danger">
+                                {errors.adultUsername}
+                            </div>
+                        )
+                    }
+                </div>
+
                 {/*controlId must match what is defined by the initialValues object*/}
                 <div className="form-group">
                     <label htmlFor="adultPassword">Password</label>
@@ -55,7 +90,7 @@ export const SignUpFormContent = (props) => {
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <FontAwesomeIcon icon="key"/>
+                                <i><FontAwesomeIcon icon={faLock} size="sm"/></i>
                             </div>
                         </div>
                         <input
@@ -78,7 +113,7 @@ export const SignUpFormContent = (props) => {
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <div className="input-group-text">
-                                <FontAwesomeIcon icon="key"/>
+                                <i><FontAwesomeIcon icon={faCheck} size="sm"/></i>
                             </div>
                         </div>
                         <input
@@ -99,44 +134,7 @@ export const SignUpFormContent = (props) => {
 
 
                 <div className="form-group">
-                    <label htmlFor="adultUsername">Username</label>
-                    <label className="required">*</label>
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <FontAwesomeIcon icon="dove"/>
-                            </div>
-                        </div>
-
-                        <input
-                            className="form-control"
-                            type="text"
-                            id="adultUsername"
-                            placeholder="username"
-                            value={values.adultUsername}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                    </div>
-                    {
-                        errors.adultUsername && touched.adultUsername && (
-                            <div className="alert alert-danger">
-                                {errors.adultUsername}
-                            </div>
-                        )
-                    }
-                </div>
-
-
-
-                <div className="form-group">
                     <button className="btn btn-primary mb-2" type="submit">Submit</button>
-                    <button
-                        className="btn btn-danger mb-2"
-                        onClick={handleReset}
-                        disabled={!dirty || isSubmitting}
-                    >Reset
-                    </button>
                 </div>
 
             </form>
