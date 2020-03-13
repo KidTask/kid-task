@@ -26,7 +26,7 @@ export const Home = () => {
 						<div className="card w-lg-50">
 							<div className="card-body">
 								<h5 className="card-title">Not yet part of the Club?</h5>
-								<p><a>Sign up for Kid Task</a></p>
+								<p><a>Register your family or team for Kid Task.</a></p>
 							</div>
 						</div>
 					</div>
