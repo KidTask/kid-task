@@ -12,6 +12,7 @@ import {SignUp} from "./pages/SignUp";
 
 import {Kid} from "./pages/Kid";
 import {AdultDashboard} from "./pages/AdultDashboard";
+import {Home} from "./pages/Home";
 
 
 const Routing = () => (
