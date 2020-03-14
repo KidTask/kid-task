@@ -10,7 +10,7 @@ import {TaskForm} from "./pages/TaskForm";
 import {KidSignUp} from "./pages/KidSignUp";
 import {SignUp} from "./pages/SignUp";
 
-import {Kid} from "./pages/Kid";
+import {Kid} from "./pages/KidDashboard";
 import {AdultDashboard} from "./pages/AdultDashboard";
 import {Home} from "./pages/Home";
 
