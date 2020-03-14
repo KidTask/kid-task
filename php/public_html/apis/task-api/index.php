@@ -155,24 +155,19 @@ try {
             $task = new Task($taskId, $_SESSION["adult"]->getAdultId(), $requestObject->taskKidId, $requestObject->taskAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, 0, $requestObject->taskReward);
             $task->insert($pdo);
 
-            // update reply
-            $reply->message = "Task created OK";
-
-			  // create new step and insert into the database
+			  // create new steps and insert into the database
 			  $index = 0;
 			  foreach($requestObject->steps as $key => $value) {
 				  if(empty($value) === true) {
 					  throw(new \InvalidArgumentException("content is empty"));
 				  }
-				  if ($key === "stepContent") {
-			  			$index++;
-				  }
-				  $step = new Step(generateUuidV4(), $taskId, $value, $index);
+				  $index++;
+				  $step = new Step(generateUuidV4(), $taskId, $value->stepContent, $index);
 				  $step->insert($pdo);
 			  }
 
 			  // update reply
-			  $reply->message = "Step created OK";
+			  $reply->message = "Task created OK";
         }
 
     } else if($method === "DELETE") {
