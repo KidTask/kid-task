@@ -1,51 +1,71 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React from "react";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import {FormDebugger} from "../FormDebugger";
 
 
-export const LoginFormContent =
-	(props) => {
-		const {
-			submitStatus,
-			values,
-			errors,
-			touched,
-			dirty,
-			isSubmitting,
-			handleChange,
-			handleBlur,
-			handleSubmit,
-			handleReset
-		} = props;
+export const LoginFormContent = (props) => {
+	const {
+		submitStatus,
+		values,
+		errors,
+		touched,
+		dirty,
+		isSubmitting,
+		handleChange,
+		handleBlur,
+		handleSubmit,
+		handleReset
+	} = props;
 
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
 				{/*controlId must match what is passed to the initialValues prop*/}
-				<Form.Group controlId="adultUsername">
-					<Form.Label>Username</Form.Label>
-					<Form.Control type="text" size="sm" placeholder="Enter Username"/>
-					<input
-						className="form-control"
-						type="username"
-						id="adultUsername"
-						placeholder="Enter Username"
-						value={values.adultUsername}
-						onChange={handleChange}
-						onBlur={handleBlur}
-					/>
-				</Form.Group>
+				<div className="form-group">
+					<label htmlFor="adultUsername">Username</label>
+					<div className="input-group">
+						<input
+							className="form-control"
+							type="text"
+							id="adultUsername"
+							placeholder="Username"
+							value={values.adultUsername}
+							onChange={handleChange}
+							onBlur={handleBlur}
+						/>
+					</div>
+					{
+						errors.adultUsername && touched.adultUsername && (
+							<div className="alert alert-danger">
+								{errors.adultUsername}
+							</div>
+						)
+					}
+				</div>
 
 
 				{/*controlId must match what is defined by the initialValues object*/}
+				<div className="form-group">
+					<label htmlFor="adultPassword">Password</label>
+					<div className="input-group" >
+
+						<input
+							id="adultPassword"
+							className="form-control"
+							type="password"
+							placeholder="Password"
+							value={values.adultPassword}
+							onChange={handleChange}
+							onBlur={handleBlur}
+						/>
+					</div>
+					{errors.adultPassword && touched.adultPassword && (
+						<div className="alert alert-danger">{errors.adultPassword}</div>
+					)}
+				</div>
 
 
-				<Form.Group controlId="password">
-					<Form.Label>Password</Form.Label>
-					<Form.Control type="text" size="sm" placeholder="Enter Password"/>
-				</Form.Group>
 				<div className="row mt-4">
 					<div className="col-6">
 						<Form.Group controlId="formBasicCheckbox">
@@ -56,7 +76,6 @@ export const LoginFormContent =
 						<Button variant="outline-primary" size="sm" type="submit">Submit</Button>
 					</div>
 				</div>
-
 				<FormDebugger {...props} />
 			</form>
 		</>

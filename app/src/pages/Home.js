@@ -1,7 +1,7 @@
 import React from "react"
 import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
-import {LoginFormContent} from "../shared/components/login/LoginFormContent";
+import {LoginForm} from "../shared/components/login/LoginForm";
 import {SignUp} from "./SignUp";
 
 //REACT BOOTSTRAP CSS
@@ -17,7 +17,7 @@ export const Home = () => {
 						<div className="card w-lg-50">
 							<div className="card-body">
 								<h5 className="card-title">Sign in!</h5>
-								<LoginFormContent/>
+								<LoginForm/>
 							</div>
 						</div>
 					</div>
