@@ -26,11 +26,10 @@ export const LoginFormContent =
 				{/*controlId must match what is passed to the initialValues prop*/}
 				<Form.Group controlId="adultUsername">
 					<Form.Label>Username</Form.Label>
-					<Form.Control type="text" size="sm" placeholder="Enter Username"/>
 					<input
 						className="form-control"
 						type="username"
-						id="adultUsername"
+						id="username"
 						placeholder="Enter Username"
 						value={values.adultUsername}
 						onChange={handleChange}
