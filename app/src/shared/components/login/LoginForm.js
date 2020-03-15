@@ -16,7 +16,7 @@ export const LoginForm = () => {
     //the initial values object defines what the request payload is.
     const login = {
         adultUsername: "",
-        adultHash: ""
+        adultPassword: ""
     };
 
     const submitLogin = (values, {resetForm, setStatus}) => {

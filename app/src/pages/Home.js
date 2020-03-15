@@ -1,4 +1,6 @@
 import React from "react"
+
+
 import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
 import {LoginForm} from "../shared/components/login/LoginForm";
@@ -6,8 +8,10 @@ import {SignUp} from "./SignUp";
 
 //REACT BOOTSTRAP CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios"
 
 export const Home = () => {
+	axios.get("/apis/earl-grey/");
 	return (
 		<>
 			<Header/>
