@@ -8,6 +8,7 @@ require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 use Club\KidTask\Task;
+use Club\KidTask\Step;
 use Club\KidTask\Kid;
 use Club\KidTask\Adult;
 
@@ -148,12 +149,25 @@ try {
             //enforce the end user has a JWT token
             validateJwtHeader();
 
+            $taskId = generateUuidV4();
+
             // create new task and insert into the database
-            $task = new Task(generateUuidV4(), $_SESSION["adult"]->getAdultId(), $requestObject->taskKidId, $requestObject->taskAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, 0, $requestObject->taskReward);
+            $task = new Task($taskId, $_SESSION["adult"]->getAdultId(), $requestObject->taskKidId, $requestObject->taskAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, 0, $requestObject->taskReward);
             $task->insert($pdo);
 
-            // update reply
-            $reply->message = "Task created OK";
+			  // create new steps and insert into the database
+			  $index = 0;
+			  foreach($requestObject->steps as $key => $value) {
+				  if(empty($value) === true) {
+					  throw(new \InvalidArgumentException("content is empty"));
+				  }
+				  $index++;
+				  $step = new Step(generateUuidV4(), $taskId, $value->stepContent, $index);
+				  $step->insert($pdo);
+			  }
+
+			  // update reply
+			  $reply->message = "Task created OK";
         }
 
     } else if($method === "DELETE") {
