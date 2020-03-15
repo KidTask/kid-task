@@ -3,6 +3,7 @@ import {httpConfig} from "../../utils/http-config";
 import * as Yup from "yup";
 import {Formik} from "formik/dist/index";
 import {LoginFormContent} from "./LoginFormContent";
+import {useHistory} from "react-router";
 
 export const LoginForm = () => {
    const validator = Yup.object().shape({
@@ -11,6 +12,9 @@ export const LoginForm = () => {
       adultPassword: Yup.string()
          .required("Password is required")
    });
+
+const history = useHistory();
+console.log(history);
 
 
     //the initial values object defines what the request payload is.
@@ -28,6 +32,7 @@ export const LoginForm = () => {
                     window.localStorage.removeItem("jwt-token");
                     window.localStorage.setItem("jwt-token", reply.headers["x-jwt-token"]);
                     resetForm();
+                    history.push("/adult-dashboard");
                 }
             });
     };
