@@ -2,15 +2,32 @@ import React from "react"
 import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
 import CardDeck from "react-bootstrap/CardDeck";
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
-import "../styles/adult-dashboard.css"
-
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import "../styles/adult-dashboard.css";
 
 //REACT BOOTSTRAP CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+//Redux
+import {useDispatch, useSelector} from "react-redux";
+
+//Actions
+import {getAdultUsername} from "../shared/actions/adult-account-action";
+
+
+
+
+
 export const AdultDashboard = () => {
+
+	// const {match} = props;
+	// const adult = useSelector(state => (state.adult));
+	//
+	// const dispatch = useDispatch();
+	// const effects = () => {
+	// 	dispatch(getAdultUsername(match.params.adultUsername));
+	// };
 
 	let variable = "primary";
 	return (

@@ -7,6 +7,7 @@ import {FormDebugger} from "../FormDebugger";
 export const LoginFormContent = (props) => {
 	const {
 		submitStatus,
+		status,
 		values,
 		errors,
 		touched,
@@ -75,8 +76,9 @@ export const LoginFormContent = (props) => {
 						<Button variant="outline-primary" size="sm" type="submit">Submit</Button>
 					</div>
 				</div>
-				<FormDebugger {...props} />
+				{/*<FormDebugger {...props} />*/}
 			</form>
+			{status && <div className={status.type}>{status.message}</div>}
 		</>
 	)
 };
