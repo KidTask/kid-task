@@ -22,12 +22,12 @@ import {getAdultUsername} from "../shared/actions/adult-account-action";
 export const AdultDashboard = () => {
 
 	// const {match} = props;
-	// const adult = useSelector(state => (state.adult));
-	//
-	// const dispatch = useDispatch();
-	// const effects = () => {
-	// 	dispatch(getAdultUsername(match.params.adultUsername));
-	// };
+	// 	// const adult = useSelector(state => (state.adult));
+	// 	//
+	// 	// const dispatch = useDispatch();
+	// 	// const effects = () => {
+	// 	// 	dispatch(getAdultUsername(match.params.adultUsername));
+	// 	// };
 
 	let variable = "primary";
 	return (

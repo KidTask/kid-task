@@ -9,7 +9,8 @@ import {SignUp} from "./pages/SignUp";
 import {Kid} from "./pages/KidDashboard";
 import {AdultDashboard} from "./pages/AdultDashboard";
 import {Home} from "./pages/Home";
-
+import axios from "axios";
+axios.get("/apis/earl-grey/");
 
 const Routing = () => (
 	<>
