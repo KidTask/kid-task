@@ -1,8 +1,12 @@
 import {combineReducers} from "redux"
-import KidReducer from "./KidReducer";
-import UserPostsReducer from "./user-posts-reducer"
+import AdultReducer from "./adult-reducers";
+import KidReducer from "./kid-reducers";
+import TaskReducer from "./task-reducers";
+import StepReducer from "./step-reducers";
 
 export const reducers = combineReducers({
-    kids: KidReducer,
-    userPosts: UserPostsReducer,
+    adult: AdultReducer,
+    kid: KidReducer,
+    task: TaskReducer,
+    step: StepReducer,
 });
