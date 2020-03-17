@@ -1,15 +1,13 @@
 import React from 'react';
 import {ErrorMessage, Field, FieldArray, Formik} from 'formik';
 import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+
 import * as Yup from 'yup';
-import { addTask, getTasks } from './requests';
-import { connect } from 'react-redux';
-import { setTasks } from './actionCreators';
-import '../styles/TaskForm.css';
-import divWithClassName from "react-bootstrap/cjs/divWithClassName";
-import ErrorBoundary from "react-beautiful-dnd/src/view/drag-drop-context/error-boundary";
+import Button from "react-bootstrap/Button";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+//import { connect } from 'react-redux';
+//import { setTasks } from './actionCreators';
 
 
 const initialValues = {
@@ -30,8 +28,8 @@ export const TaskForm = () => (
 			initialValues={initialValues}
 			validationSchema={Yup.object({
 				task: Yup.string().required('Required'),
-				image: Yup.mixed(),
-				dueDate: Yup.date,
+				image: Yup.string(),
+				dueDate: Yup.string(),
 				reward: Yup.string(),
 				steps: Yup.array().of(
 					Yup.object({
@@ -47,46 +45,55 @@ export const TaskForm = () => (
 		>
 			{({ values, isSubmitting }) => (
 				<Form>
-					<Field name="task" type="text" placeholder"Task" />
-					<ErrorMessage name="task">
-						{msg => <div className="field-error">{msg}</div>}
-					</ErrorMessage>
-					<div className="row">
-						<div className="col">
-							<Field name="image" type="image" />
-						</div>
-						<div className="col">
-							<Field name="dueDate" type="dateTime"  />
-						</div>
-						<div className="col">
-							<Field name="reward" type="text" />
-						</div>
-					</div>
+					<Form.Group>
+						<Form.Label>Task</Form.Label>
+						<Form.Control name="task" type="text" placeholder="Example: Clean your room." />
+						<ErrorMessage name="task">
+							{msg => <div className="field-error">{msg}</div>}
+						</ErrorMessage>
+					</Form.Group>
 					<FieldArray name="steps">
 						{({ push, remove }) =>
 					<React.Fragment>
 						{values.steps && values.steps.length > 0 && values.steps.map((step, index) =>
-						<div className="row">
-							<div className="col">
-								<Field name={`steps[${index}].content`} type="text" placeholder"Add a step" />
-							</div>
-							<div className="col">
-								<button type="button" onClick={() => remove(index)}>X</button>
-							</div>
-						</div>
+						<Row>
+							<Col sm="10">
+								<Form.Control name={`steps[${index}].content`} type="text" placeholder="Add a step" />
+							</Col>
+							<br/>
+							<br/>
+							<Col sm="2">
+								<Button type="button" variant="outline-danger" onClick={() => remove(index)}>X</Button>
+							</Col>
+						</Row>
 						)}
-					<button
+					<Button
 						type="button"
 						onClick={() => push({content: ''})}
-						className="secondary"
+						variant="outline-primary"
 					>
 						Add Step
-					</button>
+					</Button>
 					</React.Fragment>
 						}
 					</FieldArray>
-					<button type="submit" disabled={isSubmitting}>Create Task</button>
-					<Debug />
+					<br/>
+					<br/>
+					<Form.Label>Image</Form.Label>
+					<Form.Control name="image" type="text" />
+					<br/>
+					<Row>
+						<Col>
+							<Form.Label>Due Date</Form.Label>
+							<Form.Control name="dueDate" type="dateTime" />
+						</Col>
+						<Col>
+							<Form.Label>Reward</Form.Label>
+							<Form.Control name="reward" type="text" />
+						</Col>
+					</Row>
+					<br/>
+					<Button type="submit" variant="primary" disabled={isSubmitting}>Create Task</Button>
 				</Form>
 				)}
 		</Formik>

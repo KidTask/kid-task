@@ -4,7 +4,7 @@ import {Footer} from "../shared/components/footer/Footer";
 import {TaskForm} from "../shared/components/taskform/TaskForm";
 
 
-export const AdultDashboard = () => {
+export const CreateTask = () => {
 	return (
 		<>
 			<Header/>
