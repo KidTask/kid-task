@@ -1,5 +1,7 @@
 import React from "react"
 import {Header} from "../shared/components/header/Header";
+import {KidCard} from "../shared/components/kidCard/kid-card";
+import {AddKidCard} from "../shared/components/kidCard/add-kid-card";
 import {Footer} from "../shared/components/footer/Footer";
 import CardDeck from "react-bootstrap/CardDeck";
 import Card from 'react-bootstrap/Card';
@@ -19,17 +21,12 @@ import {getAdultUsername} from "../shared/actions/adult-account-action";
 
 
 
+
 export const AdultDashboard = () => {
 
-	// const {match} = props;
-	// 	// const adult = useSelector(state => (state.adult));
-	// 	//
-	// 	// const dispatch = useDispatch();
-	// 	// const effects = () => {
-	// 	// 	dispatch(getAdultUsername(match.params.adultUsername));
-	// 	// };
 
-	let variable = "primary";
+
+
 	return (
 		<>
 		<Header/>
@@ -37,29 +34,11 @@ export const AdultDashboard = () => {
 
 		<div className="container parent-cards">
 				<CardDeck>
-					<Card border={variable} text="primary">
-						<Card.Img variant="top" src="http://www.fillmurray.com/284/196" />
-						<Card.Body className="text-center">
-							<Card.Title>Kid 1</Card.Title>
-							<Button variant="outline-primary">+ Add Task</Button>
-						</Card.Body>
-					</Card>
 
-					<Card border="warning" text="warning">
-						<Card.Img variant="top" src="http://www.fillmurray.com/284/196" />
-						<Card.Body className="text-center">
-							<Card.Title>Kid 2</Card.Title>
-							<Button variant="outline-warning">+ Add Task</Button>
-						</Card.Body>
-					</Card>
+					<KidCard/>
 
-					<Card border="secondary" text="secondary">
-						<Card.Img variant="top" src="http://placeholder.pics/svg/284x196" />
-						<Card.Body className="text-center">
-							<Card.Title>New Kid</Card.Title>
-							<Button variant="outline-secondary">+ Add Kid</Button>
-						</Card.Body>
-					</Card>
+					<AddKidCard/>
+
 				</CardDeck>
 
 			<div className="row mt-3">
