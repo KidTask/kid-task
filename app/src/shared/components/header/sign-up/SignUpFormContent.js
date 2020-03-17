@@ -1,6 +1,7 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../../FormDebugger";
 import React from "react";
+import { Route } from 'react-router-dom'
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faLock, faUser, faCheck} from "@fortawesome/free-solid-svg-icons";
@@ -134,7 +135,15 @@ export const SignUpFormContent = (props) => {
 
 
                 <div className="form-group">
-                    <button className="btn btn-primary mb-2" type="submit">Submit</button>
+                    <Route render={({ history}) => (
+                        <button
+                            className="btn btn-primary mb-2"
+                            type='submit'
+                            onClick={() => { history.push('/') }}
+                        >
+                            Submit
+                        </button>
+                    )} />
                 </div>
 
                 {/*<FormDebugger {...props} />*/}

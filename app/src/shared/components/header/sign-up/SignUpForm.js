@@ -40,7 +40,7 @@ export const SignUpForm = () => {
                     setStatus({message, type});
                     if(reply.status === 200) {
                         resetForm();
-                        history.push("/adult-dashboard");
+                        history.push("/");
                     }
                 }
             );
