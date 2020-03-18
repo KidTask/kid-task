@@ -135,15 +135,7 @@ export const SignUpFormContent = (props) => {
 
 
                 <div className="form-group">
-                    <Route render={({ history}) => (
-                        <button
-                            className="btn btn-primary mb-2"
-                            type='submit'
-                            onClick={() => { history.push('/') }}
-                        >
-                            Submit
-                        </button>
-                    )} />
+                        <button className="btn btn-primary mb-2" type='submit'>Submit</button>
                 </div>
 
                 {/*<FormDebugger {...props} />*/}
