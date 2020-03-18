@@ -1,22 +1,22 @@
 import { httpConfig } from '../utils/http-config'
 
-export const getTaskByTaskId = () => async (dispatch) => {
-	const {data} = await httpConfig('/apis/sign-in/?taskId=${Id}');
+export const getTaskByTaskId = (id) => async (dispatch) => {
+	const {data} = await httpConfig(`/apis/task-api/?taskId=${id}`);
 	dispatch({ type: 'GET_TASK_BY_TASK_ID', payload: data })
 };
 
-export const getTaskByTaskAdultId = () => async (dispatch) => {
-	const {data} = await httpConfig('/apis/sign-in/?taskAdultId=${taskAdultId}');
+export const getTaskByTaskAdultId = (taskAdultId) => async (dispatch) => {
+	const {data} = await httpConfig(`/apis/task-api/?taskAdultId=${taskAdultId}`);
 	dispatch({ type: 'GET_TASK_BY_TASK_ADULT_ID', payload: data })
 };
 
-export const getTaskByTaskKidId = () => async (dispatch) => {
-	const {data} = await httpConfig('/apis/sign-in/?taskKidId=${taskKidId}');
+export const getTaskByTaskKidId = (taskKidId) => async (dispatch) => {
+	const {data} = await httpConfig(`/apis/task-api/?taskKidId=${taskKidId}`);
 	dispatch({ type: 'GET_TASK_BY_TASK_KID_ID', payload: data })
 };
 
-export const getTaskByTaskContent = () => async (dispatch) => {
-	const {data} = await httpConfig('/apis/sign-in/?taskContent=${taskContent}');
+export const getTaskByTaskContent = (taskContent) => async (dispatch) => {
+	const {data} = await httpConfig(`/apis/task-api/?taskContent=${taskContent}`);
 	dispatch({ type: 'GET_TASK_BY_TASK_TASK_CONTENT', payload: data })
 };
 

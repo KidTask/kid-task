@@ -2,10 +2,10 @@ import React from 'react';
 import {httpConfig} from "../../utils/http-config";
 import * as Yup from "yup";
 import {Formik} from "formik/dist/index";
-import {LoginFormContent} from "./LoginFormContent";
+import {AdultLoginFormContent} from "./AdultLoginFormContent";
 import {useHistory} from "react-router";
 
-export const LoginForm = () => {
+export const AdultLoginForm = () => {
    const validator = Yup.object().shape({
       adultUsername: Yup.string()
          .required("username is required"),
@@ -44,7 +44,7 @@ console.log(history);
                 onSubmit={submitLogin}
                 validationSchema={validator}
             >
-                {LoginFormContent}
+                {AdultLoginFormContent}
             </Formik>
         </>
     )

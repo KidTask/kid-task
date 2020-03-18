@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import {FormDebugger} from "../FormDebugger";
 
 
-export const LoginFormContent = (props) => {
+export const AdultLoginFormContent = (props) => {
 	const {
 		submitStatus,
 		status,

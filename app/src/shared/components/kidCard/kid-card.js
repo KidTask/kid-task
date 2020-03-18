@@ -1,7 +1,6 @@
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import React, {useEffect} from "react";
-
 import {getKidByKidAdultId} from "../../actions/kid-account-actions";
 import {useDispatch} from "react-redux";
 import {useHistory} from "react-router";
