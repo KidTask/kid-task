@@ -28,12 +28,11 @@ const Routing = () => (
 
 			<BrowserRouter>
 				<Switch>
-
+					<Route exact path="/create-task/:kidUsername" component={CreateTask} kidId=":kidUsername"/>
 					<Route exact path="/adult-dashboard" component={AdultDashboard}/>
 					{/*<Route exact path="/kid-dashboard" component={Kid}/>*/}
 					{/*<Route exact path="/kid-sign-up" component={KidSignUp}/>*/}
 					<Route exact path="/adult-sign-up" component={SignUp}/>
-					<Route exact path="/create-task/:kidId" component={CreateTask}/>
 
 					<Route exact path="/" component={Home}/>
 					{/*<Route exact path="/task-form" component={TaskForm}/>*/}

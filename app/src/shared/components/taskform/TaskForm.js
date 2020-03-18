@@ -6,18 +6,19 @@ import * as Yup from 'yup';
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {FormDebugger} from "../FormDebugger";
 //import { connect } from 'react-redux';
 //import { setTasks } from './actionCreators';
 
 
 const initialValues = {
-	task: '',
-	image: '',
-	dueDate: '',
-	reward: '',
-	steps: [
+	taskContent: '',
+	taskAvatarUrl: '',
+	taskDueDate: '',
+	taskReward: '',
+	taskSteps: [
 		{
-			content: '',
+			stepContent: '',
 		},
 	],
 };
@@ -38,13 +39,14 @@ export const TaskForm = () => (
 				),
 			})}
 			onSubmit={values => {
-				setTimeout(() => {
-					alert(JSON.stringify(values, null, 2));
-				}, 500);
+				console.log(values)
 			}}
 		>
-			{({ values, isSubmitting }) => (
-				<Form>
+			{(props) => {
+				const  {values, isSubmitting} = props;
+				return(
+
+				<Form noValidate>
 					<Form.Group>
 						<Form.Label>Task</Form.Label>
 						<Form.Control name="task" type="text" placeholder="Example: Clean your room." />
@@ -94,8 +96,10 @@ export const TaskForm = () => (
 					</Row>
 					<br/>
 					<Button type="submit" variant="primary" disabled={isSubmitting}>Create Task</Button>
+					<FormDebugger  {...props} />
 				</Form>
-				)}
+				)}}
+
 		</Formik>
 	</div>
 ); // end of TaskForm
