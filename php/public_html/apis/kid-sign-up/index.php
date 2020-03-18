@@ -54,6 +54,12 @@ try {
 			throw(new \InvalidArgumentException ("Must input valid username or password", 405));
 		}
 
+		$adult = Adult::getAdultByAdultId($pdo, $id);
+		$kid = Kid::getKidByKidId($pdo,$id);
+		if($requestObject->kidUsername === $adult || $requestObject->kidUsername === $kid) {
+			throw(new \InvalidArgumentException("Username is taken", 405));
+		}
+
 		//verify that kid-account password is present
 		if(empty($requestObject->kidPassword) === true) {
 			throw(new \InvalidArgumentException ("Must input valid username or password", 405));
