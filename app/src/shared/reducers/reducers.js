@@ -6,7 +6,7 @@ import StepReducer from "./step-reducers";
 
 export const reducers = combineReducers({
     adult: AdultReducer,
-    kid: KidReducer,
-    task: TaskReducer,
-    step: StepReducer,
+    kids: KidReducer,
+    tasks: TaskReducer,
+    steps: StepReducer,
 });

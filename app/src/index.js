@@ -11,25 +11,37 @@ import {AdultDashboard} from "./pages/AdultDashboard";
 import {CreateTask} from "./pages/CreateTask";
 import {Home} from "./pages/Home";
 import axios from "axios";
+import {applyMiddleware, createStore} from "redux";
+import {reducers} from "./shared/reducers/reducers";
+import thunk from "redux-thunk";
+import {Provider} from "react-redux";
+
 axios.get("/apis/earl-grey/");
 
+
+const store = createStore(reducers, applyMiddleware(thunk));
+
 const Routing = () => (
+
 	<>
-	<BrowserRouter>
-	<Switch>
+		<Provider store={store}>
 
-	<Route exact path="/adult-dashboard" component={AdultDashboard}/>
-	{/*<Route exact path="/kid-dashboard" component={Kid}/>*/}
-	{/*<Route exact path="/kid-sign-up" component={KidSignUp}/>*/}
-	<Route exact path="/adult-sign-up" component={SignUp}/>
-	<Route exact path="/create-task" component={CreateTask}/>
+			<BrowserRouter>
+				<Switch>
 
-		<Route exact path="/" component={Home}/>
-	{/*<Route exact path="/task-form" component={TaskForm}/>*/}
+					<Route exact path="/adult-dashboard" component={AdultDashboard}/>
+					{/*<Route exact path="/kid-dashboard" component={Kid}/>*/}
+					{/*<Route exact path="/kid-sign-up" component={KidSignUp}/>*/}
+					<Route exact path="/adult-sign-up" component={SignUp}/>
+					<Route exact path="/create-task/:kidId" component={CreateTask}/>
 
-<Route component={FourOhFour}/>
-</Switch>
-</BrowserRouter>
-</>
+					<Route exact path="/" component={Home}/>
+					{/*<Route exact path="/task-form" component={TaskForm}/>*/}
+
+					<Route component={FourOhFour}/>
+				</Switch>
+			</BrowserRouter>
+		</Provider>
+	</>
 );
 ReactDOM.render(<Routing/>, document.querySelector('#root'));
