@@ -7,7 +7,7 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use Club\KidTask\Adult;
+use Club\KidTask\{Adult, Kid};
 
 /**
  * api for signing up to Kid Task
@@ -46,6 +46,12 @@ try {
 		//adult-account username is a required field
 		if(empty($requestObject->adultUsername) === true) {
 			throw(new \InvalidArgumentException ("No parent username", 405));
+		}
+
+		$adult = Adult::getAdultByAdultId($pdo, $id);
+		$kid = Kid::getKidByKidId($pdo,$id);
+		if($requestObject->adultUsername === $adult || $requestObject->adultUsername === $kid) {
+			throw(new \InvalidArgumentException("Username is taken", 405));
 		}
 
 		//verify that adult-account password is present
