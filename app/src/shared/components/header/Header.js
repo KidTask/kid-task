@@ -10,10 +10,10 @@ export const Header = (props) => {
     return(
         <Navbar variant="light" bg="light">
            <Container>
-              <Navbar.Brand href="#">Kid Task</Navbar.Brand>
+              <Navbar.Brand href="/">Kid Task</Navbar.Brand>
               <Navbar.Collapse className="justify-content-end">
                  <NavDropdown alignRight title="" id="dropdown-menu-align-right">
-                    <NavDropdown.Item href="#action/3.1">+ Add Kid</NavDropdown.Item>
+                    <NavDropdown.Item href="/adult-dashboard">+ Add Kid</NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="#action/3.2">Edit Profile</NavDropdown.Item>
                  </NavDropdown>
