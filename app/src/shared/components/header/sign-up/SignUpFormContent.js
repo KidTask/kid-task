@@ -19,7 +19,8 @@ export const SignUpFormContent = (props) => {
         handleChange,
         handleBlur,
         handleSubmit,
-        handleReset
+        handleReset,
+       status
     } = props;
     return (
         <>
@@ -144,7 +145,7 @@ export const SignUpFormContent = (props) => {
                 submitStatus
             )}
             {
-                submitStatus && (<div className={submitStatus.type}>{submitStatus.message}</div>)
+                status && (<div className={status.type}>{status.message}</div>)
             }
         </>
 

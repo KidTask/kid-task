@@ -17,7 +17,7 @@ export const SignUpForm = () => {
     const history = useHistory();
     console.log(history);
 
-    const [status, setStatus] = useState(null);
+
     const validator = Yup.object().shape({
         adultEmail: Yup.string()
             .email("email must be a valid email")
@@ -33,15 +33,16 @@ export const SignUpForm = () => {
             .min(3,"username must be at least three characters"),
     });
 
-    const submitSignUp = (values, {resetForm}) => {
+    const submitSignUp = (values, {resetForm, setStatus}) => {
         httpConfig.post("/apis/sign-up/", values)
             .then(reply => {
                     let {message, type} = reply;
-                    setStatus({message, type});
                     if(reply.status === 200) {
                         resetForm();
+                        window.setTimeout();
                         history.push("/");
                     }
+                    setStatus({message, type})
                 }
             );
     };
