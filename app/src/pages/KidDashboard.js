@@ -1,12 +1,38 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
 import {Col} from "react-bootstrap";
 import {Image} from "react-bootstrap";
 import {TaskPreview} from "../shared/components/task/TaskPreview";
+import {useJwtKidId} from "../shared/utils/JwtHelpers";
+import {getKidByKidAdultId, getKidByKidId} from "../shared/actions/kid-account-actions";
+import {useDispatch, useSelector} from "react-redux";
+
+import {getTaskByTaskKidId} from "../shared/actions/task-actions";
+
 
 
 export const Kid = () => {
+
+	const kidId  = useJwtKidId();
+	console.log(kidId);
+
+	const dispatch = useDispatch();
+
+	const sideEffects = () => {
+		dispatch(getTaskByTaskKidId(kidId))
+	};
+
+	const sideEffectsInput = [kidId];
+
+	useEffect(sideEffects, sideEffectsInput);
+
+	const tasks = useSelector(state => {
+		return state.tasks ? state.tasks : []
+	});
+
+
+
 	return (
 		<>
 			<Header/>
@@ -19,9 +45,8 @@ export const Kid = () => {
 
 				<div className="row mb-6 pb-5" >
 
-					<TaskPreview/>
-					<TaskPreview/>
-					<TaskPreview/>
+					{tasks.map(task => <TaskPreview task={task} key={task.taskId}/>)}
+
 
 				</div>
 

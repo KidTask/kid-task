@@ -3,12 +3,13 @@ import React from "react"
 
 import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
-import {LoginForm} from "../shared/components/login/LoginForm";
-import {SignUp} from "./SignUp";
+import {AdultLoginForm} from "../shared/components/login/AdultLoginForm";
+import {KidLoginForm} from "../shared/components/login/KidLoginForm";
 
 //REACT BOOTSTRAP CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios"
+
 
 export const Home = () => {
 	axios.get("/apis/earl-grey/");
@@ -20,8 +21,16 @@ export const Home = () => {
 					<div className="col-lg-5  mx-auto mt-5">
 						<div className="card w-lg-50">
 							<div className="card-body">
-								<h5 className="card-title">Sign in!</h5>
-								<LoginForm/>
+								<h5 className="card-title">Adult sign in!</h5>
+								<AdultLoginForm/>
+							</div>
+						</div>
+					</div>
+					<div className="col-lg-5  mx-auto mt-5">
+						<div className="card w-lg-50">
+							<div className="card-body">
+								<h5 className="card-title">Kids sign in over here!</h5>
+								<KidLoginForm/>
 							</div>
 						</div>
 					</div>

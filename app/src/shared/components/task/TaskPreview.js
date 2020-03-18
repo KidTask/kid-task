@@ -6,7 +6,11 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import {StepPreview} from "../step/StepPreview";
 
 
-export const TaskPreview = () => {
+export const TaskPreview = (props) => {
+	const {task} = props;
+	console.log(task);
+
+
 	return (
 		<>
 			<div className="col-md-5 col-lg-4 mx-auto mb-5">
@@ -20,7 +24,7 @@ export const TaskPreview = () => {
 					<Card.Img variant="top" src="https://images.unsplash.com/photo-1524420533980-5fe0aecc5fe6"/>
 					<Card.Body >
 						<h3 className="title">Task</h3>
-						<Card.Title className="kidCardTitle">This is where the task would be.</Card.Title>
+						<Card.Title className="kidCardTitle">{task.taskContent}</Card.Title>
 					</Card.Body>
 					<Card.Body>
 						<h3 className="title">Steps</h3>
