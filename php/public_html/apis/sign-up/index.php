@@ -48,9 +48,9 @@ try {
 			throw(new \InvalidArgumentException ("No parent username", 405));
 		}
 
-		$adult = Adult::getAdultByAdultId($pdo, $id);
-		$kid = Kid::getKidByKidId($pdo,$id);
-		if($requestObject->adultUsername === $adult || $requestObject->adultUsername === $kid) {
+		$adult = Adult::getAdultByAdultId($pdo, $requestObject->adultUsername);
+		$kid = Kid::getKidByKidId($pdo, $requestObject->adultUsername);
+		if($requestObject->adultUsername === $adult->getAdultUsername() || $requestObject->adultUsername === $kid->getKidUsername()) {
 			throw(new \InvalidArgumentException("Username is taken", 405));
 		}
 

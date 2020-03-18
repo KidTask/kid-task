@@ -54,9 +54,9 @@ try {
 			throw(new \InvalidArgumentException ("Must input valid username or password", 405));
 		}
 
-		$adult = Adult::getAdultByAdultId($pdo, $id);
-		$kid = Kid::getKidByKidId($pdo,$id);
-		if($requestObject->kidUsername === $adult || $requestObject->kidUsername === $kid) {
+		$adult = Adult::getAdultByAdultId($pdo, $requestObject->kidUsername);
+		$kid = Kid::getKidByKidId($pdo, $requestObject->kidUsername);
+		if($requestObject->kidUsername === $adult->getAdultUsername() || $requestObject->kidUsername === $kid->getKidUsername()) {
 			throw(new \InvalidArgumentException("Username is taken", 405));
 		}
 
