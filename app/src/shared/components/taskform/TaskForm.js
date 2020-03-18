@@ -28,13 +28,13 @@ export const TaskForm = () => (
 		<Formik
 			initialValues={initialValues}
 			validationSchema={Yup.object({
-				task: Yup.string().required('Required'),
-				image: Yup.string(),
-				dueDate: Yup.string(),
-				reward: Yup.string(),
-				steps: Yup.array().of(
+				taskContent: Yup.string().required('Required'),
+				taskAvatarUrl: Yup.string(),
+				taskDueDate: Yup.string(),
+				taskReward: Yup.string(),
+				taskSteps: Yup.array().of(
 					Yup.object({
-						content: Yup.string(),
+						stepContent: Yup.string(),
 					})
 				),
 			})}
@@ -49,12 +49,11 @@ export const TaskForm = () => (
 				<Form noValidate>
 					<Form.Group>
 						<Form.Label>Task</Form.Label>
-						<Form.Control name="task" type="text" placeholder="Example: Clean your room." />
-						<ErrorMessage name="task">
-							{msg => <div className="field-error">{msg}</div>}
-						</ErrorMessage>
+						<Form.Control name="taskContent" type="text" placeholder="Example: Clean your room." />
+						<ErrorMessage name="taskContent"/>
+
 					</Form.Group>
-					<FieldArray name="steps">
+					<FieldArray name="taskSteps">
 						{({ push, remove }) =>
 					<React.Fragment>
 						{values.steps && values.steps.length > 0 && values.steps.map((step, index) =>

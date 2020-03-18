@@ -4,7 +4,11 @@ import {Footer} from "../shared/components/footer/Footer";
 import {TaskForm} from "../shared/components/taskform/TaskForm";
 
 
-export const CreateTask = () => {
+export const CreateTask = (props) => {
+
+	const {match} = props;
+	console.log(match);
+
 	return (
 		<>
 			<Header/>
