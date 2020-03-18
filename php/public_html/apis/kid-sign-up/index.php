@@ -54,9 +54,9 @@ try {
 			throw(new \InvalidArgumentException ("Must input valid username or password", 405));
 		}
 
-		$adult = Adult::getAdultByAdultId($pdo, $requestObject->kidUsername);
-		$kid = Kid::getKidByKidId($pdo, $requestObject->kidUsername);
-		if($requestObject->kidUsername === $adult->getAdultUsername() || $requestObject->kidUsername === $kid->getKidUsername()) {
+		$adult = Adult::getAdultByAdultUsername($pdo, $requestObject->kidUsername);
+		$kid = Kid::getKidByKidUsername($pdo, $requestObject->kidUsername);
+		if($kid!==null || $adult!==null) {
 			throw(new \InvalidArgumentException("Username is taken", 405));
 		}
 
@@ -71,7 +71,7 @@ try {
 		}
 
 
-		$hash = password_hash($requestObject->kidPassword, PASSWORD_ARGON2I, ["time_cost" => 32]);
+		$hash = password_hash($requestObject->kidPassword, PASSWORD_ARGON2I, ["time_cost" => 7]);
 
 
 		//make sure name is valid (optional field)

@@ -48,9 +48,10 @@ try {
 			throw(new \InvalidArgumentException ("No parent username", 405));
 		}
 
-		$adult = Adult::getAdultByAdultId($pdo, $requestObject->adultUsername);
-		$kid = Kid::getKidByKidId($pdo, $requestObject->adultUsername);
-		if($requestObject->adultUsername === $adult->getAdultUsername() || $requestObject->adultUsername === $kid->getKidUsername()) {
+		$adult = Adult::getAdultByAdultUsername($pdo, $requestObject->adultUsername);
+		$kid = Kid::getKidByKidUsername($pdo, $requestObject->adultUsername);
+		var_dump($kid);
+		if($kid !== null || $adult !== null) {
 			throw(new \InvalidArgumentException("Username is taken", 405));
 		}
 
@@ -65,7 +66,7 @@ try {
 		}
 
 
-		$hash = password_hash($requestObject->adultPassword, PASSWORD_ARGON2I, ["time_cost" => 32]);
+		$hash = password_hash($requestObject->adultPassword, PASSWORD_ARGON2I, ["time_cost" => 7]);
 
 		$adultActivationToken = bin2hex(random_bytes(16));
 
