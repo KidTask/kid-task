@@ -35,7 +35,6 @@ const Routing = () => (
 					<Route exact path="/adult-sign-up" component={SignUp}/>
 
 					<Route exact path="/" component={Home}/>
-					{/*<Route exact path="/task-form" component={TaskForm}/>*/}
 
 					<Route component={FourOhFour}/>
 				</Switch>

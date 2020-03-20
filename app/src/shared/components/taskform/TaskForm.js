@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {FormDebugger} from "../FormDebugger";
+import {httpConfig} from "../../utils/http-config";
 //import { connect } from 'react-redux';
 //import { setTasks } from './actionCreators';
 
@@ -24,22 +25,29 @@ const initialValues = {
 };
 
 export const TaskForm = () => (
-	<div>
+	<>
 		<Formik
 			initialValues={initialValues}
 			validationSchema={Yup.object({
-				task: Yup.string().required('Required'),
-				image: Yup.string(),
-				dueDate: Yup.string(),
-				reward: Yup.string(),
-				steps: Yup.array().of(
+				taskContent: Yup.string().required('Task is required'),
+				taskAvatarUrl: Yup.string(),
+				taskDueDate: Yup.string(),
+				taskReward: Yup.string(),
+				taskSteps: Yup.array().of(
 					Yup.object({
-						content: Yup.string(),
+						stepContent: Yup.string(),
 					})
 				),
 			})}
-			onSubmit={values => {
-				console.log(values)
+			onSubmit={(values, {resetForm, setStatus}) => {
+				httpConfig.post("/apis/task-api/", values)
+				.then(reply => {
+						let {message, type} = reply;
+						if(reply.status === 200) {
+							resetForm();
+						}
+					setStatus({message, type});
+				});
 			}}
 		>
 			{(props) => {
@@ -49,18 +57,18 @@ export const TaskForm = () => (
 				<Form noValidate>
 					<Form.Group>
 						<Form.Label>Task</Form.Label>
-						<Form.Control name="task" type="text" placeholder="Example: Clean your room." />
-						<ErrorMessage name="task">
+						<Form.Control name="taskContent" type="text" placeholder="Example: Clean your room." />
+						<ErrorMessage name="taskContent">
 							{msg => <div className="field-error">{msg}</div>}
 						</ErrorMessage>
 					</Form.Group>
-					<FieldArray name="steps">
+					<FieldArray name="taskSteps">
 						{({ push, remove }) =>
 					<React.Fragment>
-						{values.steps && values.steps.length > 0 && values.steps.map((step, index) =>
+						{values.taskSteps && values.taskSteps.length > 0 && values.taskSteps.map((step, index) =>
 						<Row>
 							<Col sm="10">
-								<Form.Control name={`steps[${index}].content`} type="text" placeholder="Add a step" />
+								<Form.Control name={`taskSteps[${index}].stepContent`} type="text" placeholder="Add a step" />
 							</Col>
 							<br/>
 							<br/>
@@ -71,7 +79,7 @@ export const TaskForm = () => (
 						)}
 					<Button
 						type="button"
-						onClick={() => push({content: ''})}
+						onClick={() => push({stepContent: ''})}
 						variant="outline-primary"
 					>
 						Add Step
@@ -82,16 +90,16 @@ export const TaskForm = () => (
 					<br/>
 					<br/>
 					<Form.Label>Image</Form.Label>
-					<Form.Control name="image" type="text" />
+					<Form.Control name="taskAvatarUrl" type="text" />
 					<br/>
 					<Row>
 						<Col>
 							<Form.Label>Due Date</Form.Label>
-							<Form.Control name="dueDate" type="dateTime" />
+							<Form.Control name="taskDueDate" type="dateTime" />
 						</Col>
 						<Col>
 							<Form.Label>Reward</Form.Label>
-							<Form.Control name="reward" type="text" />
+							<Form.Control name="taskReward" type="text" />
 						</Col>
 					</Row>
 					<br/>
@@ -101,5 +109,5 @@ export const TaskForm = () => (
 				)}}
 
 		</Formik>
-	</div>
+	</>
 ); // end of TaskForm
