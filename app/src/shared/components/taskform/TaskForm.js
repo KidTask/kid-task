@@ -10,6 +10,7 @@ import {FormDebugger} from "../FormDebugger";
 import {httpConfig} from "../../utils/http-config";
 //import { connect } from 'react-redux';
 //import { setTasks } from './actionCreators';
+//import {useHistory} from "react-router";
 
 
 const initialValues = {
@@ -24,8 +25,9 @@ const initialValues = {
 	],
 };
 
-export const TaskForm = () => (
+export const TaskForm = ({match}) => (
 	<>
+		{console.log(match.params)}
 		<Formik
 			initialValues={initialValues}
 			validationSchema={Yup.object({
@@ -39,8 +41,10 @@ export const TaskForm = () => (
 					})
 				),
 			})}
+
 			onSubmit={(values, {resetForm, setStatus}) => {
-				httpConfig.post("/apis/task-api/", values)
+				const request = {...values, kidUsername:match.params.kidUsername};
+				httpConfig.post("/apis/task-api/", request)
 				.then(reply => {
 						let {message, type} = reply;
 						if(reply.status === 200) {
@@ -51,24 +55,46 @@ export const TaskForm = () => (
 			}}
 		>
 			{(props) => {
-				const  {values, isSubmitting} = props;
+				const {
+					status,
+					values,
+					errors,
+					touched,
+					dirty,
+					isSubmitting,
+					handleChange,
+					handleBlur,
+					handleSubmit,
+					handleReset
+				} = props;
 				return(
-
-				<Form noValidate>
+					<Form onSubmit={handleSubmit} noValidate>
 					<Form.Group>
 						<Form.Label>Task</Form.Label>
-						<Form.Control name="taskContent" type="text" placeholder="Example: Clean your room." />
+						<Form.Control
+							name="taskContent"
+							type="text"
+							placeholder="Example: Clean your room."
+							onChange={handleChange}
+							onBlur={handleBlur}
+						/>
 						<ErrorMessage name="taskContent">
 							{msg => <div className="field-error">{msg}</div>}
 						</ErrorMessage>
 					</Form.Group>
-					<FieldArray name="taskSteps">
+						<Form.Label>Steps</Form.Label>
+						<FieldArray name="taskSteps">
 						{({ push, remove }) =>
 					<React.Fragment>
 						{values.taskSteps && values.taskSteps.length > 0 && values.taskSteps.map((step, index) =>
 						<Row>
 							<Col sm="10">
-								<Form.Control name={`taskSteps[${index}].stepContent`} type="text" placeholder="Add a step" />
+								<Form.Control
+									name={`taskSteps[${index}].stepContent`}
+									type="text" placeholder="Add a step"
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
 							</Col>
 							<br/>
 							<br/>
@@ -81,6 +107,8 @@ export const TaskForm = () => (
 						type="button"
 						onClick={() => push({stepContent: ''})}
 						variant="outline-primary"
+						onChange={handleChange}
+						onBlur={handleBlur}
 					>
 						Add Step
 					</Button>
@@ -103,7 +131,15 @@ export const TaskForm = () => (
 						</Col>
 					</Row>
 					<br/>
-					<Button type="submit" variant="primary" disabled={isSubmitting}>Create Task</Button>
+					<Button
+						type="submit"
+						variant="primary"
+						disabled={isSubmitting}
+						onChange={handleChange}
+						onBlur={handleBlur}
+					>
+						Create Task
+					</Button>
 					<FormDebugger  {...props} />
 				</Form>
 				)}}

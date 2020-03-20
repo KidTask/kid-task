@@ -92,9 +92,13 @@ try {
             throw(new \InvalidArgumentException ("No content for Task.", 405));
         }
 
-        if(empty($requestObject->taskKidId) === true) {
+        if(empty($requestObject->kidUsername) === true) {
             throw(new \InvalidArgumentException ("Select a Kid.", 405));
         }
+        $kid = Kid::getKidByKidUsername($pdo, $requestObject->kidUsername);
+        if(empty($kid) === true) {
+			  throw(new \InvalidArgumentException ("No kid tied to task", 405));
+		  }
 
         if(empty($requestObject->taskAvatarUrl) === true) {
             $requestObject->taskAvatarUrl = null;
@@ -142,22 +146,22 @@ try {
         } else if($method === "POST") {
 
             // enforce the user is signed in
-            if(empty($_SESSION["adult"]) === true) {
-                throw(new \InvalidArgumentException("you must be logged in to post tasks", 403));
+            if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()){
+                throw(new \InvalidArgumentException("You do not have permission to perform this task.", 403));
             }
 
             //enforce the end user has a JWT token
-            validateJwtHeader();
+            //validateJwtHeader();
 
             $taskId = generateUuidV4();
 
             // create new task and insert into the database
-            $task = new Task($taskId, $_SESSION["adult"]->getAdultId(), $requestObject->taskKidId, $requestObject->taskAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, 0, $requestObject->taskReward);
+            $task = new Task($taskId, $_SESSION["adult"]->getAdultId(), $kid->getKidId(), $requestObject->taskAvatarUrl, $requestObject->taskCloudinaryToken, $requestObject->taskContent, $requestObject->taskDueDate, 0, $requestObject->taskReward);
             $task->insert($pdo);
 
 			  // create new steps and insert into the database
 			  $index = 0;
-			  foreach($requestObject->steps as $key => $value) {
+			  foreach($requestObject->taskSteps as $key => $value) {
 				  if(empty($value) === true) {
 					  throw(new \InvalidArgumentException("content is empty"));
 				  }
