@@ -3,6 +3,7 @@ import {httpConfig} from "../../../utils/http-config";
 import * as Yup from "yup";
 import {Formik} from "formik";
 import {KidSignUpFormContent} from "./KidSignUpFormContent";
+import {useHistory} from "react-router";
 
 
 export const KidSignUpForm = () => {
@@ -12,6 +13,8 @@ export const KidSignUpForm = () => {
         kidPassword: "",
         kidPasswordConfirm: "",
     };
+
+    const history = useHistory();
 
     const [status, setStatus] = useState(null);
     const validator = Yup.object().shape({
@@ -30,12 +33,13 @@ export const KidSignUpForm = () => {
     });
 
     const submitSignUp = (values, {resetForm}) => {
-        httpConfig.post("/apis/sign-up/", values)
+        httpConfig.post("/apis/kid-sign-up/", values)
             .then(reply => {
                     let {message, type} = reply;
                     setStatus({message, type});
                     if(reply.status === 200) {
                         resetForm();
+                        setTimeout(() => history.push("/adult-dashboard"), 3000);
                     }
                 }
             );
