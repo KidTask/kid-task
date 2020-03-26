@@ -11,4 +11,4 @@
 /public_html/index.html
 /php/config/secrets/Secrets.php
 /php/config/secrets/kidtask.php
-
+docker-composer.env
