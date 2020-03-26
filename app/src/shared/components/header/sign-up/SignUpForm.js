@@ -39,8 +39,7 @@ export const SignUpForm = () => {
                     let {message, type} = reply;
                     if(reply.status === 200) {
                         resetForm();
-                        history.push("/");
-                        window.setTimeout(window.alert, 1, 'You successfully created an account. Check your email to activate your account.') ;
+                        setTimeout(() => history.push("/"), 3000);
                     }
                     setStatus({message, type})
                 }
