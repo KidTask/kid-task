@@ -22,7 +22,7 @@ COPY --from=vendor /app/vendor/ /var/www/vendor/
 
 RUN mkdir /etc/apache2/capstone-mysql
 COPY config/secrets /etc/apache2/capstone-mysql
-RUN touch /etc/apache2/capstone-mysql/ddctwitter.ini && php /etc/apache2/capstone-mysql/ddctwitter.php
+RUN touch /etc/apache2/capstone-mysql/kidtask.ini && php /etc/apache2/capstone-mysql/kidtask.php
 
 # configure Secrets for protected information
 WORKDIR /var/www
