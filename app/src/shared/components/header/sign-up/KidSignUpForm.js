@@ -6,7 +6,7 @@ import {KidSignUpFormContent} from "./KidSignUpFormContent";
 import {useHistory} from "react-router";
 
 
-export const KidSignUpForm = () => {
+export const KidSignUpForm = ({match}) => {
     const signUp = {
         kidName: "",
         kidUsername: "",
@@ -16,32 +16,32 @@ export const KidSignUpForm = () => {
 
     const history = useHistory();
 
-    const [status, setStatus] = useState(null);
     const validator = Yup.object().shape({
         kidName: Yup.string()
             .required("Name is required")
             .min(3, "Name must be at least three characters long."),
         kidUsername: Yup.string()
             .required("Username is required")
-            .min(4, "Username must be at least four characters"),
+            .min(3, "Username must be at least four characters"),
         kidPassword: Yup.string()
             .required("Password is required")
-            .min(8, "Password must be at least eight characters"),
+            .min(4, "Password is too short"),
         kidPasswordConfirm: Yup.string()
             .required("Password Confirm is required")
-            .min(8, "Password must be at least eight characters"),
+            .min(4, "Password is too short"),
     });
 
-    const submitSignUp = (values, {resetForm}) => {
+    const submitSignUp = (values, {resetForm, setStatus}) => {
+        const request = {...values, adultUsername:match.params.adultUsername};
         httpConfig.post("/apis/kid-sign-up/", values)
             .then(reply => {
                     let {message, type} = reply;
-                    setStatus({message, type});
                     if(reply.status === 200) {
                         resetForm();
                         setTimeout(() => history.push("/adult-dashboard"), 3000);
                     }
-                }
+                   setStatus({message, type})
+               }
             );
     };
 

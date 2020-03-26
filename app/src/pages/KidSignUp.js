@@ -6,7 +6,7 @@ import {KidSignUpForm} from "../../src/shared/components/header/sign-up/KidSignU
 //REACT BOOTSTRAP CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export const KidSignUp = () => {
+export const KidSignUp = ({match}) => {
     return (
         <>
             <Header/>
@@ -18,7 +18,7 @@ export const KidSignUp = () => {
                                 <div className="row my-4">
                                     <div className="card-body">
                                         <h5 className="card-title">Register For An Account</h5>
-                                        <KidSignUpForm/>
+                                        <KidSignUpForm match={match}/>
                                     </div>
                                 </div>
                             </div>

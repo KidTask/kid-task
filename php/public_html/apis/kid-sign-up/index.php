@@ -41,7 +41,7 @@ try {
 		}
 
 		//enforce the end user has a JWT token
-		validateJwtHeader();
+		//validateJwtHeader();
 
 		$requestContent = file_get_contents("php://input");
 

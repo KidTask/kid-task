@@ -6,7 +6,8 @@ import {useHistory} from "react-router";
 
 
 
-export const AddKidCard = () => {
+export const AddKidCard = (props) => {
+	const {adult} = props;
 	const history = useHistory();
 	console.log(history);
 	return (
@@ -15,9 +16,7 @@ export const AddKidCard = () => {
 				<Card.Img variant="top" src="http://placeholder.pics/svg/284x196" />
 				<Card.Body className="text-center">
 					<Card.Title>New Kid</Card.Title>
-					<Button variant="outline-secondary" onClick={()=>
-						history.push("/kid-sign-up")
-					}>+ Add Kid</Button>
+					<Button variant="outline-secondary" onClick={()=> {history.push(`/kid-sign-up/${adult.adultUsername}`)}}>+ Add Kid</Button>
 				</Card.Body>
 			</Card>
 		</>
