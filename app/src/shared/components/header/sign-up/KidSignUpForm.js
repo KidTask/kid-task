@@ -33,7 +33,7 @@ export const KidSignUpForm = ({match}) => {
 
     const submitSignUp = (values, {resetForm, setStatus}) => {
         const request = {...values, adultUsername:match.params.adultUsername};
-        httpConfig.post("/apis/kid-sign-up/", values)
+        httpConfig.post("/apis/kid-sign-up/", request)
             .then(reply => {
                     let {message, type} = reply;
                     if(reply.status === 200) {
