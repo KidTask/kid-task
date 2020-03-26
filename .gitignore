@@ -7,4 +7,7 @@
 /php/vendor
 /app/src/setupProxy.js
 /npm-debug.log
+/public_html/dist
+/public_html/index.html
+/php/config/secrets/Secrets.php
 
