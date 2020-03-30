@@ -31,7 +31,7 @@ const Routing = () => (
 					<Route exact path="/create-task/:kidUsername" component={CreateTask} kidUsername=":kidUsername"/>
 					<Route exact path="/adult-dashboard" component={AdultDashboard}/>
 					<Route exact path="/kid-dashboard" component={Kid}/>
-					<Route exact path="/kid-sign-up/:adultUsername" component={KidSignUp} adultUsername=":adultUsername"/>
+					<Route exact path="/kid-sign-up/" component={KidSignUp} />
 					<Route exact path="/adult-sign-up" component={SignUp}/>
 
 					<Route exact path="/" component={Home}/>

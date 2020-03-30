@@ -85,6 +85,7 @@ export const TaskForm = ({match}) => {
 								</ErrorMessage>
 							</Form.Group>
 							<Form.Label>Steps</Form.Label>
+							<br/>
 							<FieldArray name="taskSteps">
 								{({ push, remove }) =>
 									<React.Fragment>

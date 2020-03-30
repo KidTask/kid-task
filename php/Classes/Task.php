@@ -369,8 +369,8 @@ class Task implements \JsonSerializable {
 			$this->taskIsComplete = 0;
 			return;
 		}
-		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2)) {
-			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-2"));
+		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2 || $newTaskIsComplete === 3)) {
+			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-3"));
 		}
 
 		// store the task is complete
