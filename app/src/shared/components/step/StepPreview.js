@@ -14,7 +14,7 @@ export const StepPreview = (props) => {
 
 					<ListGroup variant="flush">
 
-						<ListGroup.Item>{step.stepContent}</ListGroup.Item>
+						<ListGroup.Item>{step.stepOrder}. {step.stepContent}</ListGroup.Item>
 
 					</ListGroup>
 

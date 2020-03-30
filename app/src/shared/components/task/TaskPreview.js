@@ -42,7 +42,7 @@ export const TaskPreview = (props) => {
 
 						{/*Similar to Adult Dashboard*/}
 
-						{steps.map(step => <StepPreview = {step} key={step.stepId}/>)}
+						{steps.map(step => <StepPreview step={step} key={step.stepId}/>)}
 
 					</Card.Body>
 					<ListGroup variant="flush" className="beginTask">
