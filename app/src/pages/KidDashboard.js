@@ -8,7 +8,7 @@ import {useJwtKidId} from "../shared/utils/JwtHelpers";
 import {getKidByKidAdultId, getKidByKidId} from "../shared/actions/kid-account-actions";
 import {useDispatch, useSelector} from "react-redux";
 
-import {getTaskByTaskKidId} from "../shared/actions/task-actions";
+import {getTaskByTaskKidId, getTasksAndSteps} from "../shared/actions/task-actions";
 
 
 
@@ -20,7 +20,7 @@ export const Kid = () => {
 	const dispatch = useDispatch();
 
 	const sideEffects = () => {
-		dispatch(getTaskByTaskKidId(kidId))
+		dispatch(getTasksAndSteps(kidId))
 	};
 
 	const sideEffectsInput = [kidId];

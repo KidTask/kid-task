@@ -1,4 +1,6 @@
 import { httpConfig } from '../utils/http-config'
+import {getStepByStepTaskId} from "./step-actions";
+import _ from "lodash";
 
 export const getTaskByTaskId = (id) => async (dispatch) => {
 	const {data} = await httpConfig(`/apis/task-api/?taskId=${id}`);
@@ -18,5 +20,15 @@ export const getTaskByTaskKidId = (taskKidId) => async (dispatch) => {
 export const getTaskByTaskContent = (taskContent) => async (dispatch) => {
 	const {data} = await httpConfig(`/apis/task-api/?taskContent=${taskContent}`);
 	dispatch({ type: 'GET_TASK_BY_TASK_TASK_CONTENT', payload: data })
+};
+
+export const getTasksAndSteps = (taskKidId) => async (dispatch, getState) => {
+
+	await dispatch(getTaskByTaskKidId(taskKidId));
+	//commented out lines below are equivalent to the _ chain method
+
+	const taskIds = _.uniq(_.map(getState().tasks, "taskId"));
+
+	taskIds.forEach(id => dispatch(getStepByStepTaskId(id)));
 };
 

@@ -4,11 +4,20 @@ import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import {StepPreview} from "../step/StepPreview";
+import {TaskProgressBar} from "./TaskProgressBar";
+import {useSelector} from "react-redux";
+import {KidCard} from "../kidCard/kid-card";
 
 
 export const TaskPreview = (props) => {
 	const {task} = props;
-	console.log(task);
+	const steps = useSelector(state =>
+	{
+		return state.steps ? state.steps.filter(step =>{
+		return step.stepTaskId === task.taskId}): [] }
+	);
+
+ console.log(steps);
 
 
 	return (
@@ -17,7 +26,9 @@ export const TaskPreview = (props) => {
 				<Card border="info">
 					<Card.Header>
 						<h3 className="title">Due soon</h3>
-						<ProgressBar animated now={33} variant="info" label={`Working on it!`}/>
+						<TaskProgressBar
+							taskIsComplete = {0}
+						/>
 					</Card.Header>
 
 
@@ -28,7 +39,11 @@ export const TaskPreview = (props) => {
 					</Card.Body>
 					<Card.Body>
 						<h3 className="title">Steps</h3>
-						<StepPreview/>
+
+						{/*Similar to Adult Dashboard*/}
+
+						{steps.map(step => <StepPreview = {step} key={step.stepId}/>)}
+
 					</Card.Body>
 					<ListGroup variant="flush" className="beginTask">
 						<ListGroup.Item><Button variant="outline-info">Begin task</Button></ListGroup.Item>

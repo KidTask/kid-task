@@ -27,7 +27,8 @@
     "react-scripts": "^3.1.1",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "lodash": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
