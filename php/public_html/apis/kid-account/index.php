@@ -44,7 +44,7 @@ try {
 
 
     // make sure the id is valid for methods that require it
-        if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {
+		if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {
             throw(new InvalidArgumentException("Kid Id cannot be empty or negative", 405));
         }
 
@@ -73,7 +73,7 @@ try {
             $reply->data = Kid::getKidByKidAdultId($pdo, $_SESSION["adult"]->getAdultId()->toString())->toArray();
         }
 
-    } elseif($method === "PUT") {
+    	 elseif($method === "PUT") {
 
         //enforce that the XSRF token is present in the header
         verifyXsrf();
