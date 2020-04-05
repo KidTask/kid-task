@@ -63,7 +63,13 @@ try {
 					throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 				}
             $reply->data = $kid;
-        } else {
+        } elseif (empty($kidUsername)===false){
+        		$kid = Kid::getKidByKidUsername($pdo, $kidUsername);
+			  if($_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()){
+				  throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+			  }
+			  $reply->data = $kid;
+		  } else
             $reply->data = Kid::getKidByKidAdultId($pdo, $_SESSION["adult"]->getAdultId()->toString())->toArray();
         }
 

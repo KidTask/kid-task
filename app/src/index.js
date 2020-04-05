@@ -9,6 +9,7 @@ import {SignUp} from "./pages/SignUp";
 import {Kid} from "./pages/KidDashboard";
 import {AdultDashboard} from "./pages/AdultDashboard";
 import {CreateTask} from "./pages/CreateTask";
+import {AdultViewTasks} from "./pages/AdultViewTasks";
 import {Home} from "./pages/Home";
 import axios from "axios";
 import {applyMiddleware, createStore} from "redux";
@@ -33,7 +34,7 @@ const Routing = () => (
 					<Route exact path="/kid-dashboard" component={Kid}/>
 					<Route exact path="/kid-sign-up/" component={KidSignUp} />
 					<Route exact path="/adult-sign-up" component={SignUp}/>
-
+					<Route exact path="/assigned-tasks/:kidUsername" component={AdultViewTasks} kidUsername=":kidUsername"/>
 					<Route exact path="/" component={Home}/>
 
 					<Route component={FourOhFour}/>

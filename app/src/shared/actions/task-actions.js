@@ -1,6 +1,7 @@
 import { httpConfig } from '../utils/http-config'
 import {getStepByStepTaskId} from "./step-actions";
 import _ from "lodash";
+import {getKidByKidUsername} from "./kid-account-actions";
 
 export const getTaskByTaskId = (id) => async (dispatch) => {
 	const {data} = await httpConfig(`/apis/task-api/?taskId=${id}`);
@@ -32,3 +33,12 @@ export const getTasksAndSteps = (taskKidId) => async (dispatch, getState) => {
 	taskIds.forEach(id => dispatch(getStepByStepTaskId(id)));
 };
 
+export const getTaskAndStepsByKidUsername = (kidUsername) => async (dispatch, getState) => {
+	await dispatch(getKidByKidUsername(kidUsername));
+
+	const kid = getState().kids.find(kid => kid.kidUsername===kidUsername);
+
+	if (kid !== undefined) {
+		await dispatch(getTasksAndSteps(kid.kidId));
+	}
+};

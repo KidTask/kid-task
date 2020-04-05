@@ -19,7 +19,8 @@ const history = useHistory();
 				<Card.Img variant="top" src="http://www.fillmurray.com/284/196" />
 				<Card.Body className="text-center">
 					<Card.Title>{kid.kidName}</Card.Title>
-					<Button variant="outline-primary" onClick={() => {history.push(`/create-task/${kid.kidUsername}`)}}>+ Add Task</Button>
+					<Button className="mb-3" variant="outline-primary" onClick={() => {history.push(`/create-task/${kid.kidUsername}`)}}>+ Add Task</Button>
+					<Button variant="outline-primary" onClick={() => {history.push(`/assigned-tasks/${kid.kidUsername}`)}}>View Tasks</Button>
 				</Card.Body>
 			</Card>
 		</>

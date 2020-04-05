@@ -4,8 +4,8 @@ export default (state = [], action) => {
             return [...state, action.payload];
         case "GET_KID_BY_KID_ADULT_ID":
             return action.payload;
-        case "GET_KID_USERNAME":
-            return action.payload;
+        case "GET_KID_BY_KID_USERNAME":
+            return [...state, action.payload];
         case "GET_KID_AVATAR_URL":
             return action.payload;
         case "GET_KID_NAME":
