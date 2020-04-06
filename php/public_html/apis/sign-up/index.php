@@ -50,7 +50,6 @@ try {
 
 		$adult = Adult::getAdultByAdultUsername($pdo, $requestObject->adultUsername);
 		$kid = Kid::getKidByKidUsername($pdo, $requestObject->adultUsername);
-		var_dump($kid);
 		if($kid !== null || $adult !== null) {
 			throw(new \InvalidArgumentException("Username is taken", 405));
 		}

@@ -544,7 +544,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskKidId = :taskKidId";
+		$query = "SELECT taskId, taskAdultId, taskKidId, taskAvatarUrl, taskCloudinaryToken, taskContent, taskDueDate, taskIsComplete, taskReward FROM task WHERE taskKidId = :taskKidId && taskIsComplete < 3";
 		$statement = $pdo->prepare($query);
 
 		// bind the task kid id to the place holder in the template
