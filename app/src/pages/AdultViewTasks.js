@@ -2,18 +2,15 @@ import React, {useEffect} from "react"
 import {Header} from "../shared/components/header/Header";
 import {Footer} from "../shared/components/footer/Footer";
 import {useDispatch, useSelector} from "react-redux";
-import {AdultTaskPreview} from "../shared/components/task/AdultTaskPreview";
+import {AdultPreviewTasks} from "../shared/components/task/AdultPreviewTasks";
 import "../styles/adult-dashboard.css";
 
 //REACT BOOTSTRAP CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 //Actions
-import {getAdultUsername} from "../shared/actions/adult-account-action";
 import {useJwtAdultId} from "../shared/utils/JwtHelpers";
-import {getKidByKidAdultId} from "../shared/actions/kid-account-actions";
 import {getTaskAndStepsByKidUsername, getTasksAndSteps} from "../shared/actions/task-actions";
-import {TaskPreview} from "../shared/components/task/TaskPreview";
 
 
 export const AdultViewTasks = ({match}) => {
@@ -48,7 +45,7 @@ export const AdultViewTasks = ({match}) => {
 
 					<div className="row mb-6 pb-5" >
 
-						{tasks.map(task => <AdultTaskPreview task={task} key={task.taskId}/>)}
+						{tasks.map(task => <AdultPreviewTasks task={task} key={task.taskId}/>)}
 
 
 					</div>

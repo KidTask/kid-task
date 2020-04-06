@@ -7,12 +7,13 @@ import {StepPreview} from "../step/StepPreview";
 import {TaskProgressBar} from "./TaskProgressBar";
 import {useSelector} from "react-redux";
 
-export const AdultTaskPreview = (props) => {
+export const AdultPreviewTasks = (props) => {
 	const {task} = props;
-	const steps = useSelector(state =>
-	{
-		return state.steps ? state.steps.filter(step =>{
-		return step.stepTaskId === task.taskId}): [] }
+	const steps = useSelector(state => {
+			return state.steps ? state.steps.filter(step => {
+				return step.stepTaskId === task.taskId
+			}) : []
+		}
 	);
 
 	return (
@@ -22,13 +23,13 @@ export const AdultTaskPreview = (props) => {
 					<Card.Header>
 						<h3 className="title">Due soon</h3>
 						<TaskProgressBar
-							taskIsComplete = {0}
+							taskIsComplete={0}
 						/>
 					</Card.Header>
 
 
 					<Card.Img variant="top" src="https://images.unsplash.com/photo-1524420533980-5fe0aecc5fe6"/>
-					<Card.Body >
+					<Card.Body>
 						<h3 className="title">Task</h3>
 						<Card.Title className="kidCardTitle">{task.taskContent}</Card.Title>
 					</Card.Body>
@@ -50,3 +51,4 @@ export const AdultTaskPreview = (props) => {
 			<br/>
 		</>
 	)
+};
