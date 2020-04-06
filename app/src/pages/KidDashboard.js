@@ -4,7 +4,7 @@ import {Footer} from "../shared/components/footer/Footer";
 import {Col} from "react-bootstrap";
 import {Image} from "react-bootstrap";
 import {TaskPreview} from "../shared/components/task/TaskPreview";
-import {useJwtKidId} from "../shared/utils/JwtHelpers";
+import {useJwtKidUsername, useJwtKidId} from "../shared/utils/JwtHelpers";
 import {getKidByKidAdultId, getKidByKidId} from "../shared/actions/kid-account-actions";
 import {useDispatch, useSelector} from "react-redux";
 
@@ -15,7 +15,8 @@ import {getTaskByTaskKidId} from "../shared/actions/task-actions";
 export const Kid = () => {
 
 	const kidId  = useJwtKidId();
-	console.log(kidId);
+	const kidUsername  = useJwtKidUsername();
+
 
 	const dispatch = useDispatch();
 
@@ -39,7 +40,7 @@ export const Kid = () => {
 			<div className="container">
 				<div className="row">
 					<div className="mx-auto my-5">
-						<h5><span>Kid</span>'s Dashboard</h5>
+						<h5><span>{kidUsername}</span>'s Dashboard</h5>
 					</div>
 				</div>
 

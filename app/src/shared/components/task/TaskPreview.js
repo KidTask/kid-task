@@ -45,12 +45,12 @@ export const TaskPreview = (props) => {
 						{steps.map(step => <StepPreview step={step} key={step.stepId}/>)}
 
 					</Card.Body>
-					<ListGroup variant="flush" className="beginTask">
-						<ListGroup.Item><Button variant="outline-info">Begin task</Button></ListGroup.Item>
-					</ListGroup>
-					<ListGroup variant="flush" className="taskOpen">
+					{task.taskIsComplete === 0 && <ListGroup variant="flush" className="beginTask">
+						<ListGroup.Item><Button variant="outline-info" onClick=>Begin task</Button></ListGroup.Item>
+						</ListGroup>}
+					{task.taskIsComplete !== 0 && <ListGroup variant="flush" className="taskOpen">
 						<ListGroup.Item><Button variant="outline-info">I'm done with my task!</Button></ListGroup.Item>
-					</ListGroup>
+					</ListGroup>}
 
 				</Card>
 			</div>

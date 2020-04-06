@@ -45,3 +45,17 @@ export const useJwtKidId = () => {
 
 	return kidId;
 };
+
+export const useJwtKidUsername = () => {
+	const [kidUsername, setKidUsername] = useState(null);
+
+	useEffect(() => {
+		const token = window.localStorage.getItem("jwt-token");
+		if(token !== null) {
+			const decodedJwt = jwtDecode(token);
+			setKidUsername(decodedJwt.auth.kidUsername);
+		}
+	}, [kidUsername]);
+
+	return kidUsername;
+};
