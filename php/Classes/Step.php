@@ -281,7 +281,7 @@ class Step implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT stepId, stepTaskId, stepContent, stepOrder FROM step WHERE stepTaskId = :stepTaskId ORDER BY stepOrder ASC";
+		$query = "SELECT stepId, stepTaskId, stepContent, stepOrder FROM step WHERE stepTaskId = :stepTaskId ORDER BY stepOrder";
 		$statement = $pdo->prepare($query);
 
 		// bind the task adult id to the place holder in the template
