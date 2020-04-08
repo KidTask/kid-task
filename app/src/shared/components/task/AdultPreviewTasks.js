@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -7,6 +7,7 @@ import {StepPreview} from "../step/StepPreview";
 import {TaskProgressBar} from "./TaskProgressBar";
 import {useSelector} from "react-redux";
 import {httpConfig} from "../../utils/http-config";
+//import {useTaskIsComplete} from "../../utils/useTaskIsComplete";
 
 export const AdultPreviewTasks = (props) => {
 	const {task} = props;
@@ -17,17 +18,6 @@ export const AdultPreviewTasks = (props) => {
 		}
 	);
 
-	function submitTaskIsComplete() {
-		httpConfig.put("/apis/task-api/", )
-			.then(reply => {
-					let {message, type} = reply;
-					if(reply.status === 200) {
-						task.taskIsComplete = 3;
-					}
-					//setStatus({message, type})
-				}
-			);
-	};
 
 	return (
 		<>
@@ -47,7 +37,7 @@ export const AdultPreviewTasks = (props) => {
 						{steps.map(step => <StepPreview step={step} key={step.stepId}/>)}
 					</Card.Body>
 					<ListGroup variant="flush">
-						<ListGroup.Item><Button onClick={submitTaskIsComplete} variant="outline-info">Task Is Complete</Button></ListGroup.Item>
+						<ListGroup.Item><Button  variant="outline-info">Task Is Complete</Button></ListGroup.Item>
 					</ListGroup>
 				</Card>
 			</div>

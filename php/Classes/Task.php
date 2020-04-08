@@ -687,7 +687,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 		if(empty($taskIsComplete) === true) {
 			$taskIsComplete = 0;
 		}
-		if(!($taskIsComplete === 0 || $taskIsComplete === 1 || $taskIsComplete === 2)) {
+		if(!($taskIsComplete === 0 || $taskIsComplete === 1 || $taskIsComplete === 2 || $taskIsComplete ===3)) {
 			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-2"));
 		}
 
