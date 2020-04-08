@@ -17,13 +17,14 @@ export const AdultPreviewTasks = (props) => {
 		}
 	);
 
-	const submitTaskIsComplete = (values, {setStatus}) => {
-		httpConfig.put("/apis/task-api/", values)
+	function submitTaskIsComplete() {
+		httpConfig.put("/apis/task-api/", )
 			.then(reply => {
 					let {message, type} = reply;
 					if(reply.status === 200) {
+						task.taskIsComplete = 3;
 					}
-					setStatus({message, type})
+					//setStatus({message, type})
 				}
 			);
 	};
@@ -46,7 +47,7 @@ export const AdultPreviewTasks = (props) => {
 						{steps.map(step => <StepPreview step={step} key={step.stepId}/>)}
 					</Card.Body>
 					<ListGroup variant="flush">
-						<ListGroup.Item><Button onClick="submitTaskIsComplete()" variant="outline-info">Task Is Complete</Button></ListGroup.Item>
+						<ListGroup.Item><Button onClick={submitTaskIsComplete} variant="outline-info">Task Is Complete</Button></ListGroup.Item>
 					</ListGroup>
 				</Card>
 			</div>

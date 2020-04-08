@@ -44,7 +44,8 @@ try {
     $taskKidId = filter_input(INPUT_GET, "taskKidId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
     $taskContent = filter_input(INPUT_GET, "taskContent", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    //make sure the id is valid for methods that require it
+
+	//make sure the id is valid for methods that require it
     if(($method === "DELETE" || $method === "PUT") && (empty($id) === true )) {
         throw(new InvalidArgumentException("id cannot be empty or negative", 402));
     }
@@ -74,11 +75,6 @@ try {
     } else if($method === "PUT" || $method === "POST") {
         //enforce that the XSRF token is present in the header
         verifyXsrf();
-
-        //enforce the user is signed in and only trying to edit their own profile
-       /* if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()) {
-            throw(new \InvalidArgumentException("You are not allowed to access this profile son", 403));
-        }*/
 
         $requestContent = file_get_contents("php://input");
 
@@ -133,11 +129,13 @@ try {
                 throw(new \InvalidArgumentException("You are not allowed to edit this task", 403));
             }
 
+            //(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $task->getTaskKidId()->toString())
+
             validateJwtHeader();
 
             // update all attributes
             //$task->setTaskDate($requestObject->taskDate);
-            $task->setTaskContent($requestObject->taskContent);
+            $task->setTaskIsComplete($requestObject->taskIsComplete);
             $task->update($pdo);
 
             // update reply
