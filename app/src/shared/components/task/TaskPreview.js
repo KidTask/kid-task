@@ -46,7 +46,7 @@ export const TaskPreview = (props) => {
 
 					</Card.Body>
 					{task.taskIsComplete === 0 && <ListGroup variant="flush" className="beginTask">
-						<ListGroup.Item><Button variant="outline-info" onClick=>Begin task</Button></ListGroup.Item>
+						<ListGroup.Item><Button variant="outline-info" onClick={}>Begin task</Button></ListGroup.Item>
 						</ListGroup>}
 					{task.taskIsComplete !== 0 && <ListGroup variant="flush" className="taskOpen">
 						<ListGroup.Item><Button variant="outline-info">I'm done with my task!</Button></ListGroup.Item>
