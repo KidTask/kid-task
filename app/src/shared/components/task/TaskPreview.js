@@ -7,6 +7,7 @@ import {StepPreview} from "../step/StepPreview";
 import {TaskProgressBar} from "./TaskProgressBar";
 import {useSelector} from "react-redux";
 import {KidCard} from "../kidCard/kid-card";
+import {useTaskIsComplete} from "../../utils/useTaskIsComplete";
 
 
 export const TaskPreview = (props) => {
@@ -17,7 +18,7 @@ export const TaskPreview = (props) => {
 		return step.stepTaskId === task.taskId}): [] }
 	);
 
- console.log(steps);
+const {status, temp} = useTaskIsComplete();
 
 
 	return (
@@ -26,9 +27,9 @@ export const TaskPreview = (props) => {
 				<Card border="info">
 					<Card.Header>
 						<h3 className="title">Due soon</h3>
-						<TaskProgressBar
-							taskIsComplete = {0}
-						/>
+						{task.taskIsComplete && <TaskProgressBar
+							taskIsComplete = {2}
+						/>}
 					</Card.Header>
 
 
@@ -46,10 +47,11 @@ export const TaskPreview = (props) => {
 
 					</Card.Body>
 					{task.taskIsComplete === 0 && <ListGroup variant="flush" className="beginTask">
-						<ListGroup.Item><Button variant="outline-info" >Begin task</Button></ListGroup.Item>
+
+						<ListGroup.Item><Button variant="outline-info" onClick={() => temp(task, 1)}>Begin task</Button></ListGroup.Item>
 						</ListGroup>}
 					{task.taskIsComplete !== 0 && <ListGroup variant="flush" className="taskOpen">
-						<ListGroup.Item><Button variant="outline-info">I'm done with my task!</Button></ListGroup.Item>
+						<ListGroup.Item><Button variant="outline-info" onClick={() => temp(task, 2)}>I'm done with my task!</Button></ListGroup.Item>
 					</ListGroup>}
 
 				</Card>

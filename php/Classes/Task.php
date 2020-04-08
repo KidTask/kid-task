@@ -369,7 +369,7 @@ class Task implements \JsonSerializable {
 			$this->taskIsComplete = 0;
 			return;
 		}
-		if(!($newTaskIsComplete === 0 || $newTaskIsComplete === 1 || $newTaskIsComplete === 2 || $newTaskIsComplete === 3)) {
+		if($newTaskIsComplete < 0 || $newTaskIsComplete > 3) {
 			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-3"));
 		}
 
@@ -683,12 +683,13 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		// verify task is complete is 0, 1, 2
+		// verify task is complete is 0, 1, 2, 3
 		if(empty($taskIsComplete) === true) {
 			$taskIsComplete = 0;
 		}
-		if(!($taskIsComplete === 0 || $taskIsComplete === 1 || $taskIsComplete === 2 || $taskIsComplete ===3)) {
-			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-2"));
+
+		if(!($taskIsComplete === 0 || $taskIsComplete === 1 || $taskIsComplete === 2 || $taskIsComplete === 3)) {
+			throw(new \InvalidArgumentException("task is complete should be a whole number between 0-3"));
 		}
 
 

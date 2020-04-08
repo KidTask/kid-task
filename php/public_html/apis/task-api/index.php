@@ -88,13 +88,6 @@ try {
             throw(new \InvalidArgumentException ("No content for Task.", 405));
         }
 
-        if(empty($requestObject->kidUsername) === true) {
-            throw(new \InvalidArgumentException ("Select a Kid.", 405));
-        }
-        $kid = Kid::getKidByKidUsername($pdo, $requestObject->kidUsername);
-        if(empty($kid) === true) {
-			  throw(new \InvalidArgumentException ("No kid tied to task", 405));
-		  }
 
         if(empty($requestObject->taskAvatarUrl) === true) {
             $requestObject->taskAvatarUrl = null;
@@ -133,6 +126,7 @@ try {
 
             validateJwtHeader();
 
+
             // update all attributes
             //$task->setTaskDate($requestObject->taskDate);
             $task->setTaskIsComplete($requestObject->taskIsComplete);
@@ -142,6 +136,15 @@ try {
             $reply->message = "Task updated OK";
 
         } else if($method === "POST") {
+
+			  if(empty($requestObject->kidUsername) === true) {
+				  throw(new \InvalidArgumentException ("Select a Kid.", 405));
+			  }
+			  $kid = Kid::getKidByKidUsername($pdo, $requestObject->kidUsername);
+			  if(empty($kid) === true) {
+				  throw(new \InvalidArgumentException ("No kid tied to task", 405));
+			  }
+
 
             // enforce the user is signed in
             if(empty($_SESSION["adult"]) === true || $_SESSION["adult"]->getAdultId()->toString() !== $kid->getKidAdultId()->toString()){
