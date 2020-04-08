@@ -119,7 +119,6 @@ export const KidSignUpFormContent = (props) => {
                             </div>
                         </div>
                         <input
-
                             className="form-control"
                             type="password"
                             id="kidPasswordConfirm"

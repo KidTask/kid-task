@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 //Actions
 import {useJwtAdultId} from "../shared/utils/JwtHelpers";
-import {getTaskAndStepsByKidUsername, getTasksAndSteps} from "../shared/actions/task-actions";
+import {getTaskAndStepsByKidUsername} from "../shared/actions/task-actions";
 
 
 export const AdultViewTasks = ({match}) => {
@@ -39,18 +39,12 @@ export const AdultViewTasks = ({match}) => {
 				<div className="container">
 					<div className="row">
 						<div className="mx-auto my-5">
-							<h5><span>Kid</span>'s Dashboard</h5>
+							<h5><span>{match.params.kidUsername.toUpperCase()}</span>'s TASKS</h5>
 						</div>
 					</div>
-
 					<div className="row mb-6 pb-5" >
-
 						{tasks.map(task => <AdultPreviewTasks task={task} key={task.taskId}/>)}
-
-
 					</div>
-
-
 					<div className="row">
 						<Footer/>
 					</div>
