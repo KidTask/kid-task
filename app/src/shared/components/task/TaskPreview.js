@@ -27,9 +27,9 @@ const {status, temp} = useTaskIsComplete();
 				<Card border="info">
 					<Card.Header>
 						<h3 className="title">Due soon</h3>
-						<TaskProgressBar
-							taskIsComplete = {0}
-						/>
+						{task.taskIsComplete && <TaskProgressBar
+							taskIsComplete = {2}
+						/>}
 					</Card.Header>
 
 
@@ -50,7 +50,7 @@ const {status, temp} = useTaskIsComplete();
 						<ListGroup.Item><Button variant="outline-info" onClick={() => temp(task, 1)}>Begin task</Button></ListGroup.Item>
 						</ListGroup>}
 					{task.taskIsComplete !== 0 && <ListGroup variant="flush" className="taskOpen">
-						<ListGroup.Item><Button variant="outline-info">I'm done with my task!</Button></ListGroup.Item>
+						<ListGroup.Item><Button variant="outline-info" onClick={() => temp(task, 2)}>I'm done with my task!</Button></ListGroup.Item>
 					</ListGroup>}
 
 				</Card>
