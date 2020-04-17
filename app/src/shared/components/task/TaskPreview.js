@@ -27,9 +27,7 @@ const {status, temp} = useTaskIsComplete();
 				<Card border="info">
 					<Card.Header>
 						<h3 className="title">Due soon</h3>
-						{task.taskIsComplete && <TaskProgressBar
-							taskIsComplete = {2}
-						/>}
+						 <TaskProgressBar taskIsComplete = {task.taskIsComplete}/>
 					</Card.Header>
 
 
@@ -40,8 +38,6 @@ const {status, temp} = useTaskIsComplete();
 					</Card.Body>
 					<Card.Body>
 						<h3 className="title">Steps</h3>
-
-						{/*Similar to Adult Dashboard*/}
 
 						{steps.map(step => <StepPreview step={step} key={step.stepId}/>)}
 

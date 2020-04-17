@@ -7,5 +7,6 @@ export const getStepByStepId = (id) => async (dispatch) => {
 
 export const getStepByStepTaskId = (stepTaskId) => async (dispatch) => {
 	const {data} = await httpConfig(`/apis/step/?stepTaskId=${stepTaskId}`);
+	console.log(data);
 	dispatch({ type: 'GET_STEP_BY_STEP_TASK_ID', payload: data })
 };

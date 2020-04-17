@@ -5,10 +5,9 @@ import React from "react";
 // <ProgressBar animated now={33} variant="info" label={`Working on it!`}/>
 
 export function TaskProgressBar(props) {
-	console.log(props.taskIsComplete);
 	const {taskIsComplete} = props;
 	if (taskIsComplete === 0) {
-		return <ProgressBar animated now={33} variant="info" label={`Let's get started!`}/>
+		return <ProgressBar animated now={33} variant="info" label={`Get started!`}/>
 	} else if (taskIsComplete === 1) {
 		return <ProgressBar animated now={67} variant="info" label={`Working on it!`}/>
 	} else if (taskIsComplete === 2) {

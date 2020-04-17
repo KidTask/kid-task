@@ -744,6 +744,7 @@ VALUES( :taskId, :taskAdultId, :taskKidId, :taskAvatarUrl, :taskCloudinaryToken,
 
 		//format the date so that the front end can consume it
 		$fields["taskDueDate"] = round(floatval($this->taskDueDate->format("U.u")) * 1000);
+		$fields["taskIsComplete"] = intval($this->taskIsComplete);
 		return($fields);
 	}
 

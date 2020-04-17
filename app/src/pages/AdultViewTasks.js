@@ -15,8 +15,6 @@ import {getTaskAndStepsByKidUsername} from "../shared/actions/task-actions";
 
 export const AdultViewTasks = ({match}) => {
 
-	const adultId  = useJwtAdultId();
-
 	const dispatch = useDispatch();
 
 	const sideEffects = () => {
@@ -24,7 +22,7 @@ export const AdultViewTasks = ({match}) => {
 	};
 
 
-	const sideEffectsInput = [adultId];
+	const sideEffectsInput = [match.params.kidUsername];
 
 	useEffect(sideEffects, sideEffectsInput);
 
@@ -39,7 +37,7 @@ export const AdultViewTasks = ({match}) => {
 				<div className="container">
 					<div className="row">
 						<div className="mx-auto my-5">
-							<h5><span>{match.params.kidUsername.toUpperCase()}</span>'s TASKS</h5>
+							<h5><span>{match.params.kidUsername.toUpperCase()}</span>'S TASKS</h5>
 						</div>
 					</div>
 					<div className="row mb-6 pb-5" >
