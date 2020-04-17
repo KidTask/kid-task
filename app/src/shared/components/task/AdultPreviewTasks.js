@@ -18,7 +18,6 @@ export const AdultPreviewTasks = (props) => {
 		}
 	);
 
-
 	return (
 		<>
 			<div className="col-md-5 col-lg-4 mx-auto mb-5">
@@ -26,7 +25,7 @@ export const AdultPreviewTasks = (props) => {
 					<Card.Header>
 						<h3 className="title">Task</h3>
 						<Card.Title className="kidCardTitle">{task.taskContent}</Card.Title>
-						<h3 className="title">Due {task.taskDueDate.getDay}</h3>
+						{/*<h3 className="title">Due {task.taskDueDate.getDay}</h3>*/}
 						<TaskProgressBar
 							taskIsComplete={task.taskIsComplete}
 						/>
