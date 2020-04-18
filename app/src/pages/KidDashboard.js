@@ -11,20 +11,18 @@ import {useDispatch, useSelector} from "react-redux";
 import {getTaskAndStepsByKidUsername, getTaskByTaskKidId} from "../shared/actions/task-actions";
 
 
-
 export const Kid = () => {
 
+	const kidId = useJwtKidId();
 	const kidUsername  = useJwtKidUsername();
-
 	const dispatch = useDispatch();
+
 
 	const sideEffects = () => {
 		dispatch(getTaskAndStepsByKidUsername(kidUsername))
 	};
 
-	const sideEffectsInput = [kidUsername];
-
-	useEffect(sideEffects, sideEffectsInput);
+	useEffect(sideEffects, [kidUsername]);
 
 	const tasks = useSelector(state => {
 		return state.tasks ? state.tasks : []
@@ -38,7 +36,7 @@ export const Kid = () => {
 			<div className="container">
 				<div className="row">
 					<div className="mx-auto my-5">
-						<h5><span>{kidUsername}</span>'s Dashboard</h5>
+						{/*<h5><span>{kidUsername.toUpperCase()}</span>'S DASHBOARD</h5>*/}
 					</div>
 				</div>
 

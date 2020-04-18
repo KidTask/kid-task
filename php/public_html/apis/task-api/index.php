@@ -124,7 +124,7 @@ try {
 
             //(empty($_SESSION["kid"]) === true || $_SESSION["kid"]->getKidId()->toString() !== $task->getTaskKidId()->toString())
 
-            validateJwtHeader();
+            //validateJwtHeader();
 
 
             // update all attributes
@@ -192,7 +192,7 @@ try {
         }
 
         //enforce the end user has a JWT token
-        validateJwtHeader();
+        //validateJwtHeader();
 
         // delete task
         $task->delete($pdo);

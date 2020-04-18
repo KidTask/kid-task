@@ -34,8 +34,18 @@ export const getTasksAndSteps = (taskKidId) => async (dispatch, getState) => {
 
 export const getTaskAndStepsByKidUsername = (kidUsername) => async (dispatch, getState) => {
 	const {data} = await httpConfig(`/apis/kid-account/?kidUsername=${kidUsername}`);
-	console.log(data);
-	if (data !== undefined) {
+	if (data !== null) {
 		await dispatch(getTasksAndSteps(data.kidId));
 	}
+};
+
+export const updateTaskIsComplete = (task) => (dispatch, getState) => {
+	const tasks = getState().tasks;
+	const newTasks = tasks.map(currentTask => {
+		if(currentTask.taskId === task.taskId) {
+			return task;
+		}
+		return currentTask;
+	});
+	dispatch({type: "UPDATE_TASK_IS_COMPLETE", payload: newTasks})
 };

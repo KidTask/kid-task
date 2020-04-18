@@ -28,7 +28,6 @@ export const TaskForm = ({match}) => {
 	const history = useHistory();
 	return (
 		<>
-			{console.log(match.params)}
 			<Formik
 				initialValues={initialValues}
 				validationSchema={Yup.object({
@@ -144,7 +143,6 @@ export const TaskForm = ({match}) => {
 								Create Task
 							</Button>
 							{status  && (<div className={status.type}>{status.message}</div>)}
-							<FormDebugger  {...props} />
 						</Form>
 					)}}
 
