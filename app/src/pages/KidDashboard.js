@@ -13,7 +13,7 @@ import {getTaskAndStepsByKidUsername, getTaskByTaskKidId} from "../shared/action
 
 export const Kid = () => {
 
-	const kidId = useJwtKidId();
+	// const kidId = useJwtKidId();
 	const kidUsername  = useJwtKidUsername();
 	const dispatch = useDispatch();
 

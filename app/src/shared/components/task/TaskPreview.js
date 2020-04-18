@@ -10,10 +10,10 @@ import {KidCard} from "../kidCard/kid-card";
 import {useTaskIsComplete} from "../../utils/useTaskIsComplete";
 import {Formik} from "formik";
 import {httpConfig} from "../../utils/http-config";
-import {updateTaskIsComplete} from "../../actions/task-actions";
+import {UpdateTaskIsComplete} from "./UpdateTaskIsComplete";
 
 
-export const TaskPreview = (props) => {
+export const TaskPreview = () => {
 	const {task} = props;
 	const steps = useSelector(state => {
 			return state.steps ? state.steps.filter(step => {
@@ -38,12 +38,18 @@ export const TaskPreview = (props) => {
 					</Card.Body>
 					{task.taskIsComplete === 0 && <ListGroup variant="flush" className="beginTask">
 						<ListGroup.Item>
-
+							<UpdateTaskIsComplete
+								newTaskIsComplete="1"
+								buttonText="Begin Task"
+							/>
 						</ListGroup.Item>
 					</ListGroup>}
-					{task.taskIsComplete !== 0 && <ListGroup variant="flush" className="taskOpen">
+					{task.taskIsComplete > 0 && task.taskIsComplete < 2 && <ListGroup variant="flush" className="taskOpen">
 						<ListGroup.Item>
-							<Button variant="outline-info">I'm done with my task!</Button>
+							<UpdateTaskIsComplete
+								newTaskIsComplete="2"
+								buttonText="I'm Done!"
+							/>
 						</ListGroup.Item>
 					</ListGroup>}
 				</Card>

@@ -7,15 +7,16 @@ import {useDispatch} from "react-redux";
 
 
 
-export const UpdateTaskIsComplete = () => {
+export const UpdateTaskIsComplete = (props) => {
 
 	const dispatch = useDispatch();
 	return (
+		<>
 		<Formik
 			const initialValues={{taskIsComplete: ""}}
 			//value is not set and will return initial value unchanged
 			onSubmit={(value, {setStatus}) => {
-				const newTask = {...task, taskIsComplete: 1};
+				const newTask = {...task, taskIsComplete: `${props.newTaskIsComplete}`};
 				httpConfig.put(`/apis/task-api/${task.taskId}`, newTask)
 					.then(reply => {
 						if(reply.status === 200) {
@@ -35,7 +36,7 @@ export const UpdateTaskIsComplete = () => {
 				return (
 					<>
 						<form onSubmit={handleSubmit}>
-							<Button type="submit" variant="outline-info">Begin task</Button>
+							<Button type="submit" variant="outline-info">{props.buttonText}</Button>
 						</form>
 						<br/>
 						{
@@ -45,5 +46,6 @@ export const UpdateTaskIsComplete = () => {
 				)
 			}}
 		</Formik>
+		</>
 	);
 };
