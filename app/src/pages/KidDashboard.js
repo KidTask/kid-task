@@ -8,23 +8,21 @@ import {useJwtKidUsername, useJwtKidId} from "../shared/utils/JwtHelpers";
 import {getKidByKidAdultId, getKidByKidId} from "../shared/actions/kid-account-actions";
 import {useDispatch, useSelector} from "react-redux";
 
-import {getTaskByTaskKidId} from "../shared/actions/task-actions";
+import {getTaskAndStepsByKidUsername, getTaskByTaskKidId} from "../shared/actions/task-actions";
 
 
 
 export const Kid = () => {
 
-	const kidId  = useJwtKidId();
 	const kidUsername  = useJwtKidUsername();
-
 
 	const dispatch = useDispatch();
 
 	const sideEffects = () => {
-		dispatch(getTaskByTaskKidId(kidId))
+		dispatch(getTaskAndStepsByKidUsername(kidUsername))
 	};
 
-	const sideEffectsInput = [kidId];
+	const sideEffectsInput = [kidUsername];
 
 	useEffect(sideEffects, sideEffectsInput);
 
@@ -53,7 +51,6 @@ export const Kid = () => {
 
 
 				<div className="row">
-					<Footer/>
 				</div>
 			</div>
 			</>

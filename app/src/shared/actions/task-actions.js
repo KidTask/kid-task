@@ -29,13 +29,12 @@ export const getTasksAndSteps = (taskKidId) => async (dispatch, getState) => {
 	//commented out lines below are equivalent to the _ chain method
 
 	const taskIds = _.uniq(_.map(getState().tasks, "taskId"));
-	console.log(taskIds);
 	taskIds.forEach(id => dispatch(getStepByStepTaskId(id)));
 };
 
 export const getTaskAndStepsByKidUsername = (kidUsername) => async (dispatch, getState) => {
 	const {data} = await httpConfig(`/apis/kid-account/?kidUsername=${kidUsername}`);
-
+	console.log(data);
 	if (data !== undefined) {
 		await dispatch(getTasksAndSteps(data.kidId));
 	}

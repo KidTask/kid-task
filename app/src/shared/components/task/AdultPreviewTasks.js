@@ -18,7 +18,6 @@ export const AdultPreviewTasks = (props) => {
 		}
 	);
 
-
 	return (
 		<>
 			<div className="col-md-5 col-lg-4 mx-auto mb-5">

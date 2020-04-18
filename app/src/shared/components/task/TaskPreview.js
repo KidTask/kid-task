@@ -26,16 +26,14 @@ const {status, temp} = useTaskIsComplete();
 			<div className="col-md-5 col-lg-4 mx-auto mb-5">
 				<Card border="info">
 					<Card.Header>
-						<h3 className="title">Due soon</h3>
+						<h3 className="title">Task</h3>
+						<Card.Title className="kidCardTitle">{task.taskContent}</Card.Title>
 						 <TaskProgressBar taskIsComplete = {task.taskIsComplete}/>
 					</Card.Header>
 
 
 					<Card.Img variant="top" src="https://images.unsplash.com/photo-1524420533980-5fe0aecc5fe6"/>
-					<Card.Body >
-						<h3 className="title">Task</h3>
-						<Card.Title className="kidCardTitle">{task.taskContent}</Card.Title>
-					</Card.Body>
+
 					<Card.Body>
 						<h3 className="title">Steps</h3>
 
