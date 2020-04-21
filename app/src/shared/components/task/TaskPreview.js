@@ -7,17 +7,16 @@ import {StepPreview} from "../step/StepPreview";
 import {TaskProgressBar} from "./TaskProgressBar";
 import {useDispatch, useSelector} from "react-redux";
 import {KidCard} from "../kidCard/kid-card";
-import {useTaskIsComplete} from "../../utils/useTaskIsComplete";
 import {Formik} from "formik";
 import {httpConfig} from "../../utils/http-config";
 import {UpdateTaskIsComplete} from "./UpdateTaskIsComplete";
 
 
-export const TaskPreview = () => {
+export const TaskPreview = (props) => {
 	const {task} = props;
 	const steps = useSelector(state => {
 			return state.steps ? state.steps.filter(step => {
-				return step.stepTaskId === task.taskId
+				return step.stepTaskId === task.taskId;
 			}) : []
 		}
 	);
@@ -41,6 +40,7 @@ export const TaskPreview = () => {
 							<UpdateTaskIsComplete
 								newTaskIsComplete="1"
 								buttonText="Begin Task"
+								taskId={task.taskId}
 							/>
 						</ListGroup.Item>
 					</ListGroup>}
@@ -49,6 +49,7 @@ export const TaskPreview = () => {
 							<UpdateTaskIsComplete
 								newTaskIsComplete="2"
 								buttonText="I'm Done!"
+								taskId={task.taskId}
 							/>
 						</ListGroup.Item>
 					</ListGroup>}

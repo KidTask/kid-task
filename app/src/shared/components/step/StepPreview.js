@@ -11,17 +11,9 @@ export const StepPreview = (props) => {
 
 	return (
 		<>
-
 					<ListGroup variant="flush">
-
 						<ListGroup.Item>{step.stepOrder}. {step.stepContent}</ListGroup.Item>
-
 					</ListGroup>
-
-
-
-
-
 		</>
 	)
 };

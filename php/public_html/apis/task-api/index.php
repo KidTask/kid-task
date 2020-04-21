@@ -84,7 +84,7 @@ try {
 
         // This Line Then decodes the JSON package and stores that result in $requestObject
         //make sure task content is available (required field)
-        if(empty($requestObject->taskContent) === true) {
+        if(empty($requestObject->taskContent) === true && $method === "POST") {
             throw(new \InvalidArgumentException ("No content for Task.", 405));
         }
 

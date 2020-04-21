@@ -1,23 +1,36 @@
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {httpConfig} from "../../utils/http-config";
-import {updateTaskIsComplete} from "../../actions/task-actions";
+import {
+	getTaskByTaskId,
+	updateTaskIsComplete
+} from "../../actions/task-actions";
 import Button from "react-bootstrap/Button";
 import {Formik} from "formik";
-import React from "react";
-import {useDispatch} from "react-redux";
 
 
-
-export const UpdateTaskIsComplete = (props) => {
+export const UpdateTaskIsComplete = (clickedTask) => {
 
 	const dispatch = useDispatch();
+
+	/*const sideEffects = () => dispatch(getTaskByTaskId(task.taskId));
+
+	useEffect(sideEffects, task.taskId);*/
+
+	/*const clickedTask = useSelector(state =>
+		console.log(state)
+		return state;
+	});*/
+
+
 	return (
 		<>
 		<Formik
-			const initialValues={{taskIsComplete: ""}}
+			const initialValues={{taskIsComplete: ''}}
 			//value is not set and will return initial value unchanged
 			onSubmit={(value, {setStatus}) => {
-				const newTask = {...task, taskIsComplete: `${props.newTaskIsComplete}`};
-				httpConfig.put(`/apis/task-api/${task.taskId}`, newTask)
+				const newTask = {...clickedTask, taskIsComplete: `${clickedTask.newTaskIsComplete}`};
+				httpConfig.put(`/apis/task-api/${clickedTask.taskId}`, newTask)
 					.then(reply => {
 						if(reply.status === 200) {
 							dispatch(updateTaskIsComplete(newTask));
@@ -36,12 +49,10 @@ export const UpdateTaskIsComplete = (props) => {
 				return (
 					<>
 						<form onSubmit={handleSubmit}>
-							<Button type="submit" variant="outline-info">{props.buttonText}</Button>
+							<Button type="submit" variant="outline-info">{clickedTask.buttonText}</Button>
 						</form>
 						<br/>
-						{
-							status && (<div className={status.type}>{status.message}</div>)
-						}
+						{ status && (<div className={status.type}>{status.message}</div>) }
 					</>
 				)
 			}}

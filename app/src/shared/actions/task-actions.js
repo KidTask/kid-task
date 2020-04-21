@@ -24,10 +24,8 @@ export const getTaskByTaskContent = (taskContent) => async (dispatch) => {
 };
 
 export const getTasksAndSteps = (taskKidId) => async (dispatch, getState) => {
-
 	await dispatch(getTaskByTaskKidId(taskKidId));
 	//commented out lines below are equivalent to the _ chain method
-
 	const taskIds = _.uniq(_.map(getState().tasks, "taskId"));
 	taskIds.forEach(id => dispatch(getStepByStepTaskId(id)));
 };

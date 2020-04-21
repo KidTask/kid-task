@@ -8,6 +8,7 @@ import {StepPreview} from "../step/StepPreview";
 import {TaskProgressBar} from "./TaskProgressBar";
 import {useSelector} from "react-redux";
 import {httpConfig} from "../../utils/http-config";
+import {UpdateTaskIsComplete} from "./UpdateTaskIsComplete";
 //import {useTaskIsComplete} from "../../utils/useTaskIsComplete";
 
 export const AdultPreviewTasks = (props) => {
@@ -21,10 +22,6 @@ export const AdultPreviewTasks = (props) => {
 
 	return (
 		<>
-			{/*<Formik
-				onSubmit={(values, {setStatus}) => {
-					const request = {}
-			}}*/}
 				<div className="col-md-5 col-lg-4 mx-auto mb-5">
 					<Card border="info">
 						<Card.Header>
@@ -40,13 +37,16 @@ export const AdultPreviewTasks = (props) => {
 						</Card.Body>
 						<ListGroup variant="flush">
 							<ListGroup.Item>
-								<Button  variant="outline-info">Task Is Complete</Button>
+								<UpdateTaskIsComplete
+									newTaskIsComplete="3"
+									buttonText="Task is Complete!"
+									taskId={task.taskId}
+								/>
 							</ListGroup.Item>
 						</ListGroup>
 					</Card>
 				</div>
 				<br/>
-			{/*</Formik>*/}
 		</>
 	)
 };
