@@ -41,6 +41,7 @@ export const AdultPreviewTasks = (props) => {
 									newTaskIsComplete="3"
 									buttonText="Task is Complete!"
 									taskId={task.taskId}
+									theTask={task}
 								/>
 							</ListGroup.Item>
 						</ListGroup>

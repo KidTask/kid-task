@@ -41,6 +41,7 @@ export const TaskPreview = (props) => {
 								newTaskIsComplete="1"
 								buttonText="Begin Task"
 								taskId={task.taskId}
+								theTask={task}
 							/>
 						</ListGroup.Item>
 					</ListGroup>}
@@ -50,6 +51,7 @@ export const TaskPreview = (props) => {
 								newTaskIsComplete="2"
 								buttonText="I'm Done!"
 								taskId={task.taskId}
+								theTask={task}
 							/>
 						</ListGroup.Item>
 					</ListGroup>}

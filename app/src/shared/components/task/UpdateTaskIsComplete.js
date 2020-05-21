@@ -13,29 +13,21 @@ export const UpdateTaskIsComplete = (clickedTask) => {
 
 	const dispatch = useDispatch();
 
-	/*const sideEffects = () => dispatch(getTaskByTaskId(task.taskId));
-
-	useEffect(sideEffects, task.taskId);*/
-
-	/*const clickedTask = useSelector(state =>
-		console.log(state)
-		return state;
-	});*/
-
-
 	return (
 		<>
 		<Formik
 			const initialValues={{taskIsComplete: ''}}
 			//value is not set and will return initial value unchanged
 			onSubmit={(value, {setStatus}) => {
-				const newTask = {...clickedTask, taskIsComplete: `${clickedTask.newTaskIsComplete}`};
+				const newTask = {...clickedTask.theTask, taskIsComplete: parseInt(clickedTask.newTaskIsComplete)};
 				httpConfig.put(`/apis/task-api/${clickedTask.taskId}`, newTask)
 					.then(reply => {
 						if(reply.status === 200) {
 							dispatch(updateTaskIsComplete(newTask));
+							//app won't rerender, manual refresh
+							//setTimeout(() => window.location.reload(), 1000);
 						}
-						setStatus(reply)
+						setStatus(reply);
 					})
 			}
 			}

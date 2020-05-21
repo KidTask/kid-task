@@ -13,14 +13,16 @@ import {AdultViewTasks} from "./pages/AdultViewTasks";
 import {Home} from "./pages/Home";
 import axios from "axios";
 import {applyMiddleware, createStore} from "redux";
-import {reducers} from "./shared/reducers/reducers";
+import reducer from "./shared/reducers/reducers";
 import thunk from "redux-thunk";
 import {Provider} from "react-redux";
+import { configureStore } from '@reduxjs/toolkit'
+
 
 axios.get("/apis/earl-grey/");
 
 
-const store = createStore(reducers, applyMiddleware(thunk));
+const store = configureStore({reducer});
 
 const Routing = () => (
 
