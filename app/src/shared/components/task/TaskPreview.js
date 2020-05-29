@@ -1,8 +1,6 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import ProgressBar from "react-bootstrap/ProgressBar";
 import {StepPreview} from "../step/StepPreview";
 import {TaskProgressBar} from "./TaskProgressBar";
 import {useDispatch, useSelector} from "react-redux";

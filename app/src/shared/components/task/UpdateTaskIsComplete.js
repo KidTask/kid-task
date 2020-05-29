@@ -1,10 +1,7 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {httpConfig} from "../../utils/http-config";
-import {
-	getTaskByTaskId,
-	updateTaskIsComplete
-} from "../../actions/task-actions";
+import {updateTaskIsComplete} from "../../actions/task-actions";
 import Button from "react-bootstrap/Button";
 import {Formik} from "formik";
 

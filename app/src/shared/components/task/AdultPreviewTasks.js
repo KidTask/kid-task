@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import {ErrorMessage, Field, FieldArray, Formik} from 'formik';
-import ProgressBar from "react-bootstrap/ProgressBar";
 import {StepPreview} from "../step/StepPreview";
 import {TaskProgressBar} from "./TaskProgressBar";
 import {useSelector} from "react-redux";

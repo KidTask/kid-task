@@ -12,9 +12,7 @@ import {CreateTask} from "./pages/CreateTask";
 import {AdultViewTasks} from "./pages/AdultViewTasks";
 import {Home} from "./pages/Home";
 import axios from "axios";
-import {applyMiddleware, createStore} from "redux";
 import reducer from "./shared/reducers/reducers";
-import thunk from "redux-thunk";
 import {Provider} from "react-redux";
 import { configureStore } from '@reduxjs/toolkit'
 
