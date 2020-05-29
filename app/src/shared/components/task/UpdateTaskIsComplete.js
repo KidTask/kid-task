@@ -19,12 +19,14 @@ export const UpdateTaskIsComplete = (clickedTask) => {
 				const newTask = {...clickedTask.theTask, taskIsComplete: parseInt(clickedTask.newTaskIsComplete)};
 				httpConfig.put(`/apis/task-api/${clickedTask.taskId}`, newTask)
 					.then(reply => {
+						setStatus(reply);
 						if(reply.status === 200) {
 							dispatch(updateTaskIsComplete(newTask));
-							//app won't rerender, manual refresh
-							//setTimeout(() => window.location.reload(), 1000);
+							//app won't rerender for adult, manual refresh
+							if (parseInt(clickedTask.newTaskIsComplete) === 3){
+								setTimeout(() => window.location.reload(), 1000);
+							}
 						}
-						setStatus(reply);
 					})
 			}
 			}

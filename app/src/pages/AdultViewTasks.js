@@ -2,7 +2,7 @@ import React, {useEffect} from "react"
 import {Header} from "../shared/components/header/Header";
 import {useDispatch, useSelector} from "react-redux";
 import {AdultPreviewTasks} from "../shared/components/task/AdultPreviewTasks";
-//import "../styles/adult-dashboard.css";
+import "../styles/adult-dashboard.css";
 
 //REACT BOOTSTRAP CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
