@@ -29,7 +29,6 @@ export const KidSignUpFormContent = (props) => {
                             id="kidName"
                             type="name"
                             value={values.kidName}
-                            placeholder="Enter name"
                             onChange={handleChange}
                             onBlur={handleBlur}
 
@@ -55,7 +54,6 @@ export const KidSignUpFormContent = (props) => {
                             id="kidUsername"
                             type="username"
                             value={values.kidUsername}
-                            placeholder="Enter username"
                             onChange={handleChange}
                             onBlur={handleBlur}
 
@@ -79,7 +77,6 @@ export const KidSignUpFormContent = (props) => {
                             id="kidPassword"
                             className="form-control"
                             type="password"
-                            placeholder="Password"
                             value={values.kidPassword}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -97,7 +94,6 @@ export const KidSignUpFormContent = (props) => {
                             className="form-control"
                             type="password"
                             id="kidPasswordConfirm"
-                            placeholder="Password Confirm"
                             value={values.kidPasswordConfirm}
                             onChange={handleChange}
                             onBlur={handleBlur}

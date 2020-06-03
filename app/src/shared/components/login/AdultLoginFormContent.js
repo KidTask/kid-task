@@ -30,7 +30,6 @@ export const AdultLoginFormContent = (props) => {
 							className="form-control"
 							type="text"
 							id="adultUsername"
-							placeholder="Username"
 							value={values.adultUsername}
 							onChange={handleChange}
 							onBlur={handleBlur}
@@ -54,7 +53,6 @@ export const AdultLoginFormContent = (props) => {
 							id="adultPassword"
 							className="form-control"
 							type="password"
-							placeholder="Password"
 							value={values.adultPassword}
 							onChange={handleChange}
 							onBlur={handleBlur}
