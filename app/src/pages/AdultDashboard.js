@@ -22,8 +22,6 @@ import {getKidByKidAdultId} from "../shared/actions/kid-account-actions";
 
 
 
-
-
 export const AdultDashboard = () => {
 
 const adultId  = useJwtAdultId();
@@ -57,10 +55,6 @@ const kids = useSelector(state => {
 					<AddKidCard/>
 
 				</CardDeck>
-
-			<div className="row mt-3">
-				<Footer/>
-			</div>
 		</div>
 		</>
 		)

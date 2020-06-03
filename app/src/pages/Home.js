@@ -1,8 +1,6 @@
 import React from "react"
 
-
 import {Header} from "../shared/components/header/Header";
-import {Footer} from "../shared/components/footer/Footer";
 import {AdultLoginForm} from "../shared/components/login/AdultLoginForm";
 import {KidLoginForm} from "../shared/components/login/KidLoginForm";
 
@@ -21,7 +19,7 @@ export const Home = () => {
 					<div className="col-lg-5  mx-auto mt-5">
 						<div className="card w-lg-50">
 							<div className="card-body">
-								<h5 className="card-title">Adult sign in!</h5>
+								<h5 className="card-title">Adult Sign In!</h5>
 								<AdultLoginForm/>
 							</div>
 						</div>
@@ -29,7 +27,7 @@ export const Home = () => {
 					<div className="col-lg-5  mx-auto mt-5">
 						<div className="card w-lg-50">
 							<div className="card-body">
-								<h5 className="card-title">Kids sign in over here!</h5>
+								<h5 className="card-title">Kids Sign In Here!</h5>
 								<KidLoginForm/>
 							</div>
 						</div>
@@ -44,9 +42,6 @@ export const Home = () => {
 							</div>
 						</div>
 					</div>
-				</div>
-				<div className="row">
-					<Footer/>
 				</div>
 			</div>
 		</>

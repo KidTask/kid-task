@@ -26,7 +26,6 @@ const Routing = () => (
 
 	<>
 		<Provider store={store}>
-
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/create-task/:kidUsername" component={CreateTask} kidUsername=":kidUsername"/>
@@ -36,7 +35,6 @@ const Routing = () => (
 					<Route exact path="/adult-sign-up" component={SignUp}/>
 					<Route exact path="/assigned-tasks/:kidUsername" component={AdultViewTasks} kidUsername=":kidUsername"/>
 					<Route exact path="/" component={Home}/>
-
 					<Route component={FourOhFour}/>
 				</Switch>
 			</BrowserRouter>

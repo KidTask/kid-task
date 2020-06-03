@@ -66,15 +66,8 @@ export const KidLoginFormContent = (props) => {
 				</div>
 
 
-				<div className="row mt-4">
-					<div className="col-6">
-						<Form.Group controlId="formBasicCheckbox">
-							<Form.Check type="checkbox" size="sm" label="Keep me logged in"/>
-						</Form.Group>
-					</div>
-					<div className="col-6">
-						<Button variant="outline-primary" size="sm" type="submit">Submit</Button>
-					</div>
+				<div className="row py-2 mt-4 mx-3">
+					<Button variant="primary" size="sm" type="submit">Sign In</Button>
 				</div>
 				{/*<FormDebugger {...props} />*/}
 			</form>

@@ -13,9 +13,6 @@ export const CreateTask = ({match}) => {
 				<h5>Create a Task</h5>
 				<TaskForm match={match}/>
 			</div>
-			<div className="row mt-3">
-				<Footer/>
-			</div>
 			</>
 	)
 };

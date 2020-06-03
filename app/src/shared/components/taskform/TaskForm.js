@@ -72,6 +72,7 @@ export const TaskForm = ({match}) => {
 						<Form onSubmit={handleSubmit} noValidate>
 							<Form.Group>
 								<Form.Label>Task</Form.Label>
+								<Form.Label className="required">*</Form.Label>
 								<Form.Control
 									name="taskContent"
 									type="text"
@@ -121,17 +122,6 @@ export const TaskForm = ({match}) => {
 							<br/>
 							<Form.Label>Image</Form.Label>
 							<Form.Control name="taskAvatarUrl" type="text" />
-							<br/>
-							<Row>
-								<Col>
-									<Form.Label>Due Date</Form.Label>
-									<Form.Control name="taskDueDate" type="dateTime" />
-								</Col>
-								<Col>
-									<Form.Label>Reward</Form.Label>
-									<Form.Control name="taskReward" type="text" />
-								</Col>
-							</Row>
 							<br/>
 							<Button
 								type="submit"

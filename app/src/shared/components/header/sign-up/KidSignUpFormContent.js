@@ -1,11 +1,6 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormDebugger} from "../../FormDebugger";
 import React from "react";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
-import {library} from "@fortawesome/fontawesome-svg-core";
-import {faChild, faUser, faLock, faCheck} from "@fortawesome/free-solid-svg-icons";
 
-library.add(faChild, faEnvelope, faUser, faLock, faCheck);
 
 export const KidSignUpFormContent = (props) => {
     const {
@@ -29,11 +24,6 @@ export const KidSignUpFormContent = (props) => {
                     <label htmlFor="kidName">Kid Name</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faChild} size="sm"/></i>
-                            </div>
-                        </div>
                         <input
                             className="form-control"
                             id="kidName"
@@ -60,11 +50,6 @@ export const KidSignUpFormContent = (props) => {
                     <label htmlFor="kidUsername">Kid Login Username</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faUser} size="sm"/></i>
-                            </div>
-                        </div>
                         <input
                             className="form-control"
                             id="kidUsername"
@@ -90,11 +75,6 @@ export const KidSignUpFormContent = (props) => {
                     <label htmlFor="kidPassword">Password</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faLock} size="sm"/></i>
-                            </div>
-                        </div>
                         <input
                             id="kidPassword"
                             className="form-control"
@@ -113,11 +93,6 @@ export const KidSignUpFormContent = (props) => {
                     <label htmlFor="kidPasswordConfirm">Confirm Password</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faCheck} size="sm"/></i>
-                            </div>
-                        </div>
                         <input
                             className="form-control"
                             type="password"
@@ -139,7 +114,7 @@ export const KidSignUpFormContent = (props) => {
                     <button className="btn btn-primary mb-2" type="submit">Submit</button>
                 </div>
 
-                <FormDebugger {...props} />
+                {/*<FormDebugger {...props} />*/}
             </form>
             {console.log(
                 submitStatus

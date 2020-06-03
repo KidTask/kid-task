@@ -30,17 +30,11 @@ export const SignUpFormContent = (props) => {
                     <label htmlFor="adultEmail">Email Address</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faEnvelope} size="sm"/></i>
-                            </div>
-                        </div>
                         <input
                             className="form-control"
                             id="adultEmail"
                             type="email"
                             value={values.adultEmail}
-                            placeholder="Enter email"
                             onChange={handleChange}
                             onBlur={handleBlur}
 
@@ -60,17 +54,10 @@ export const SignUpFormContent = (props) => {
                     <label htmlFor="adultUsername">Username</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faUser} size="sm"/></i>
-                            </div>
-                        </div>
-
                         <input
                             className="form-control"
                             type="text"
                             id="adultUsername"
-                            placeholder="Username"
                             value={values.adultUsername}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -90,16 +77,10 @@ export const SignUpFormContent = (props) => {
                     <label htmlFor="adultPassword">Password</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faLock} size="sm"/></i>
-                            </div>
-                        </div>
                         <input
                             id="adultPassword"
                             className="form-control"
                             type="password"
-                            placeholder="Password"
                             value={values.adultPassword}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -113,17 +94,11 @@ export const SignUpFormContent = (props) => {
                     <label htmlFor="adultPasswordConfirm">Confirm Your Password</label>
                     <label className="required">*</label>
                     <div className="input-group">
-                        <div className="input-group-prepend">
-                            <div className="input-group-text">
-                                <i><FontAwesomeIcon icon={faCheck} size="sm"/></i>
-                            </div>
-                        </div>
                         <input
 
                             className="form-control"
                             type="password"
                             id="adultPasswordConfirm"
-                            placeholder="Password Confirm"
                             value={values.adultPasswordConfirm}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -135,7 +110,7 @@ export const SignUpFormContent = (props) => {
                 </div>
 
 
-                <div className="form-group">
+                <div className="form-group my-5">
                         <button className="btn btn-primary mb-2" type='submit'>Submit</button>
                 </div>
 
