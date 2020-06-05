@@ -1,7 +1,7 @@
-DROP TABLE step;
-DROP TABLE task;
-DROP TABLE kid;
-DROP TABLE adult;
+DROP TABLE IF EXISTS step;
+DROP TABLE IF EXISTS task;
+DROP TABLE IF EXISTS kid;
+DROP TABLE IF EXISTS adult;
 
 CREATE TABLE adult (
 	adultId binary(16) not null,

@@ -108,7 +108,7 @@ try {
 		<h2>Welcome to Kid Task.</h2>
 		<p>In order to start assigning tasks to your kid(s) confirm your adult-account </p>
 		<p><a href="$confirmLink">$confirmLink</a></p>
-		EOF;
+EOF;
 
 		//create swift email
 		$swiftMessage = new Swift_Message();
@@ -180,5 +180,3 @@ try {
 
 header("Content-type: application/json");
 echo json_encode($reply);
-
-
